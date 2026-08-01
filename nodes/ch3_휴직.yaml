@@ -1,0 +1,286 @@
+- id: leave-childcare
+  type: 개념
+  title: 육아휴직
+  chapter: 3
+  scope: 공통
+  summary: 자녀 1명당 3년 이내(분할 가능)로 신청하는 청원휴직.
+  body: |
+    8세 이하 또는 초등학교 2학년 이하 자녀 양육 목적. 경력은 산입되며,
+    첫째·둘째 자녀는 승급기간 1년(특정 요건 시 1년 6개월), 셋째 자녀부터는 전체 기간 산입.
+
+    | 기간 | 육아휴직수당 상한 |
+    | --- | --- |
+    | 1~3개월 | 250만원 |
+    | 4~6개월 | 200만원 |
+    | 7개월~ | 160만원(하한 70만원) |
+  refs: ["교육공무원법 §44①7"]
+  pages: {중등: "77-81", 초등: "확인필요"}
+  aliases: ["육휴", "육아휴가"]
+  verified: "2026-08-01"
+
+- id: leave-family-care
+  type: 개념
+  title: 가족돌봄휴직
+  chapter: 3
+  scope: 공통
+  summary: 1회 1년 이내, 재직 중 총 3년 한도의 청원휴직(구 가사휴직, '23.4 개칭).
+  body: |
+    조부모·부모·배우자·자녀·손자녀 돌봄 목적. 경력 미산입, 봉급 미지급.
+  refs: ["교육공무원법 §44①9"]
+  pages: {중등: "87-91", 초등: "확인필요"}
+  verified: "2026-08-01"
+
+- id: leave-sick
+  type: 개념
+  title: 질병휴직(일반)
+  chapter: 3
+  scope: 공통
+  summary: 1년 이내(1년 연장 가능, 총 2년) 직권휴직.
+  body: |
+    봉급 지급률: 1년 이하 70%, 1년 초과~2년 50%.
+  refs: ["교육공무원법 §44①1"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-01"
+
+- id: leave-sick-official
+  type: 개념
+  title: 공무상질병휴직
+  chapter: 3
+  scope: 공통
+  summary: 3년(2년 연장 가능, 총 5년, '23.4.19~) 직권휴직, 봉급 전액.
+  refs: ["교육공무원법 §44①1"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-01"
+
+- id: law-gongmuwon-44
+  type: 법령·조문
+  title: 교육공무원법 §44 (휴직)
+  chapter: 3
+  scope: 공통
+  summary: 직권휴직·청원휴직 14개 호를 열거하는 휴직의 근거 조문.
+  pages: {중등: "42-70", 초등: "45-58"}
+  verified: "2026-08-01"
+
+- id: num-childcare-max-3y
+  type: 수치·기한
+  title: 육아휴직 최대기간 — 자녀당 3년
+  chapter: 3
+  scope: 공통
+  summary: 자녀 1명당 최대 3년, 3회 분할 사용 가능.
+  refs: ["교육공무원법 §44①7"]
+  pages: {중등: "77-81"}
+  verified: "2026-08-01"
+
+- id: num-reinstate-30d
+  type: 수치·기한
+  title: 복직신고 — 사유소멸·기간만료 후 30일 이내
+  chapter: 3
+  scope: 공통
+  summary: 30일 이내 신고 시 당연복직.
+  pages: {중등: "42-70"}
+  verified: "2026-08-01"
+
+- id: num-official-illness-5y
+  type: 수치·기한
+  title: 공무상질병휴직 총 기간 — 3년+2년(총 5년)
+  chapter: 3
+  scope: 공통
+  summary: "'23.4.19. 개정으로 3년+2년 연장, 총 5년까지 확대."
+  pages: {중등: "42-70"}
+  verified: "2026-08-01"
+
+- id: proc-reinstatement
+  type: 절차
+  title: 복직 처리 절차
+  chapter: 3
+  scope: 공통
+  summary: 사유소멸 확인 → 복직원 제출 → 학교장 의견 → 인사발령.
+  pages: {중등: "100-116"}
+  verified: "2026-08-01"
+
+- id: form-leave-application
+  type: 서식
+  title: 휴직원(서식)
+  chapter: 3
+  scope: 공통
+  summary: 휴직 사유·기간·복직예정일을 기재하는 표준 서식.
+  pages: {중등: "100-116"}
+  verified: "2026-08-01"
+
+- id: qa-leave-during-suspension
+  type: Q&A·유권해석
+  title: 휴직 중 직위해제 가능 여부
+  chapter: 3
+  scope: 공통
+  summary: 불가 — 총무처 인기 12107-273 유권해석.
+  refs: ["총무처 인기 12107-273"]
+  pages: {중등: "1-70"}
+  verified: "2026-08-01"
+
+- id: audit-family-care-abuse
+  type: 감사지적사례
+  title: 가족돌봄휴직 부당 사용 유형
+  chapter: 3
+  scope: 공통
+  summary: 돌봄대상 유고 후 미복직, 본인 해외출국, 돌봄대상 원거리 거주 등 6개 유형.
+  body: |
+    적발 시 「공무원보수규정」§28③에 따라 지급 보수 징수 + 징계 사유.
+  pages: {중등: "70-136"}
+  verified: "2026-08-01"
+- id: leave-military
+  type: 개념
+  title: 병역휴직
+  chapter: 3
+  scope: 공통
+  summary: 복무기간 동안 부여되는 직권휴직으로, 경력은 산입되나 봉급은 미지급.
+  refs: ["교육공무원법 §44①2"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-missing
+  type: 개념
+  title: 행방불명휴직
+  chapter: 3
+  scope: 공통
+  summary: 3개월 이내 부여되는 직권휴직으로, 경력 미산입·봉급 미지급.
+  refs: ["교육공무원법 §44①3"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-legal-duty
+  type: 개념
+  title: 법정의무수행휴직
+  chapter: 3
+  scope: 공통
+  summary: 법률상 의무 수행에 필요한 기간의 직권휴직으로, 경력은 산입되나 봉급은 미지급.
+  refs: ["교육공무원법 §44①4"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-study-abroad
+  type: 개념
+  title: 유학휴직
+  chapter: 3
+  scope: 공통
+  summary: 학위취득 목적 유학 시 3년(학위취득 시 3년 추가)까지의 청원휴직, 경력·봉급 각 50% 산정.
+  body: |
+    실경력 3년 이상(인천 기준) 요건. 휴직 기간과 동일한 기간 이상의 의무복무가 부과된다.
+  refs: ["교육공무원법 §44①5"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-employment
+  type: 개념
+  title: 고용휴직
+  chapter: 3
+  scope: 공통
+  summary: 고용 기간 동안의 청원휴직으로, 상근 시 경력 100%·비상근 시 50% 산입, 봉급은 미지급.
+  body: |
+    민간단체 재직 중 5년 내 1회 가능하며, 5년 연속 사용 시 복직 후 1년 이상 의무복무.
+  refs: ["교육공무원법 §44①6"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-infertility
+  type: 개념
+  title: 불임·난임휴직
+  chapter: 3
+  scope: 공통
+  summary: 불임·난임 치료를 위한 1년+1년(최대 2년) 청원휴직으로, 경력은 미산입.
+  body: |
+    직권휴직이 아닌 청원휴직이며, 봉급은 1년 이하 70%, 1~2년 50% 지급.
+  refs: ["교육공무원법 §44①7의3"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: leave-training
+  type: 개념
+  title: 연수휴직
+  chapter: 3
+  scope: 공통
+  summary: 상위 학위 취득 목적의 3년 이내 청원휴직, 경력 50% 산정·봉급은 미지급.
+  body: |
+    실경력 3년 이상 요건이며, 학위 취득 시 승급기간을 재획정한다.
+  refs: ["교육공무원법 §44①8"]
+  pages: {중등: "42-70", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: law-gongmuwon-45
+  type: 법령·조문
+  title: "교육공무원법 §45 (휴직기간)"
+  chapter: 3
+  scope: 공통
+  summary: 휴직 종류별 최대 기간과 연장 요건을 규정하는 조문(§44의 휴직사유와 함께 적용).
+  pages: {중등: "42-70", 초등: "45-58"}
+  verified: "2026-08-02"
+
+- id: num-sick-general-1y
+  type: 수치·기한
+  title: 일반병가 아님 — 질병휴직 1년+1년(총2년)
+  chapter: 3
+  scope: 공통
+  summary: 일반 질병휴직은 1년 이내에서 1년 연장 가능(총 2년), 봉급은 1년 이하 70%·1~2년 50%.
+  refs: ["교육공무원법 §44①1"]
+  pages: {중등: "42-70"}
+  verified: "2026-08-02"
+
+- id: num-tb-test-1m
+  type: 수치·기한
+  title: "결핵검사 — 휴직 6개월↑ 시 복직 후 1개월 이내"
+  chapter: 3
+  scope: 공통
+  summary: 6개월 이상 휴직자는 복직 시 또는 복직 후 1개월 이내 결핵검사를 받아야 함.
+  body: |
+    복직 전 6개월 이내 검진기록이 있으면 이를 갈음할 수 있다.
+  refs: ["결핵예방법 §11"]
+  pages: {중등: "70-116"}
+  verified: "2026-08-02"
+
+- id: num-vacancy-fill-6m
+  type: 수치·기한
+  title: 결원보충 — 6개월 이상 휴직 시 별도정원
+  chapter: 3
+  scope: 공통
+  summary: 6개월 이상 휴직 시 별도정원으로 결원 보충(출산휴가 연계 육아휴직은 3개월 이상).
+  refs: ["교육공무원임용령 §7의4"]
+  pages: {중등: "70-116"}
+  verified: "2026-08-02"
+
+- id: proc-leave-application
+  type: 절차
+  title: 휴직 신청 절차
+  chapter: 3
+  scope: 공통
+  summary: 사유 확인 → 휴직원 제출 → 학교장 의견 → 임용권자 승인·발령 순으로 진행.
+  pages: {중등: "100-116"}
+  verified: "2026-08-02"
+
+- id: form-reinstatement-application
+  type: 서식
+  title: 복직원(서식)
+  chapter: 3
+  scope: 공통
+  summary: 복직 사유와 복직 예정일 등을 기재하여 제출하는 표준 서식.
+  pages: {중등: "100-116"}
+  verified: "2026-08-02"
+
+- id: qa-overseas-study-no-second-extension
+  type: Q&A·유권해석
+  title: 유학휴직 3년 연장자의 2차 재연장 불가
+  chapter: 3
+  scope: 공통
+  summary: 유학휴직은 학위취득 목적 3년 연장(총 6년)까지만 가능, 그 이상 재연장은 불가.
+  refs: ["교육공무원법 §44①5"]
+  pages: {중등: "확인필요", 초등: "확인필요"}
+  verified: "2026-08-02"
+
+- id: audit-infertility-leave-misuse
+  type: 감사지적사례
+  title: 불임·난임휴직 목적 외 사용(시술 없이 해외여행 등)
+  chapter: 3
+  scope: 공통
+  summary: 시술 없이 해외여행 등 휴직 목적과 무관하게 사용한 불임·난임휴직 부당 사례.
+  body: |
+    적발 시 「공무원보수규정」§28③에 따라 지급 보수 징수 및 징계 사유가 된다.
+  pages: {중등: "70-136"}
+  verified: "2026-08-02"
