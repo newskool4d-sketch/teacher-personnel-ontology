@@ -76,6 +76,11 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 }
 .graph-tooltip { position: fixed; display: none; background: var(--surface); border: 1px solid var(--rule);
   padding: 4px 10px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10; }
+
+.node-card-header { border-left: 6px solid var(--chapter-color); padding-left: var(--space-3); }
+.qa-item { border-left: 3px solid var(--accent); padding-left: var(--space-2); margin: var(--space-1) 0; }
+.qa-source { color: var(--ink); opacity: .6; font-size: 13px; }
+.node-meta { margin-top: var(--space-3); padding-top: var(--space-1); border-top: 1px solid var(--rule); font-size: 13px; opacity: .7; }
 </style>
 </head>
 <body>
@@ -234,6 +239,53 @@ function renderGraph(main) {
   });
   window.addEventListener('resize', resize);
   resize();
+}
+
+function findNode(id) { return ONTOLOGY.nodes.find(n => n.id === id); }
+function edgesFrom(id) { return ONTOLOGY.edges.filter(e => e.source === id); }
+function edgesTo(id) { return ONTOLOGY.edges.filter(e => e.target === id); }
+
+function renderNode(main, id) {
+  const n = findNode(id);
+  if (!n) { main.innerHTML = '<p>노드를 찾을 수 없습니다.</p>'; return; }
+
+  const outgoing = edgesFrom(id).map(e => ({ edge: e, node: findNode(e.target) })).filter(x => x.node);
+  const incoming = edgesTo(id).map(e => ({ edge: e, node: findNode(e.source) })).filter(x => x.node);
+  const group = type => outgoing.filter(x => x.edge.type === type);
+  const chip = (label, href, cls) => `<a class="chip ${cls || ''}" href="${href}">${label}</a>`;
+
+  const refsHtml = (n.refs || []).map(r => `<span class="chip chip-law">${r}</span>`).join(' ');
+  const lawsHtml = group('근거법령').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
+  const numsHtml = group('기한수치').map(x => chip(x.node.title, `#/node/${x.node.id}`, 'chip-num')).join(' ');
+  const formsHtml = group('필요서식').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
+  const qaHtml = group('관련해석').map(x =>
+    `<div class="qa-item"><p>${x.node.summary}</p><p class="qa-source">${(x.node.refs || []).join(', ')}</p></div>`).join('');
+  const auditHtml = group('유의').map(x => `<div class="audit-warning"><p>${x.node.summary}</p></div>`).join('');
+  const backlinksHtml = incoming.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
+
+  const scope = getScope();
+  const pages = n.pages || {};
+  const pagesHtml = pages[scope]
+    ? `${scope} ${pages[scope]}쪽` + (pages['공통'] ? ` · 공통 ${pages['공통']}쪽` : '')
+    : Object.entries(pages).map(([k, v]) => `${k} ${v}쪽`).join(' · ');
+
+  main.innerHTML = `
+    <div class="node-card" style="--chapter-color: var(--ch${n.chapter})">
+      <div class="node-card-header">
+        <span class="chapter-tag" style="color:var(--ch${n.chapter})">제${n.chapter === 0 ? '부록' : n.chapter + '장'} · ${n.type}</span>
+        <h1>${n.title}</h1>
+        <p class="summary">${n.summary}</p>
+      </div>
+      <div class="node-card-body">${n.body || ''}</div>
+      ${refsHtml ? `<section><h2>근거 조문</h2>${refsHtml}</section>` : ''}
+      ${lawsHtml ? `<section><h2>관련 법령·개념</h2>${lawsHtml}</section>` : ''}
+      ${numsHtml ? `<section><h2>기한·수치</h2>${numsHtml}</section>` : ''}
+      ${formsHtml ? `<section><h2>필요 서식</h2>${formsHtml}</section>` : ''}
+      ${qaHtml ? `<section><h2>관련 Q&A·유권해석</h2>${qaHtml}</section>` : ''}
+      ${auditHtml ? `<section><h2>유의사항</h2>${auditHtml}</section>` : ''}
+      <footer class="node-meta">${pagesHtml}${n.verified ? ` · 확인 ${n.verified}` : ''}</footer>
+      ${backlinksHtml ? `<aside class="backlinks"><h3>이 항목을 참조하는 개념</h3>${backlinksHtml}</aside>` : ''}
+    </div>`;
 }
 </script>
 </body>
