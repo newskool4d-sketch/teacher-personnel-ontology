@@ -1,0 +1,17 @@
+- id: leave-childcare
+  type: 개념
+  title: 육아휴직
+  chapter: 3
+  scope: 공통
+  summary: 자녀 1명당 3년 이내로 신청 가능한 청원휴직.
+  body: "**법령**: 교육공무원법 §44①7"
+  refs: ["교육공무원법 §44①7"]
+  pages: {중등: "77-81"}
+  aliases: ["육휴"]
+- id: leave-sick
+  type: 개념
+  title: 질병휴직
+  chapter: 3
+  scope: 공통
+  summary: 1년 이내(1년 연장 가능)의 직권휴직.
+  refs: ["교육공무원법 §44①1"]
