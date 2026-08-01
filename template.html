@@ -78,14 +78,73 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 </head>
 <body>
 <div id="app">
-  <header id="app-header"><a href="#/">교원인사 온톨로지</a></header>
-  <div id="main">로딩 중…</div>
+  <header id="app-header">
+    <a href="#/">교원인사 온톨로지</a>
+    <button id="scope-toggle" class="no-print"></button>
+  </header>
+  <div class="app-shell">
+    <aside id="left-nav"></aside>
+    <main id="main">로딩 중…</main>
+    <aside id="right-panel" class="right"></aside>
+  </div>
 </div>
 <script>
 const ONTOLOGY = __ONTOLOGY_DATA__;
-console.log("[ontology] 노드", ONTOLOGY.meta.nodeCount, "엣지", ONTOLOGY.meta.edgeCount);
-document.getElementById("main").textContent =
-  `데이터 로드 완료: 노드 ${ONTOLOGY.meta.nodeCount}개, 엣지 ${ONTOLOGY.meta.edgeCount}개`;
+
+const CHAPTER_NAMES = {0:'부록',1:'교육공무원 의의',2:'임용 일반',3:'휴직과 복직',
+  4:'복무',5:'상훈 및 징계',6:'호봉 및 승급',7:'계약제 교원'};
+
+function getScope() { return localStorage.getItem('ontology-scope') || '중등'; }
+function setScope(scope) { localStorage.setItem('ontology-scope', scope); render(); }
+function initScopeToggle() {
+  const btn = document.getElementById('scope-toggle');
+  const sync = () => { btn.textContent = getScope() === '중등' ? '중등 보기' : '초등 보기'; };
+  sync();
+  btn.addEventListener('click', () => { setScope(getScope() === '중등' ? '초등' : '중등'); sync(); });
+}
+
+function renderHome(main) {
+  const chapters = [1,2,3,4,5,6,7,0];
+  main.innerHTML = `
+    <div class="home-hero">
+      <h1 class="display">교원인사 온톨로지</h1>
+      <p>2026 교원인사 실무도우미(중등·초등) 기반 지식 그래프</p>
+      <input id="search-bar" class="search-bar" placeholder="검색 (예: 육아휴직, ㅇㅇㅎㅈ) — &quot;/&quot; 로 포커스" autocomplete="off">
+      <div id="search-results" class="search-results"></div>
+    </div>
+    <nav class="chapter-gate">
+      ${chapters.map(c => `
+        <a href="#/chapter/${c}" class="chapter-gate-item" style="--chapter-color:var(--ch${c})">
+          <span class="chapter-num">${c === 0 ? '부록' : c}</span>
+          <span class="chapter-name">${CHAPTER_NAMES[c]}</span>
+        </a>`).join('')}
+    </nav>
+    <div class="home-links">
+      <a href="#/graph">전체 지식 지도 →</a>
+      <a href="#/table">수치·기한 통합표 →</a>
+      <a href="#/print">인쇄용 치트시트 →</a>
+    </div>`;
+  if (typeof initSearch === 'function') initSearch();
+}
+
+function parseHash() {
+  return (location.hash.slice(1) || '/').split('/').filter(Boolean);
+}
+
+function render() {
+  const parts = parseHash();
+  const main = document.getElementById('main');
+  if (parts.length === 0) return renderHome(main);
+  if (parts[0] === 'graph' && typeof renderGraph === 'function') return renderGraph(main);
+  if (parts[0] === 'node' && parts[1] && typeof renderNode === 'function') return renderNode(main, parts[1]);
+  if (parts[0] === 'table' && typeof renderTable === 'function') return renderTable(main);
+  if (parts[0] === 'chapter' && parts[1] && typeof renderChapterHub === 'function') return renderChapterHub(main, Number(parts[1]));
+  if (parts[0] === 'print' && typeof renderPrint === 'function') return renderPrint(main);
+  main.innerHTML = '<p>준비 중인 화면입니다.</p>';
+}
+
+window.addEventListener('hashchange', render);
+window.addEventListener('DOMContentLoaded', () => { initScopeToggle(); render(); });
 </script>
 </body>
 </html>
