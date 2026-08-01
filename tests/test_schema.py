@@ -56,3 +56,19 @@ def test_validate_graph_clean_data_has_no_errors():
     nodes = load_nodes(FIXTURES / "sample_nodes")
     edges = load_edges(FIXTURES / "sample_edges.yaml")
     assert validate_graph(nodes, edges) == []
+
+
+def test_validate_rejects_string_chapter_without_crashing():
+    # 실제 사례: YAML에서 chapter: "3" 처럼 따옴표를 쳐서 문자열로 파싱된 경우
+    n = Node(id="leave-sick", type="개념", title="x", chapter="3",
+              scope="공통", summary="s")
+    errors = n.validate()
+    assert any("chapter" in e for e in errors)
+
+
+def test_validate_rejects_non_string_id_without_crashing():
+    # 실제 사례: YAML에서 id: 2024 처럼 따옴표 없는 숫자로 파싱된 경우
+    n = Node(id=2024, type="수치·기한", title="x", chapter=3,
+              scope="공통", summary="s")
+    errors = n.validate()
+    assert any("id" in e for e in errors)

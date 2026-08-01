@@ -31,13 +31,17 @@ class Node:
 
     def validate(self) -> list[str]:
         errors = []
-        if not ID_PATTERN.match(self.id):
+        if not isinstance(self.id, str):
+            errors.append(f"[{self.id}] id는 문자열이어야 함(현재 타입: {type(self.id).__name__})")
+        elif not ID_PATTERN.match(self.id):
             errors.append(f"[{self.id}] id는 kebab-case 영문/숫자만 허용")
         if self.type not in VALID_TYPES:
             errors.append(f"[{self.id}] 알 수 없는 type: {self.type}")
         if self.scope not in VALID_SCOPES:
             errors.append(f"[{self.id}] 알 수 없는 scope: {self.scope}")
-        if not (0 <= self.chapter <= 7):
+        if not isinstance(self.chapter, int):
+            errors.append(f"[{self.id}] chapter는 정수여야 함(현재 타입: {type(self.chapter).__name__})")
+        elif not (0 <= self.chapter <= 7):
             errors.append(f"[{self.id}] chapter는 0~7 범위(0=부록)")
         if not self.summary:
             errors.append(f"[{self.id}] summary는 필수")
