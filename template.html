@@ -81,6 +81,12 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 .qa-item { border-left: 3px solid var(--accent); padding-left: var(--space-2); margin: var(--space-1) 0; }
 .qa-source { color: var(--ink); opacity: .6; font-size: 13px; }
 .node-meta { margin-top: var(--space-3); padding-top: var(--space-1); border-top: 1px solid var(--rule); font-size: 13px; opacity: .7; }
+
+.search-bar { width: 100%; max-width: 480px; padding: var(--space-1) var(--space-2); font-size: 17px;
+  border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); }
+.search-results { max-width: 480px; }
+.search-result { display: flex; align-items: center; gap: 8px; padding: 6px 4px; text-decoration: none; color: var(--ink); }
+.chapter-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 </style>
 </head>
 <body>
@@ -286,6 +292,38 @@ function renderNode(main, id) {
       <footer class="node-meta">${pagesHtml}${n.verified ? ` · 확인 ${n.verified}` : ''}</footer>
       ${backlinksHtml ? `<aside class="backlinks"><h3>이 항목을 참조하는 개념</h3>${backlinksHtml}</aside>` : ''}
     </div>`;
+}
+
+function toChosung(text) {
+  const CHOSUNG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  let out = '';
+  for (const ch of text) {
+    const code = ch.charCodeAt(0);
+    out += (code >= 0xAC00 && code <= 0xD7A3) ? CHOSUNG[Math.floor((code - 0xAC00) / (21 * 28))] : ch;
+  }
+  return out;
+}
+
+function initSearch() {
+  const bar = document.getElementById('search-bar');
+  const results = document.getElementById('search-results');
+  if (!bar) return;
+  bar.addEventListener('input', () => {
+    const q = bar.value.trim();
+    if (!q) { results.innerHTML = ''; return; }
+    const qChosung = toChosung(q);
+    const matches = ONTOLOGY.search.filter(item =>
+      item.haystack.includes(q) || item.chosung.includes(qChosung)
+    ).slice(0, 20);
+    results.innerHTML = matches.map(m =>
+      `<a class="search-result" href="#/node/${m.id}">
+         <span class="chapter-dot" style="background:var(--ch${m.chapter})"></span>${m.title} <small>${m.type}</small>
+       </a>`
+    ).join('') || '<p class="no-result">결과 없음</p>';
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== bar) { e.preventDefault(); bar.focus(); }
+  });
 }
 </script>
 </body>
