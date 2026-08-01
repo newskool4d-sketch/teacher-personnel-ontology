@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>교원인사 온톨로지</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div id="app">
+  <header id="app-header"><a href="#/">교원인사 온톨로지</a></header>
+  <div id="main">로딩 중…</div>
+</div>
+<script>
+const ONTOLOGY = __ONTOLOGY_DATA__;
+console.log("[ontology] 노드", ONTOLOGY.meta.nodeCount, "엣지", ONTOLOGY.meta.edgeCount);
+document.getElementById("main").textContent =
+  `데이터 로드 완료: 노드 ${ONTOLOGY.meta.nodeCount}개, 엣지 ${ONTOLOGY.meta.edgeCount}개`;
+</script>
+</body>
+</html>
