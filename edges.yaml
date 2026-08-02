@@ -182,3 +182,27 @@
 - {source: num-appeal-lawsuit-deadline, target: appeal-review, type: 상위개념}
 - {source: num-appeal-lawsuit-deadline, target: law-teacher-status-act-10, type: 근거법령}
 - {source: discipline-overview, target: appeal-review, type: 유의}
+
+# 제6장 호봉 및 승급
+- {source: hobong-initial-determination, target: num-hobong-gisan, type: 기한수치}
+- {source: hobong-initial-determination, target: num-hobong-hakryeong-gasan, type: 기한수치}
+- {source: career-conversion-table, target: hobong-initial-determination, type: 상위개념}
+- {source: num-career-conversion-public, target: career-conversion-table, type: 상위개념}
+- {source: num-career-conversion-private, target: career-conversion-table, type: 상위개념}
+- {source: num-career-conversion-lecturer, target: career-conversion-table, type: 상위개념}
+- {source: num-career-conversion-etc, target: career-conversion-table, type: 상위개념}
+- {source: proc-hobong-rejudge, target: num-hobong-rejudge-effective, type: 기한수치}
+- {source: proc-hobong-rejudge, target: leave-training, type: 관련해석}
+- {source: promotion-nonaccrual, target: promotion-monthly, type: 상위개념}
+- {source: promotion-nonaccrual, target: leave-childcare, type: 관련해석}
+- {source: num-promotion-restriction-period, target: promotion-monthly, type: 상위개념}
+- {source: num-promotion-restriction-period, target: law-gongmuwon-bosu-14, type: 근거법령}
+- {source: num-promotion-restriction-period, target: promotion-nonaccrual, type: 유의}
+- {source: promotion-nonaccrual, target: law-gongmuwon-bosu-14, type: 근거법령}
+- {source: promotion-monthly, target: law-gongmuwon-bosu-14, type: 근거법령}
+- {source: promotion-monthly, target: neis-regular-promotion, type: 절차단계}
+- {source: proc-hobong-rejudge, target: neis-regular-promotion, type: 절차단계}
+- {source: num-promotion-restriction-period, target: discipline-gangdeung, type: 관련해석}
+- {source: num-promotion-restriction-period, target: discipline-jeongjik, type: 관련해석}
+- {source: num-promotion-restriction-period, target: discipline-gambong, type: 관련해석}
+- {source: num-promotion-restriction-period, target: discipline-gyeonchaek, type: 관련해석}
