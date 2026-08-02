@@ -269,3 +269,9 @@
 - {source: num-discipline-dui-standard, target: law-gyoyuk-jinggyeyangjeong-gyuchik, type: 근거법령}
 - {source: num-contract-report-deadline, target: law-gyoyuk-insagirok-gyuchik, type: 근거법령}
 - {source: neis-contract-no-reuse-record, target: law-gyoyuk-insagirok-gyuchik, type: 근거법령}
+- {source: leave-adoption, target: law-gongmuwon-44, type: 근거법령}
+- {source: leave-accompany, target: law-gongmuwon-44, type: 근거법령}
+- {source: leave-union, target: law-gongmuwon-44, type: 근거법령}
+- {source: leave-self-training, target: law-gongmuwon-44, type: 근거법령}
+- {source: leave-childcare, target: leave-adoption, type: 상위개념}
+- {source: leave-employment, target: leave-accompany, type: 상위개념}
