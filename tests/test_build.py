@@ -3,7 +3,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from build import build, render_body
+from build import build, render_body, NODES_DIR, EDGES_PATH
+from schema import load_nodes, load_edges, validate_graph
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -44,3 +45,20 @@ def test_build_raises_on_schema_error(tmp_path, monkeypatch):
         assert False, "SystemExit이 발생해야 함"
     except SystemExit as e:
         assert "고아 엣지" in str(e)
+
+
+def test_real_data_builds_clean_and_meets_minimum_scale(tmp_path):
+    """실제 nodes/+edges.yaml 기준 스모크 테스트 — 정확한 수 하드코딩 대신 하한선만 검증해
+    데이터가 늘어나도 깨지지 않게 한다."""
+    nodes = load_nodes(NODES_DIR)
+    edges = load_edges(EDGES_PATH)
+
+    errors = validate_graph(nodes, edges)
+    assert errors == [], f"실데이터 스키마 검증 오류 {len(errors)}건: {errors}"
+    assert len(nodes) >= 220, f"노드 수 {len(nodes)}개 — 220개 미만"
+    assert len(edges) >= 250, f"엣지 수 {len(edges)}개 — 250개 미만"
+
+    dist_path = tmp_path / "real.html"
+    result_path = build(dist_path=dist_path)
+    assert result_path == dist_path
+    assert dist_path.exists()
