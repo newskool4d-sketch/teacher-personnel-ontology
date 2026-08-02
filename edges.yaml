@@ -47,3 +47,36 @@
 - {source: term-bokjik, target: term-imyong, type: 상위개념}
 - {source: term-jeonjik, target: term-jeonbo, type: 유의}
 - {source: term-bokjik, target: proc-reinstatement, type: 절차단계}
+
+# 제2장 교육공무원 임용 일반
+- {source: appoint-date-principle, target: num-appoint-date-regular, type: 기한수치}
+- {source: appoint-date-principle, target: num-appoint-date-occasional-14d, type: 기한수치}
+- {source: appoint-date-principle, target: retire-age, type: 유의}
+- {source: num-appoint-date-occasional-14d, target: num-resign-voluntary-14d, type: 유의}
+- {source: disqual-general, target: law-gukgong-33, type: 근거법령}
+- {source: disqual-general, target: num-disqual-felony-5y, type: 기한수치}
+- {source: disqual-general, target: num-disqual-probation-2y, type: 기한수치}
+- {source: disqual-general, target: num-disqual-dismissal-pamyeon-5y, type: 기한수치}
+- {source: disqual-general, target: num-disqual-dismissal-haeim-3y, type: 기한수치}
+- {source: disqual-general, target: num-disqual-minor-sexcrime-20y, type: 기한수치}
+- {source: hire-restrict-misconduct, target: disqual-general, type: 유의}
+- {source: recruit-open-competition, target: num-candidate-list-3x-1y, type: 기한수치}
+- {source: recruit-career-competitive, target: recruit-open-competition, type: 유의}
+- {source: transfer-jeonjik-restriction, target: num-jeonjik-reappoint, type: 기한수치}
+- {source: transfer-jeonjik-restriction, target: term-jeonjik, type: 상위개념}
+- {source: transfer-jeonbo-restriction-1y, target: term-jeonbo, type: 상위개념}
+- {source: transfer-jeonbo-restriction-1y, target: transfer-jeonjik-restriction, type: 유의}
+- {source: dispatch-pagyeon, target: num-dispatch-1-3y, type: 기한수치}
+- {source: retire-age, target: num-retire-age-62, type: 기한수치}
+- {source: retire-honorary, target: num-honorary-retire-req, type: 기한수치}
+- {source: retire-honorary, target: retire-age, type: 유의}
+- {source: resign-voluntary, target: num-resign-voluntary-14d, type: 기한수치}
+- {source: death-separation, target: num-death-separation, type: 기한수치}
+- {source: recruit-open-competition, target: term-imyong, type: 상위개념}
+- {source: recruit-career-competitive, target: term-imyong, type: 상위개념}
+- {source: dispatch-pagyeon, target: term-imyong, type: 상위개념}
+- {source: retire-age, target: term-imyong, type: 상위개념}
+- {source: retire-honorary, target: term-imyong, type: 상위개념}
+- {source: resign-voluntary, target: term-imyong, type: 상위개념}
+- {source: death-separation, target: term-imyong, type: 상위개념}
+- {source: dismissal-discretionary, target: term-imyong, type: 상위개념}
