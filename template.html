@@ -87,6 +87,15 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 .search-results { max-width: 480px; }
 .search-result { display: flex; align-items: center; gap: 8px; padding: 6px 4px; text-decoration: none; color: var(--ink); }
 .chapter-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+.chapter-node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-2); margin-top: var(--space-2); }
+.mini-card { display: block; border-left: 4px solid; padding: var(--space-2); background: var(--surface-2);
+  text-decoration: none; color: var(--ink); border-radius: 4px; }
+.mini-card-type { font-size: 12px; opacity: .6; }
+.chapter-gate { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-2); margin: var(--space-3) 0; }
+.chapter-gate-item { display: block; padding: var(--space-2); border-top: 4px solid var(--chapter-color);
+  background: var(--surface-2); text-decoration: none; color: var(--ink); border-radius: 4px; }
+.chapter-gate-item .chapter-num { font-family: var(--font-display); font-size: 24px; display: block; color: var(--chapter-color); }
 </style>
 </head>
 <body>
@@ -128,7 +137,7 @@ function renderHome(main) {
     <nav class="chapter-gate">
       ${chapters.map(c => `
         <a href="#/chapter/${c}" class="chapter-gate-item" style="--chapter-color:var(--ch${c})">
-          <span class="chapter-num">${c === 0 ? '부록' : c}</span>
+          <span class="chapter-num">${c === 0 ? '' : c}</span>
           <span class="chapter-name">${CHAPTER_NAMES[c]}</span>
         </a>`).join('')}
     </nav>
@@ -366,6 +375,22 @@ function sortTable(colIdx) {
   rows.forEach(r => tbody.appendChild(r));
   tbody.dataset.sortCol = colIdx;
   tbody.dataset.sortDir = asc ? 'asc' : 'desc';
+}
+
+function renderChapterHub(main, chapterNum) {
+  const scope = getScope();
+  const nodes = ONTOLOGY.nodes.filter(n => n.chapter === chapterNum && (n.scope === '공통' || n.scope === scope));
+  main.innerHTML = `
+    <h1 style="color:var(--ch${chapterNum})">제${chapterNum === 0 ? '' : chapterNum + '장 '}${CHAPTER_NAMES[chapterNum]}</h1>
+    <p>${nodes.length}개 항목</p>
+    <div class="chapter-node-grid">
+      ${nodes.map(n => `
+        <a class="mini-card" href="#/node/${n.id}" style="border-left-color:var(--ch${n.chapter})">
+          <span class="mini-card-type">${n.type}</span>
+          <strong>${n.title}</strong>
+          <p>${n.summary}</p>
+        </a>`).join('')}
+    </div>`;
 }
 </script>
 </body>
