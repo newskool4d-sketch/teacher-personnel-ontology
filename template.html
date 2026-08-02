@@ -48,14 +48,24 @@ table { font-variant-numeric: tabular-nums; border-collapse: collapse; width: 10
 th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--space-2); text-align: left; }
 
 #app-header { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--rule); font-family: var(--font-display); }
-.app-shell { display: grid; grid-template-columns: 240px 1fr 280px; min-height: calc(100vh - 60px); }
+.build-info { font-family: var(--font-body); font-size: 11px; opacity: .5; margin-top: 4px; }
+.app-shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 60px); }
 .app-shell > aside { border-right: 1px solid var(--rule); padding: var(--space-3); }
-.app-shell > aside.right { border-right: none; border-left: 1px solid var(--rule); }
 .app-shell > main { padding: var(--space-4); overflow-y: auto; }
 @media (max-width: 900px) {
   .app-shell { grid-template-columns: 1fr; }
   .app-shell > aside { display: none; }
 }
+
+#left-nav { font-family: var(--font-body); }
+.left-nav-chapters { display: flex; flex-direction: column; gap: 2px; }
+.left-nav-chapters a { display: flex; align-items: center; gap: 8px; padding: 6px 4px;
+  text-decoration: none; color: var(--ink); border-radius: 4px; font-size: 15px; }
+.left-nav-chapters a.active { background: var(--surface-2); font-weight: 600; }
+.left-nav-divider { border: none; border-top: 1px solid var(--rule); margin: var(--space-2) 0; }
+.left-nav-quicklinks { display: flex; flex-direction: column; gap: 2px; }
+.left-nav-quicklinks a { display: block; padding: 6px 4px; text-decoration: none; color: var(--accent); font-size: 14px; }
+.left-nav-quicklinks a.active { background: var(--surface-2); border-radius: 4px; font-weight: 600; }
 
 .chip { display: inline-block; padding: 2px 10px; margin: 2px; border-radius: 12px;
   border: 1px solid var(--rule); font-size: 14px; text-decoration: none; color: var(--ink); }
@@ -84,9 +94,13 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
   padding: 4px 10px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10; }
 
 .node-card-header { border-left: 6px solid var(--chapter-color); padding-left: var(--space-3); }
+.chapter-tag { display: block; text-transform: uppercase; font-size: 12px; letter-spacing: .06em;
+  font-weight: 600; margin-bottom: 4px; }
+.summary { font-size: 19px; opacity: .8; margin: 4px 0 var(--space-2); }
 .qa-item { border-left: 3px solid var(--accent); padding-left: var(--space-2); margin: var(--space-1) 0; }
 .qa-source { color: var(--ink); opacity: .6; font-size: 13px; }
 .node-meta { margin-top: var(--space-3); padding-top: var(--space-1); border-top: 1px solid var(--rule); font-size: 13px; opacity: .7; }
+.backlinks { margin-top: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--rule); }
 
 .home-hero { padding: var(--space-4) 0 var(--space-3); border-bottom: 1px solid var(--rule); margin-bottom: var(--space-3); }
 .home-hero h1 { margin-bottom: var(--space-1); }
@@ -115,11 +129,11 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
   <header id="app-header">
     <a href="#/">교원인사 온톨로지</a>
     <button id="scope-toggle" class="no-print"></button>
+    <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 2026-08-02</div>
   </header>
   <div class="app-shell">
     <aside id="left-nav"></aside>
     <main id="main">로딩 중…</main>
-    <aside id="right-panel" class="right"></aside>
   </div>
 </div>
 <script>
@@ -177,8 +191,35 @@ function render() {
   main.innerHTML = '<p>준비 중인 화면입니다.</p>';
 }
 
-window.addEventListener('hashchange', render);
-window.addEventListener('DOMContentLoaded', () => { initScopeToggle(); render(); });
+function renderLeftNav() {
+  const nav = document.getElementById('left-nav');
+  if (!nav) return;
+  const chapters = [1,2,3,4,5,6,7,0];
+  nav.innerHTML = `
+    <nav class="left-nav-chapters">
+      ${chapters.map(c => `
+        <a href="#/chapter/${c}"><span class="chapter-dot" style="background:var(--ch${c})"></span>${c === 0 ? '부록' : '제' + c + '장 ' + CHAPTER_NAMES[c]}</a>`).join('')}
+    </nav>
+    <hr class="left-nav-divider">
+    <nav class="left-nav-quicklinks">
+      <a href="#/graph">지식 지도</a>
+      <a href="#/table">수치·기한 통합표</a>
+      <a href="#/print">인쇄 치트시트</a>
+    </nav>`;
+  highlightLeftNav();
+}
+
+function highlightLeftNav() {
+  const nav = document.getElementById('left-nav');
+  if (!nav) return;
+  const current = '#' + location.hash.slice(1);
+  nav.querySelectorAll('a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === current);
+  });
+}
+
+window.addEventListener('hashchange', () => { render(); highlightLeftNav(); });
+window.addEventListener('DOMContentLoaded', () => { initScopeToggle(); renderLeftNav(); render(); });
 
 function renderGraph(main) {
   main.innerHTML = '<canvas id="graph-canvas" style="width:100%;height:80vh;display:block"></canvas><div id="graph-tooltip" class="graph-tooltip"></div>';
@@ -192,13 +233,14 @@ function renderGraph(main) {
   const minX = Math.min(...xs), maxX = Math.max(...xs);
   const minY = Math.min(...ys), maxY = Math.max(...ys);
 
+  let zoom = 1, panX = 0, panY = 0;
+
   function toScreen(id) {
     const w = canvas.clientWidth, h = canvas.clientHeight, pad = 60;
     const p = layout[id];
-    return {
-      x: pad + (p.x - minX) / (maxX - minX || 1) * (w - pad * 2),
-      y: pad + (p.y - minY) / (maxY - minY || 1) * (h - pad * 2),
-    };
+    const bx = pad + (p.x - minX) / (maxX - minX || 1) * (w - pad * 2);
+    const by = pad + (p.y - minY) / (maxY - minY || 1) * (h - pad * 2);
+    return { x: bx * zoom + panX, y: by * zoom + panY };
   }
 
   const chColor = c => getComputedStyle(document.documentElement).getPropertyValue(`--ch${c}`).trim();
@@ -246,9 +288,32 @@ function renderGraph(main) {
     draw();
   }
 
+  let panStart = null, dragMoved = false;
+
+  canvas.addEventListener('mousedown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    dragMoved = false;
+    // mousedown 히트가 노드면 클릭 후보로 남기고(팬 시작 안 함), 빈 공간이면 팬 시작
+    panStart = nodeAt(mx, my) ? null : { x: mx, y: my, panX, panY };
+  });
+
   canvas.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
-    const hit = nodeAt(e.clientX - rect.left, e.clientY - rect.top);
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    if (panStart) {
+      const dx = mx - panStart.x, dy = my - panStart.y;
+      if (Math.hypot(dx, dy) > 4) {
+        dragMoved = true;
+        panX = panStart.panX + dx;
+        panY = panStart.panY + dy;
+        const tip = document.getElementById('graph-tooltip');
+        tip.style.display = 'none';
+        draw();
+        return;
+      }
+    }
+    const hit = nodeAt(mx, my);
     hoverId = hit ? hit.id : null;
     const tip = document.getElementById('graph-tooltip');
     if (hit) {
@@ -259,11 +324,27 @@ function renderGraph(main) {
     } else { tip.style.display = 'none'; }
     draw();
   });
+  canvas.addEventListener('mouseup', () => { panStart = null; });
+  canvas.addEventListener('mouseleave', () => { panStart = null; });
   canvas.addEventListener('click', e => {
+    if (dragMoved) { dragMoved = false; return; }
     const rect = canvas.getBoundingClientRect();
     const hit = nodeAt(e.clientX - rect.left, e.clientY - rect.top);
     if (hit) location.hash = `#/node/${hit.id}`;
   });
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    const newZoom = Math.min(4, Math.max(0.5, zoom * factor));
+    // 마우스 아래 있던 world 좌표가 줌 후에도 같은 화면 위치에 남도록 pan 보정
+    const wx = (mx - panX) / zoom, wy = (my - panY) / zoom;
+    panX = mx - wx * newZoom;
+    panY = my - wy * newZoom;
+    zoom = newZoom;
+    draw();
+  }, { passive: false });
   window.addEventListener('resize', resize);
   resize();
 }
@@ -287,7 +368,11 @@ function renderNode(main, id) {
   const formsHtml = group('필요서식').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
   const qaHtml = group('관련해석').map(x =>
     `<div class="qa-item"><p>${x.node.summary}</p><p class="qa-source">${(x.node.refs || []).join(', ')}</p></div>`).join('');
-  const auditHtml = group('유의').map(x => `<div class="audit-warning"><p>${x.node.summary}</p></div>`).join('');
+  const noteEdges = group('유의');
+  const auditNotes = noteEdges.filter(x => x.node.type === '감사지적사례');
+  const otherNotes = noteEdges.filter(x => x.node.type !== '감사지적사례');
+  const auditHtml = auditNotes.map(x => `<div class="audit-warning"><p>${x.node.summary}</p></div>`).join('');
+  const noteChipsHtml = otherNotes.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
   const backlinksHtml = incoming.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
 
   const scope = getScope();
@@ -310,6 +395,7 @@ function renderNode(main, id) {
       ${formsHtml ? `<section><h2>필요 서식</h2>${formsHtml}</section>` : ''}
       ${qaHtml ? `<section><h2>관련 Q&A·유권해석</h2>${qaHtml}</section>` : ''}
       ${auditHtml ? `<section><h2>유의사항</h2>${auditHtml}</section>` : ''}
+      ${noteChipsHtml ? `<section><h2>관련 유의</h2>${noteChipsHtml}</section>` : ''}
       <footer class="node-meta">${pagesHtml}${n.verified ? ` · 확인 ${n.verified}` : ''}</footer>
       ${backlinksHtml ? `<aside class="backlinks"><h3>이 항목을 참조하는 개념</h3>${backlinksHtml}</aside>` : ''}
     </div>`;
@@ -333,14 +419,18 @@ function initSearch() {
     const q = bar.value.trim();
     if (!q) { results.innerHTML = ''; return; }
     const qChosung = toChosung(q);
-    const matches = ONTOLOGY.search.filter(item =>
+    const allMatches = ONTOLOGY.search.filter(item =>
       item.haystack.includes(q) || item.chosung.includes(qChosung)
-    ).slice(0, 20);
-    results.innerHTML = matches.map(m =>
+    );
+    const matches = allMatches.slice(0, 20);
+    const listHtml = matches.map(m =>
       `<a class="search-result" href="#/node/${m.id}">
          <span class="chapter-dot" style="background:var(--ch${m.chapter})"></span>${m.title} <small>${m.type}</small>
        </a>`
     ).join('') || '<p class="no-result">결과 없음</p>';
+    const moreHtml = allMatches.length > 20
+      ? `<p class="more-results">외 ${allMatches.length - 20}건 — 검색어를 좁혀보세요</p>` : '';
+    results.innerHTML = listHtml + moreHtml;
   });
   document.addEventListener('keydown', e => {
     if (e.key === '/' && document.activeElement !== bar) { e.preventDefault(); bar.focus(); }
