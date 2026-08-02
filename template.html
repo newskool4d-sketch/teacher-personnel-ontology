@@ -73,6 +73,8 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
   #app-header, .app-shell > aside, .no-print { display: none !important; }
   .app-shell { display: block; }
   body { background: #fff; color: #000; font-size: 11pt; }
+  .print-chapter { page-break-after: always; }
+  .print-chapter:last-child { page-break-after: auto; }
 }
 .graph-tooltip { position: fixed; display: none; background: var(--surface); border: 1px solid var(--rule);
   padding: 4px 10px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10; }
@@ -391,6 +393,23 @@ function renderChapterHub(main, chapterNum) {
           <p>${n.summary}</p>
         </a>`).join('')}
     </div>`;
+}
+
+function renderPrint(main) {
+  const numNodes = ONTOLOGY.nodes.filter(n => n.type === '수치·기한');
+  main.innerHTML = `
+    <div class="print-sheet">
+      <h1>교원인사 실무 치트시트</h1>
+      <p class="print-meta">2026 교원인사 실무도우미 기준 · Ctrl+P로 인쇄</p>
+      ${[1,2,3,4,5,6,7].map(c => `
+        <section class="print-chapter">
+          <h2 style="color:var(--ch${c})">제${c}장 ${CHAPTER_NAMES[c]}</h2>
+          <table><tbody>
+            ${numNodes.filter(n => n.chapter === c).map(n => `<tr><td>${n.title}</td><td>${n.summary}</td></tr>`).join('') || '<tr><td colspan="2">해당 장 수치 데이터 없음</td></tr>'}
+          </tbody></table>
+        </section>`).join('')}
+    </div>
+    <button class="no-print" onclick="window.print()">인쇄</button>`;
 }
 </script>
 </body>
