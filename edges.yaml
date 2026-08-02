@@ -26,3 +26,24 @@
 - {source: leave-childcare, target: proc-leave-application, type: 절차단계}
 - {source: leave-sick, target: proc-leave-application, type: 절차단계}
 - {source: leave-childcare, target: leave-family-care, type: 상위개념}
+
+# 제1장 교육공무원 의의
+- {source: def-education-official, target: law-gongmuwon-2, type: 근거법령}
+- {source: def-education-official, target: law-list-appendix, type: 근거법령}
+- {source: def-education-official-special-service, target: law-gukgong-2, type: 근거법령}
+- {source: def-education-official-special-service, target: def-education-official, type: 상위개념}
+- {source: qual-master-teacher, target: def-education-official, type: 상위개념}
+- {source: qual-janghaksa, target: def-education-official, type: 상위개념}
+- {source: qual-janghakgwan, target: def-education-official, type: 상위개념}
+- {source: qual-master-teacher, target: num-master-teacher-15y, type: 기한수치}
+- {source: qual-janghaksa, target: num-janghaksa-5-9y, type: 기한수치}
+- {source: qual-janghakgwan, target: num-janghakgwan-7-9-11y, type: 기한수치}
+- {source: qual-master-teacher, target: law-gongmuwon-qualification, type: 근거법령}
+- {source: qual-janghaksa, target: law-gongmuwon-qualification, type: 근거법령}
+- {source: qual-janghakgwan, target: law-gongmuwon-qualification, type: 근거법령}
+- {source: term-jeonjik, target: term-imyong, type: 상위개념}
+- {source: term-jeonbo, target: term-imyong, type: 상위개념}
+- {source: term-gangim, target: term-imyong, type: 상위개념}
+- {source: term-bokjik, target: term-imyong, type: 상위개념}
+- {source: term-jeonjik, target: term-jeonbo, type: 유의}
+- {source: term-bokjik, target: proc-reinstatement, type: 절차단계}
