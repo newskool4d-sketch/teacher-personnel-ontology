@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from build import build, render_body, NODES_DIR, EDGES_PATH
+from build import build, render_body, sanitize_public_text, NODES_DIR, EDGES_PATH
 from schema import load_nodes, load_edges, validate_graph
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -13,6 +13,18 @@ def test_render_body_converts_bold_and_table():
     html = render_body("**굵게**\n\n| a | b |\n| --- | --- |\n| 1 | 2 |")
     assert "<strong>굵게</strong>" in html
     assert "<table>" in html
+
+
+def test_public_text_removes_internal_law_lookup_markers():
+    raw = "korean-law-mcp로 원문 확인(2026-08-02, MST 279617, 법령ID 001427). korean-law-mcp 원문 확인. 확인필요"
+    public = sanitize_public_text(raw)
+    assert "korean-law-mcp" not in public
+    assert "MST" not in public
+    assert "법령ID" not in public
+    assert "현행 법령 원문" in public
+    assert "현행 법령 원문 원문" not in public
+    assert "확인필요" not in public
+    assert "소속 시·도교육청 지침 또는 관련 법령 확인" in public
 
 
 def test_build_produces_valid_html_with_embedded_json(tmp_path):
@@ -62,3 +74,18 @@ def test_real_data_builds_clean_and_meets_minimum_scale(tmp_path):
     result_path = build(dist_path=dist_path)
     assert result_path == dist_path
     assert dist_path.exists()
+    public_html = dist_path.read_text(encoding="utf-8")
+    internal_markers = (
+        "korean-law-mcp",
+        "MST ",
+        '"mst":',
+        '"method":',
+        "법령ID",
+        "행정규칙일련번호",
+        "행정규칙ID",
+        "API 응답",
+        "확인필요",
+        "근거 보완 필요",
+    )
+    found_markers = [marker for marker in internal_markers if marker in public_html]
+    assert found_markers == [], f"공개 HTML에 내부 표식 잔존: {found_markers}"

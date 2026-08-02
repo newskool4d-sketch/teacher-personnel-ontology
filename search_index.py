@@ -24,14 +24,17 @@ def to_chosung(text: str) -> str:
 def build_search_index(nodes: list[Node]) -> list[dict]:
     index = []
     for n in nodes:
-        terms = [n.title, n.summary, *n.aliases]
+        terms = [n.title, n.summary, n.body, *n.refs, *n.aliases]
         haystack = " ".join(terms)
         index.append({
             "id": n.id,
             "title": n.title,
+            "summary": n.summary,
             "type": n.type,
             "chapter": n.chapter,
-            "chosung": to_chosung(n.title),
+            "scope": n.scope,
+            "pages": n.pages,
+            "chosung": to_chosung(haystack),
             "haystack": haystack,
         })
     return index
