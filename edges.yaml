@@ -29,7 +29,7 @@
 
 # 제1장 교육공무원 의의
 - {source: def-education-official, target: law-gongmuwon-2, type: 근거법령}
-- {source: def-education-official, target: law-list-appendix, type: 근거법령}
+- {source: def-education-official, target: law-gyoyuggongmuwon-act, type: 근거법령}
 - {source: def-education-official-special-service, target: law-gukgong-2, type: 근거법령}
 - {source: def-education-official-special-service, target: def-education-official, type: 상위개념}
 - {source: qual-master-teacher, target: def-education-official, type: 상위개념}
@@ -252,3 +252,20 @@
 - {source: proc-contract-recruitment, target: contract-teacher-pool, type: 절차단계}
 - {source: proc-contract-recruitment, target: neis-contract-no-reuse-record, type: 절차단계}
 - {source: contract-extension-conditions, target: proc-hobong-rejudge, type: 절차단계}
+
+# 부록(Task 15g): 개별 조문 노드 → 소속 법령 개관 노드(상위개념), 관련 개념 → 부록 법령(근거법령)
+- {source: law-gukgong-2, target: law-gukgong-act, type: 상위개념}
+- {source: law-gukgong-33, target: law-gukgong-act, type: 상위개념}
+- {source: law-gukgong-56-66, target: law-gukgong-act, type: 상위개념}
+- {source: law-gukgong-78, target: law-gukgong-act, type: 상위개념}
+- {source: law-gongmuwon-2, target: law-gyoyuggongmuwon-act, type: 상위개념}
+- {source: law-gongmuwon-44, target: law-gyoyuggongmuwon-act, type: 상위개념}
+- {source: law-gongmuwon-45, target: law-gyoyuggongmuwon-act, type: 상위개념}
+- {source: law-gongmuwon-qualification, target: law-gyoyuggongmuwon-act, type: 상위개념}
+- {source: law-gyoyuggongmuwonbeop-32, target: law-gyoyuggongmuwon-act, type: 상위개념}
+- {source: law-imyongryeong-13, target: law-gyoyuk-imyongryeong, type: 상위개념}
+- {source: dispatch-pagyeon, target: law-gyoyuk-imyongryeong, type: 근거법령}
+- {source: num-discipline-standard-table, target: law-gyoyuk-jinggyeyangjeong-gyuchik, type: 근거법령}
+- {source: num-discipline-dui-standard, target: law-gyoyuk-jinggyeyangjeong-gyuchik, type: 근거법령}
+- {source: num-contract-report-deadline, target: law-gyoyuk-insagirok-gyuchik, type: 근거법령}
+- {source: neis-contract-no-reuse-record, target: law-gyoyuk-insagirok-gyuchik, type: 근거법령}
