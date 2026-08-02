@@ -325,6 +325,48 @@ function initSearch() {
     if (e.key === '/' && document.activeElement !== bar) { e.preventDefault(); bar.focus(); }
   });
 }
+
+function renderTable(main) {
+  const scope = getScope();
+  const numNodes = ONTOLOGY.nodes.filter(n => n.type === '수치·기한' && (n.scope === '공통' || n.scope === scope));
+  main.innerHTML = `
+    <h1>수치·기한 통합표</h1>
+    <input id="table-filter" class="search-bar" placeholder="필터 (예: 휴가, 징계)">
+    <table id="numeric-table">
+      <thead><tr><th data-col="0">항목</th><th data-col="1">장</th><th data-col="2">내용</th><th data-col="3">근거</th></tr></thead>
+      <tbody>
+        ${numNodes.map(n => `
+          <tr data-title="${n.title}">
+            <td><a href="#/node/${n.id}">${n.title}</a></td>
+            <td>${n.chapter === 0 ? '부록' : n.chapter + '장'}</td>
+            <td>${n.summary}</td>
+            <td>${(n.refs || []).join(', ')}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  document.querySelectorAll('#numeric-table th').forEach(th => {
+    th.addEventListener('click', () => sortTable(Number(th.dataset.col)));
+  });
+  document.getElementById('table-filter').addEventListener('input', e => {
+    const q = e.target.value.trim();
+    document.querySelectorAll('#numeric-table tbody tr').forEach(tr => {
+      tr.style.display = (tr.dataset.title.includes(q) || tr.textContent.includes(q)) ? '' : 'none';
+    });
+  });
+}
+
+function sortTable(colIdx) {
+  const tbody = document.querySelector('#numeric-table tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const asc = tbody.dataset.sortCol == colIdx && tbody.dataset.sortDir !== 'asc';
+  rows.sort((a, b) => {
+    const av = a.children[colIdx].textContent, bv = b.children[colIdx].textContent;
+    return asc ? av.localeCompare(bv, 'ko') : bv.localeCompare(av, 'ko');
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  tbody.dataset.sortCol = colIdx;
+  tbody.dataset.sortDir = asc ? 'asc' : 'desc';
+}
 </script>
 </body>
 </html>
