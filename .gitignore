@@ -5,3 +5,7 @@ dist/
 tmp/
 .pytest-tmp/
 .pytest_cache/
+
+.vercel
+.env*
+output/playwright/

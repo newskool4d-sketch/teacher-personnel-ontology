@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <title>교원인사 온톨로지</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<script>
+(() => {
+  try {
+    const saved = localStorage.getItem('ontology-theme');
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = saved === 'dark' || saved === 'light' ? saved : preferred;
+  } catch (_) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
 <style>
 :root {
   --bg: #FAF7F0; --ink: #1A1A18; --accent: #1E3A5F; --danger: #A63A2E;
@@ -11,26 +23,39 @@
   --ch0: #8A8578; --ch1: #3B3A36; --ch2: #1E3A5F; --ch3: #2E6E65;
   --ch4: #4A6B2A; --ch5: #A63A2E; --ch6: #B07D2B; --ch7: #6B4A7E;
   --review-verified: #2E6E65; --review-partial: #8A5B00;
+  --glass: rgba(255, 255, 255, .58); --glass-strong: rgba(255, 255, 255, .76);
+  --glass-border: rgba(255, 255, 255, .8); --glass-highlight: rgba(255, 255, 255, .68);
+  --glass-shadow: 0 18px 48px rgba(45, 53, 63, .11);
+  --ambient-a: #CFE0EF; --ambient-b: #E9DDEC;
   --font-display: 'MaruBuri', Batang, 'Nanum Myeongjo', serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 40px;
+  color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14140F; --ink: #E8E4DA; --accent: #7FA3C8; --danger: #C25B4C;
-    --rule: #2E2C26; --surface: #1C1C16; --surface-2: #232319;
-    --review-verified: #70B7AC; --review-partial: #E1B45A;
-    /* 다크모드 전용 장색 보정 — 라이트모드 원색은 배경 대비 WCAG 3:1 미달(ch1 1.62:1, ch2 1.61:1,
-       ch5 2.87:1, ch7 2.56:1)이라 그래프 점·게이트 테두리 등 그래픽 요소로 쓰기엔 너무 어두움.
-       색상군은 유지한 채 밝기만 올림(전부 3:1 이상 확보). */
-    --ch1: #9C9890; --ch2: #7FA3C8; --ch5: #D4685A; --ch7: #B090C4;
-  }
+:root[data-theme="dark"] {
+  --bg: #10151B; --ink: #EDF0EA; --accent: #8FB7DE; --danger: #E07769;
+  --rule: #35404A; --surface: #1A2129; --surface-2: #222B35;
+  --review-verified: #78C6B9; --review-partial: #F0C56A;
+  --glass: rgba(24, 32, 41, .62); --glass-strong: rgba(25, 33, 42, .8);
+  --glass-border: rgba(255, 255, 255, .13); --glass-highlight: rgba(255, 255, 255, .09);
+  --glass-shadow: 0 22px 58px rgba(0, 0, 0, .34);
+  --ambient-a: #173653; --ambient-b: #3A2948;
+  /* 다크모드 전용 장색 보정 — 그래프 점·게이트 테두리의 식별 대비를 유지한다. */
+  --ch1: #AAA69D; --ch2: #8FB7DE; --ch3: #6CB9AD; --ch4: #91B966;
+  --ch5: #E07769; --ch6: #D9A956; --ch7: #BE9CD1;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 4%, color-mix(in srgb, var(--ambient-a) 72%, transparent) 0, transparent 34rem),
+    radial-gradient(circle at 96% 28%, color-mix(in srgb, var(--ambient-b) 58%, transparent) 0, transparent 30rem),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--ink); font-family: var(--font-body);
   font-size: 17px; line-height: 1.75; font-feature-settings: 'tnum' 1;
 }
 h1, h2, h3, .display { font-family: var(--font-display); }
@@ -173,8 +198,10 @@ button, select { color: var(--ink); }
 #app-header {
   position: sticky; top: 0; z-index: 20; display: grid;
   grid-template-columns: minmax(220px, 1fr) auto auto; align-items: center; gap: 24px;
-  min-height: 76px; background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(16px); box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent);
+  min-height: 76px; border-color: var(--glass-border); background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  backdrop-filter: blur(22px) saturate(145%);
+  box-shadow: 0 1px 0 var(--glass-highlight), 0 14px 40px color-mix(in srgb, var(--ink) 7%, transparent);
 }
 .brand { display: flex; align-items: baseline; gap: 12px; color: var(--ink); text-decoration: none; }
 .brand-title { font-size: 19px; font-weight: 700; letter-spacing: -.03em; }
@@ -182,14 +209,19 @@ button, select { color: var(--ink); }
 .header-nav { display: flex; align-items: center; gap: 4px; font-family: var(--font-body); }
 .header-nav a { padding: 7px 10px; color: var(--ink); text-decoration: none; border-radius: 999px; font-size: 13px; font-weight: 650; }
 .header-nav a:hover, .header-nav a:focus-visible { background: var(--surface-2); }
-.scope-switcher { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); font-family: var(--font-body); }
+.header-controls { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.scope-switcher { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--glass); font-family: var(--font-body); box-shadow: inset 0 1px 0 var(--glass-highlight); }
 .scope-switcher-label { padding: 0 7px; color: var(--ink); font-size: 11px; font-weight: 750; opacity: .62; }
 .scope-option { padding: 7px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font-size: 12px; font-weight: 750; cursor: pointer; }
 .scope-option.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 22%, transparent); }
 .scope-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 7px 11px; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--glass); color: var(--ink); box-shadow: inset 0 1px 0 var(--glass-highlight); font-family: var(--font-body); font-size: 12px; font-weight: 750; cursor: pointer; }
+.theme-toggle:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--glass-border)); background: var(--glass-strong); }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-toggle-icon { font-size: 16px; line-height: 1; }
 .build-info { grid-column: 1 / -1; margin: -10px 0 0; color: var(--ink); opacity: .48; }
 .app-shell { grid-template-columns: 264px minmax(0, 1fr); min-height: calc(100vh - 76px); }
-.app-shell > aside { position: sticky; top: 76px; height: calc(100vh - 76px); padding: 30px 22px; background: color-mix(in srgb, var(--surface-2) 44%, transparent); }
+.app-shell > aside { position: sticky; top: 76px; height: calc(100vh - 76px); padding: 30px 22px; border-color: var(--glass-border); background: var(--glass); -webkit-backdrop-filter: blur(20px) saturate(135%); backdrop-filter: blur(20px) saturate(135%); box-shadow: inset -1px 0 0 var(--glass-highlight); }
 .app-shell > main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 56px clamp(28px, 5vw, 80px) 96px; }
 .left-nav-chapters { gap: 4px; }
 .left-nav-chapters a, .left-nav-quicklinks a { padding: 9px 10px; border-radius: 8px; }
@@ -299,6 +331,72 @@ button, select { color: var(--ink); }
 .public-footer-grid section h2 { margin: 0 0 5px; color: var(--accent); font-family: var(--font-body); font-size: 12px; }
 .public-footer-grid section p { margin: 0; font-size: 12px; line-height: 1.65; opacity: .7; }
 
+/* Glass surfaces — 정보 위계는 유지하고 주요 탐색 면에만 반투명 깊이를 준다. */
+.search-panel,
+.chapter-gate-item,
+.home-links a,
+.mini-card,
+.node-section-grid > section,
+.source-panel,
+.backlinks,
+.legal-review,
+.graph-inspector,
+.graph-legend,
+.table-wrap {
+  border-color: var(--glass-border);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+}
+.graph-stage {
+  border-color: var(--glass-border);
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 64%),
+    var(--glass-strong);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight), inset 0 0 80px color-mix(in srgb, var(--ink) 4%, transparent);
+}
+.graph-toolbar input,
+.graph-toolbar select,
+.graph-toolbar button,
+.table-toolbar .search-bar,
+.table-toolbar select,
+.graph-instructions,
+.graph-depth-label,
+.chip,
+.scope-switcher,
+.theme-toggle {
+  border-color: var(--glass-border);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  backdrop-filter: blur(14px) saturate(130%);
+}
+.getting-started { border-color: var(--glass-border); background: var(--glass-border); box-shadow: var(--glass-shadow); }
+.getting-started-item { background: var(--glass-strong); }
+.search-result-count, #numeric-table thead { background: var(--glass-strong); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+#public-footer { border-color: var(--glass-border); background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(135%); backdrop-filter: blur(18px) saturate(135%); }
+
+body,
+#app-header,
+.app-shell > aside,
+.search-panel,
+.chapter-gate-item,
+.home-links a,
+.mini-card,
+.node-section-grid > section,
+.source-panel,
+.backlinks,
+.legal-review,
+.graph-stage,
+.graph-inspector,
+.graph-legend,
+.table-wrap,
+#public-footer {
+  transition: background-color .24s ease, border-color .24s ease, color .24s ease, box-shadow .24s ease;
+}
+
 @media (max-width: 1180px) {
   .chapter-gate { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .node-detail-grid { grid-template-columns: minmax(0, 1fr) 270px; gap: 32px; }
@@ -306,7 +404,9 @@ button, select { color: var(--ink); }
 @media (max-width: 900px) {
   #app-header { position: relative; grid-template-columns: 1fr auto; gap: 10px; }
   .header-nav { grid-column: 1 / -1; order: 3; overflow-x: auto; }
+  .header-controls { grid-column: 2; grid-row: 1; }
   .build-info { display: none; }
+  .app-shell { grid-template-columns: minmax(0, 1fr); }
   .app-shell > main { padding: 38px 20px 72px; }
   .home-hero-grid, .node-detail-grid { grid-template-columns: 1fr; }
   .node-rail { position: static; order: -1; }
@@ -322,19 +422,28 @@ button, select { color: var(--ink); }
 }
 @media (max-width: 620px) {
   .brand-subtitle { display: none; }
-  .home-hero h1 { font-size: 44px; }
+  .home-hero h1 { font-size: 36px; line-height: 1.16; letter-spacing: -.045em; }
   .chapter-gate { grid-template-columns: 1fr; }
   .chapter-gate-item { min-height: 145px; }
   .home-section-heading { display: block; }
   .home-section-heading p { margin-top: 8px; }
   .node-section-grid { grid-template-columns: 1fr; }
   .node-section-grid > section.wide { grid-column: auto; }
-  .scope-switcher { grid-column: 1 / -1; justify-content: center; }
+  .header-controls { grid-column: 1 / -1; grid-row: auto; order: 2; width: 100%; justify-content: space-between; }
+  .scope-switcher { flex: 1 1 auto; justify-content: center; }
+  .scope-switcher-label, .scope-option { white-space: nowrap; }
+  .scope-option { flex: 1 1 auto; padding-inline: 8px; }
+  .theme-toggle { flex: 0 0 44px; width: 44px; padding: 0; }
+  .theme-toggle-label { display: none; }
   .getting-started, .public-footer-grid { grid-template-columns: 1fr; }
   .graph-heading { display: block; }
   .graph-toolbar { grid-template-columns: 1fr; }
   .graph-side { grid-template-columns: 1fr; }
   .graph-stage { min-height: 58vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
 @media print {
@@ -359,10 +468,16 @@ button, select { color: var(--ink); }
       <a href="#/table">수치·기한</a>
       <a href="#/print">인쇄 요약</a>
     </nav>
-    <div id="scope-toggle" class="scope-switcher no-print" role="group" aria-label="학교급 선택">
-      <span class="scope-switcher-label">학교급 선택</span>
-      <button type="button" class="scope-option" data-scope="중등">중등교원</button>
-      <button type="button" class="scope-option" data-scope="초등">초등교원</button>
+    <div class="header-controls no-print">
+      <div id="scope-toggle" class="scope-switcher" role="group" aria-label="학교급 선택">
+        <span class="scope-switcher-label">학교급 선택</span>
+        <button type="button" class="scope-option" data-scope="중등">중등교원</button>
+        <button type="button" class="scope-option" data-scope="초등">초등교원</button>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" type="button">
+        <span id="theme-toggle-icon" class="theme-toggle-icon" aria-hidden="true">☾</span>
+        <span id="theme-toggle-label" class="theme-toggle-label">다크 모드</span>
+      </button>
     </div>
     <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 __BUILD_DATE__</div>
   </header>
@@ -402,6 +517,38 @@ const CHAPTER_DESCRIPTIONS = {
   6:'호봉 획정·승급·경력 환산',
   7:'기간제교원 채용·계약·복무'
 };
+
+const THEME_KEY = 'ontology-theme';
+function getTheme() {
+  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+}
+function syncThemeToggle() {
+  const button = document.getElementById('theme-toggle');
+  const icon = document.getElementById('theme-toggle-icon');
+  const label = document.getElementById('theme-toggle-label');
+  if (!button || !icon || !label) return;
+  const dark = getTheme() === 'dark';
+  icon.textContent = dark ? '☀' : '☾';
+  label.textContent = dark ? '라이트 모드' : '다크 모드';
+  button.setAttribute('aria-pressed', String(dark));
+  button.setAttribute('aria-label', dark ? '라이트 모드로 전환' : '다크 모드로 전환');
+  button.title = dark ? '라이트 모드로 전환' : '다크 모드로 전환';
+}
+function setTheme(theme, persist = true) {
+  document.documentElement.dataset.theme = theme;
+  if (persist) localStorage.setItem(THEME_KEY, theme);
+  syncThemeToggle();
+  if (parseHash()[0] === 'graph') render();
+}
+function initThemeToggle() {
+  const button = document.getElementById('theme-toggle');
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+  syncThemeToggle();
+  button.addEventListener('click', () => setTheme(getTheme() === 'dark' ? 'light' : 'dark'));
+  systemTheme.addEventListener?.('change', event => {
+    if (!localStorage.getItem(THEME_KEY)) setTheme(event.matches ? 'dark' : 'light', false);
+  });
+}
 
 function getScope() { return localStorage.getItem('ontology-scope') || '중등'; }
 function setScope(scope) { localStorage.setItem('ontology-scope', scope); render(); }
@@ -534,7 +681,7 @@ function highlightLeftNav() {
 }
 
 window.addEventListener('hashchange', () => { render(); highlightLeftNav(); });
-window.addEventListener('DOMContentLoaded', () => { initScopeToggle(); renderLeftNav(); render(); });
+window.addEventListener('DOMContentLoaded', () => { initThemeToggle(); initScopeToggle(); renderLeftNav(); render(); });
 
 function renderGraph(main) {
   const scope = getScope();

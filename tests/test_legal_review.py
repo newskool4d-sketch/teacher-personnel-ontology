@@ -139,3 +139,16 @@ def test_built_html_contains_editorial_navigation_and_honor_law_nodes(tmp_path):
     assert '"id": "law-honors-act-4"' in html
     assert '"id": "law-honors-decree-17-2"' in html
     assert '"id": "law-civil-servant-discipline-rule-4"' in html
+
+
+def test_built_html_contains_persistent_dark_mode_and_glass_surfaces(tmp_path):
+    output = build(dist_path=tmp_path / "glass-theme.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert 'data-theme="dark"' in html
+    assert 'id="theme-toggle"' in html
+    assert "ontology-theme" in html
+    assert "prefers-color-scheme: dark" in html
+    assert "function initThemeToggle()" in html
+    assert "--glass:" in html
+    assert "backdrop-filter: blur(18px)" in html
