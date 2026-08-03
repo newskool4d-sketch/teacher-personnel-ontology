@@ -231,7 +231,8 @@ button, select { color: var(--ink); }
 .home-hero { margin: 0 0 34px; padding: 0 0 34px; }
 .home-hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); align-items: end; gap: clamp(28px, 5vw, 72px); }
 .home-kicker, .section-kicker { margin: 0 0 14px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
-.home-hero h1 { max-width: 760px; font-size: clamp(42px, 6vw, 78px); line-height: 1.08; letter-spacing: -.055em; }
+.home-hero h1 { max-width: 760px; font-size: clamp(42px, 6vw, 78px); line-height: 1.08; letter-spacing: -.055em; word-break: keep-all; text-wrap: balance; }
+.home-hero-title-line { display: block; }
 .home-lede { max-width: 680px; font-size: clamp(17px, 2vw, 21px); line-height: 1.65; color: color-mix(in srgb, var(--ink) 72%, transparent); }
 .home-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); }
 .home-stat { min-height: 110px; padding: 18px 8px; border-bottom: 1px solid var(--rule); }
@@ -291,6 +292,8 @@ button, select { color: var(--ink); }
 .source-panel dl { margin: 0; }
 .source-panel dt { margin-top: 12px; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .source-panel dd { margin: 3px 0 0; font-size: 13px; line-height: 1.6; }
+.official-source-link { display: inline-flex; align-items: center; min-height: 38px; padding: 7px 10px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass-strong); color: var(--accent); font-weight: 750; line-height: 1.45; text-decoration: none; }
+.official-source-link:hover, .official-source-link:focus-visible { border-color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .source-panel .chip, .backlinks .chip { display: block; margin: 5px 0; border-radius: 7px; overflow-wrap: anywhere; }
 .node-meta { margin: 0; padding: 0; border: 0; opacity: .75; }
 .legal-review { margin: 36px 0 0; padding: 22px; border-radius: 10px; }
@@ -401,6 +404,13 @@ body,
   .chapter-gate { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .node-detail-grid { grid-template-columns: minmax(0, 1fr) 270px; gap: 32px; }
 }
+@media (min-width: 901px) and (max-width: 1440px) {
+  .app-shell > main { padding: 46px 32px 88px; }
+  .home-hero-grid { grid-template-columns: minmax(0, 1.4fr) minmax(240px, .6fr); gap: 32px; }
+  .home-hero h1 { max-width: 700px; font-size: clamp(48px, 4.4vw, 62px); line-height: 1.12; letter-spacing: -.048em; }
+  .home-hero-title-line { display: inline; }
+  .home-hero-title-line + .home-hero-title-line::before { content: ' '; }
+}
 @media (max-width: 900px) {
   #app-header { position: relative; grid-template-columns: 1fr auto; gap: 10px; }
   .header-nav { grid-column: 1 / -1; order: 3; overflow-x: auto; }
@@ -461,7 +471,7 @@ body,
   <header id="app-header">
     <a class="brand" href="#/">
       <span class="brand-title">교원인사 온톨로지</span>
-      <span class="brand-subtitle">Knowledge Atlas</span>
+      <span class="brand-subtitle">교원인사 지식지도</span>
     </a>
     <nav class="header-nav no-print" aria-label="주요 화면">
       <a href="#/graph">지식 지도</a>
@@ -492,8 +502,8 @@ body,
     <div class="public-footer-grid">
       <section><h2>자료의 기준</h2><p>매년 발행되는 2026 교원인사 실무도우미를 해당 연도 업무의 기본 기준으로 삼아 재구성했습니다. 법적 효력이 있는 법령·공문 원문을 대체하지 않습니다.</p></section>
       <section><h2>지역별 적용</h2><p>교육청별 절차·서식·제출기한이 다른 업무는 소속 시·도교육청의 해당 연도 지침과 시행 공문을 함께 확인합니다.</p></section>
-      <section><h2>기준과 출처</h2><p>중등 2026. 3. 1.·초등 2026. 2. 15. 실무도우미 기반, 법령 검토 기준일 __REVIEW_AS_OF__. 항목별 원문 쪽수와 공식 법령 링크를 제공합니다.</p></section>
-      <section><h2>원저작물 및 이용범위</h2><p>원문인 "2026 교원인사 실무도우미(중등·초등)"의 저작권은 발행 기관(인천광역시교육청 중등교육과·초등교육과)에 있습니다. 이 페이지는 원문을 요약·재구성한 내부 업무 참고 자료이며, 원문을 대체하지 않습니다. 무단 전재·재배포를 제한하며, 배포 범위는 발행 기관의 이용 허락 범위를 따릅니다.</p></section>
+      <section><h2>기준과 출처</h2><p>중등 2026. 3. 1.·초등 2026. 2. 15. 실무도우미 기반, 법령 검토 기준일 __REVIEW_AS_OF__ <a href="https://edubook.ice.go.kr/src/viewer/main.php?category=1&amp;host=main&amp;page=1&amp;site=20260304_170151" target="_blank" rel="noopener noreferrer">중등 공식 원문</a>과 <a href="https://ice.go.kr/ice/na/ntt/selectNttList.do?bbsId=2086&amp;mi=12307" target="_blank" rel="noopener noreferrer">초등 공식 자료실</a>을 연결합니다.</p></section>
+      <section><h2>원저작물 및 이용범위</h2><p>원문인 "2026 교원인사 실무도우미(중등·초등)"의 저작권은 발행 기관(인천광역시교육청 중등교육과·초등교육과)에 있습니다. 이 페이지는 원문을 요약·재구성한 업무 참고 자료이며, 원문을 대체하지 않습니다. 무단 전재·재배포를 제한하며, 배포 범위는 발행 기관의 이용 허락 범위를 따릅니다.</p></section>
     </div>
   </div>
 </footer>
@@ -516,6 +526,17 @@ const CHAPTER_DESCRIPTIONS = {
   5:'정부포상·징계·소청',
   6:'호봉 획정·승급·경력 환산',
   7:'기간제교원 채용·계약·복무'
+};
+
+const OFFICIAL_GUIDES = {
+  중등: {
+    label: '2026 중등 실무도우미 공식 원문',
+    url: 'https://edubook.ice.go.kr/src/viewer/main.php?category=1&host=main&page=1&site=20260304_170151'
+  },
+  초등: {
+    label: '2026 초등 실무도우미 공식 자료실',
+    url: 'https://ice.go.kr/ice/na/ntt/selectNttList.do?bbsId=2086&mi=12307'
+  }
 };
 
 const THEME_KEY = 'ontology-theme';
@@ -581,15 +602,15 @@ function renderHome(main) {
     <div class="home-hero">
       <div class="home-hero-grid">
         <div>
-          <p class="home-kicker">2026 인천 교원인사 실무 레퍼런스</p>
-          <h1 class="display">규정을 찾는 시간을<br>판단하는 시간으로.</h1>
-          <p class="home-lede">905쪽의 중등·초등 실무도우미를 개념, 수치, 법령, 절차로 연결했습니다. 원문 쪽수와 법령 검토 상태를 함께 확인하세요.</p>
+          <p class="home-kicker">2026 인천 교원인사 실무 참고자료</p>
+          <h1 class="display"><span class="home-hero-title-line">규정은 빠르게 찾고,</span><span class="home-hero-title-line">판단에 집중하세요.</span></h1>
+          <p class="home-lede">중등·초등 실무도우미 905쪽 분량을 개념, 수치, 법령, 절차로 연결했습니다. 실무도우미 수록 쪽과 적용 기준을 함께 확인하세요.</p>
         </div>
         <div class="home-stats" aria-label="데이터 현황">
           <div class="home-stat"><strong>${visibleNodes.length}</strong><span>${scope} 기준 지식 항목</span></div>
           <div class="home-stat"><strong>${numericNodes.length}</strong><span>수치·기한 항목</span></div>
           <div class="home-stat"><strong>${explicitReviews.length}</strong><span>관련 법령 안내 항목</span></div>
-          <div class="home-stat"><strong>${conflictReviews.length}</strong><span>현행 기준 차이 안내</span></div>
+          <div class="home-stat"><strong>${conflictReviews.length}</strong><span>현행 법령과 다른 항목</span></div>
         </div>
       </div>
       <div class="search-panel">
@@ -604,8 +625,8 @@ function renderHome(main) {
     </div>
     <section class="home-section">
       <div class="home-section-heading">
-        <div><p class="section-kicker">Chapter index</p><h2>업무 장별로 살펴보기</h2></div>
-        <p>실무도우미의 장 구성을 유지하면서 관련 조문과 수치 노드를 서로 연결했습니다.</p>
+        <div><p class="section-kicker">장별 찾아보기</p><h2>업무 장별로 살펴보기</h2></div>
+        <p>실무도우미의 장 구성을 유지하면서 관련 조문과 수치 항목을 서로 연결했습니다.</p>
       </div>
       <nav class="chapter-gate">
         ${chapters.map(c => {
@@ -622,7 +643,7 @@ function renderHome(main) {
     </section>
     <section class="home-section">
       <div class="home-section-heading">
-        <div><p class="section-kicker">Reference tools</p><h2>필요한 방식으로 확인하기</h2></div>
+        <div><p class="section-kicker">이용 도구</p><h2>필요한 방식으로 확인하기</h2></div>
       </div>
       <div class="home-links">
         <a href="#/graph"><strong>전체 지식 지도</strong><span>개념 사이의 근거법령·기한·유의 관계를 한눈에 추적합니다.</span></a>
@@ -666,7 +687,7 @@ function renderLeftNav() {
     <nav class="left-nav-quicklinks">
       <a href="#/graph">지식 지도</a>
       <a href="#/table">수치·기한 통합표</a>
-      <a href="#/print">인쇄 치트시트</a>
+      <a href="#/print">인쇄용 요약</a>
     </nav>`;
   highlightLeftNav();
 }
@@ -695,7 +716,7 @@ function renderGraph(main) {
   main.innerHTML = `
     <section class="graph-page">
       <header class="graph-heading">
-        <div><p class="section-kicker">Spatial knowledge map</p><h1>3D 지식 지도</h1>
+        <div><p class="section-kicker">입체 지식 지도</p><h1>3차원 지식 지도</h1>
           <p>${scope} 기준 개념의 연결 구조입니다. 깊이·크기·도형을 함께 사용해 관계와 항목 유형을 구분합니다.</p></div>
       </header>
       <div class="graph-toolbar">
@@ -706,8 +727,8 @@ function renderGraph(main) {
       <div class="graph-workspace">
         <div id="graph-stage" class="graph-stage">
           <canvas id="graph-canvas" aria-label="회전 가능한 3차원 지식 지도"></canvas>
-          <div class="graph-depth-label">3D ORBIT VIEW</div>
-          <div class="graph-instructions">왼쪽 버튼을 누른 채 드래그하여 회전 · 휠로 확대·축소 · 노드 클릭으로 상세 열기</div>
+          <div class="graph-depth-label">3차원 회전 보기</div>
+          <div class="graph-instructions">왼쪽 버튼을 누른 채 드래그하여 회전 · 휠로 확대·축소 · 항목 클릭으로 상세 열기</div>
         </div>
         <aside class="graph-side">
           <section id="graph-inspector" class="graph-inspector" aria-live="polite">
@@ -1115,7 +1136,7 @@ function renderLegalReview(n) {
 
 function renderNode(main, id) {
   const n = findNode(id);
-  if (!n) { main.innerHTML = '<p>노드를 찾을 수 없습니다.</p>'; return; }
+  if (!n) { main.innerHTML = '<p>항목을 찾을 수 없습니다.</p>'; return; }
 
   const outgoing = edgesFrom(id).map(e => ({ edge: e, node: findNode(e.target) })).filter(x => x.node);
   const incoming = edgesTo(id).map(e => ({ edge: e, node: findNode(e.source) })).filter(x => x.node);
@@ -1136,6 +1157,7 @@ function renderNode(main, id) {
   const backlinksHtml = incoming.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
 
   const scope = getScope();
+  const officialGuide = OFFICIAL_GUIDES[scope];
   const pages = n.pages || {};
   const pagesHtml = pages[scope]
     ? `${scope} ${pages[scope]}쪽` + (pages['공통'] ? ` · 공통 ${pages['공통']}쪽` : '')
@@ -1160,7 +1182,7 @@ function renderNode(main, id) {
       </div>
       <div class="node-detail-grid">
         <article class="node-primary">
-          <div class="node-card-body">${n.body || '<p>요약 정보만 수록된 항목입니다.</p>'}</div>
+          <div class="node-card-body">${n.body || '<p>핵심 요약과 출처 정보를 확인하세요.</p>'}</div>
           ${renderLegalReview(n)}
           <div class="node-section-grid">
             ${lawsHtml ? `<section><h2>관련 법령·개념</h2>${lawsHtml}</section>` : ''}
@@ -1175,8 +1197,9 @@ function renderNode(main, id) {
           <section class="source-panel">
             <h2>출처와 적용 범위</h2>
             <dl>
-              <dt>원문 위치</dt><dd>${pagesHtml || '쪽수 미기재'}</dd>
-              <dt>범위</dt><dd>${n.scope}</dd>
+              <dt>실무도우미 수록 쪽</dt><dd>${pagesHtml || '쪽수 미기재'}</dd>
+              <dt>공식 원문</dt><dd><a class="official-source-link" href="${officialGuide.url}" target="_blank" rel="noopener noreferrer">${officialGuide.label}</a></dd>
+              <dt>적용 범위</dt><dd>${n.scope}</dd>
               ${renderReviewBadge(n) ? `<dt>기준 안내</dt><dd>${renderReviewBadge(n)}</dd>` : ''}
               ${reviewReason(n) ? `<dt>적용 시 확인</dt><dd>${reviewReason(n)}</dd>` : ''}
               ${review.state ? `<dt>법령 적용 기준</dt><dd>${review.applicable_as_of}</dd>` : ''}
@@ -1253,7 +1276,7 @@ function renderTable(main) {
     return first ? `${first[0]} ${first[1]}쪽` : '쪽수 미기재';
   };
   main.innerHTML = `
-    <div class="table-hero"><div><p class="section-kicker">Numeric reference</p><h1>수치·기한 통합표</h1><p>${scope} 기준으로 기간·금액·횟수와 실무도우미 원문 위치를 함께 봅니다.</p></div></div>
+    <div class="table-hero"><div><p class="section-kicker">수치·기한 모아보기</p><h1>수치·기한 통합표</h1><p>${scope} 기준으로 기간·금액·횟수와 실무도우미 수록 쪽을 함께 봅니다.</p></div></div>
     <div class="table-toolbar">
       <input id="table-filter" class="search-bar" aria-label="수치 표 검색" placeholder="업무명이나 수치로 필터">
       <select id="review-filter" aria-label="적용 기준 안내 필터">
@@ -1266,7 +1289,7 @@ function renderTable(main) {
       <span id="table-count" class="table-count">${numNodes.length}개 항목</span>
     </div>
     <div class="table-wrap"><table id="numeric-table">
-        <thead><tr><th data-col="0">항목</th><th data-col="1">장</th><th data-col="2">내용</th><th data-col="3">원문 위치</th><th data-col="4">관련 법령</th><th data-col="5">기준 안내</th></tr></thead>
+        <thead><tr><th data-col="0">항목</th><th data-col="1">장</th><th data-col="2">내용</th><th data-col="3">실무도우미 수록 쪽</th><th data-col="4">관련 법령</th><th data-col="5">기준 안내</th></tr></thead>
         <tbody>
           ${numNodes.map(n => `
             <tr data-title="${escapeHtml(n.title)}" data-review-state="${reviewMeta(n).state}">
@@ -1317,7 +1340,7 @@ function renderChapterHub(main, chapterNum) {
   const nodes = ONTOLOGY.nodes.filter(n => n.chapter === chapterNum && (n.scope === '공통' || n.scope === scope));
   main.innerHTML = `
     <div class="chapter-heading">
-      <p class="section-kicker">${chapterNum === 0 ? 'Appendix' : `Chapter ${String(chapterNum).padStart(2, '0')}`}</p>
+      <p class="section-kicker">${chapterNum === 0 ? '부록 안내' : `제${chapterNum}장`}</p>
       <h1 style="color:var(--ch${chapterNum})">${chapterNum === 0 ? '' : '제' + chapterNum + '장 '}${CHAPTER_NAMES[chapterNum]}</h1>
       <p>${CHAPTER_DESCRIPTIONS[chapterNum]} · ${scope} 기준 ${nodes.length}개 항목</p>
     </div>
@@ -1337,11 +1360,11 @@ function renderPrint(main) {
   const scope = getScope();
   main.innerHTML = `
     <div class="print-sheet">
-      <div class="print-title-row"><div><p class="section-kicker">2026 personnel reference</p><h1>교원인사 실무 요약</h1><p class="print-meta">${scope} 기준 · 실무도우미 원문 쪽수와 관련 법령 안내 포함</p></div></div>
+      <div class="print-title-row"><div><p class="section-kicker">2026 교원인사 실무 참고자료</p><h1>교원인사 실무 요약</h1><p class="print-meta">${scope} 기준 · 실무도우미 수록 쪽과 관련 법령 안내 포함</p></div></div>
       ${[1,2,3,4,5,6,7].map(c => `
         <section class="print-chapter">
           <h2 style="color:var(--ch${c})">제${c}장 ${CHAPTER_NAMES[c]}</h2>
-          <table><thead><tr><th>항목</th><th>기준</th><th>원문 위치</th><th>기준 안내</th></tr></thead><tbody>
+          <table><thead><tr><th>항목</th><th>기준</th><th>실무도우미 수록 쪽</th><th>기준 안내</th></tr></thead><tbody>
             ${numNodes.filter(n => n.chapter === c && (n.scope === '공통' || n.scope === scope)).map(n => `<tr><td>${escapeHtml(n.title)}</td><td>${escapeHtml(n.summary)}</td><td>${escapeHtml((n.pages || {})[scope] || '-')}</td><td>${reviewMeta(n).label || '—'}</td></tr>`).join('') || '<tr><td colspan="4">해당 장 수치 데이터 없음</td></tr>'}
           </tbody></table>
         </section>`).join('')}

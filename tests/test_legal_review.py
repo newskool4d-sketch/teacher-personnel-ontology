@@ -105,7 +105,7 @@ def test_built_html_exposes_review_state_in_detail_and_numeric_table(tmp_path):
     html = output.read_text(encoding="utf-8")
 
     assert "기준과 관련 법령" in html
-    assert "<th data-col=\"3\">원문 위치</th>" in html
+    assert "<th data-col=\"3\">실무도우미 수록 쪽</th>" in html
     assert "<th data-col=\"5\">기준 안내</th>" in html
     assert "기존 확인일 기록" not in html
     assert "적용 시 확인" in html
@@ -128,17 +128,68 @@ def test_built_html_contains_editorial_navigation_and_honor_law_nodes(tmp_path):
     assert "1. 학교급 선택" in html
     assert 'id="public-footer"' in html
     assert "법적 효력이 있는 법령·공문 원문을 대체하지 않습니다" in html
-    assert "3D 지식 지도" in html
+    assert "3차원 지식 지도" in html
     assert 'id="graph-chapter-filter"' in html
     assert "왼쪽 버튼을 누른 채 드래그하여 회전" in html
     assert "canvas.addEventListener('pointerdown'" in html
     assert "cameraDistance = 1450" in html
     assert "shape-diamond" in html
-    assert "실무도우미 원문 쪽수와 관련 법령 안내 포함" in html
+    assert "실무도우미 수록 쪽과 관련 법령 안내 포함" in html
     assert "개 항목 모두 표시" in html
     assert '"id": "law-honors-act-4"' in html
     assert '"id": "law-honors-decree-17-2"' in html
     assert '"id": "law-civil-servant-discipline-rule-4"' in html
+
+
+def test_built_html_uses_korean_labels_responsive_hero_and_official_guides(tmp_path):
+    output = build(dist_path=tmp_path / "copy-source-links.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert 'class="home-hero-title-line">규정은 빠르게 찾고,' in html
+    assert "@media (min-width: 901px) and (max-width: 1440px)" in html
+    assert "word-break: keep-all" in html
+    assert "교원인사 지식지도" in html
+    assert "장별 찾아보기" in html
+    assert "이용 도구" in html
+    assert "인쇄용 요약" in html
+    assert "Knowledge Atlas" not in html
+    assert "Chapter index" not in html
+    assert "Reference tools" not in html
+    assert "인쇄 치트시트" not in html
+    assert "edubook.ice.go.kr/src/viewer/main.php" in html
+    assert "ice.go.kr/ice/na/ntt/selectNttList.do" in html
+    assert "2026 중등 실무도우미 공식 원문" in html
+    assert "2026 초등 실무도우미 공식 자료실" in html
+    assert "2026. 8. 4.." not in html
+
+
+def test_eight_priority_law_nodes_have_current_bodies_and_sources():
+    nodes = _nodes_by_id()
+    expected = {
+        "law-gyoyukgongmuwon-2": ("교육공무원법", "273345"),
+        "law-gukgong-2": ("국가공무원법", "286457"),
+        "law-chodeung-jungdeung-21-3": ("초ㆍ중등교육법", "285599"),
+        "law-gukgong-33": ("국가공무원법", "286457"),
+        "law-gyoyukgongmuwon-44": ("교육공무원법", "273345"),
+        "law-gyoyukgongmuwon-45": ("교육공무원법", "273345"),
+        "law-gukgong-56-66": ("국가공무원법", "286457"),
+        "law-gyoyuk-jinggye-ryeong": ("교육공무원 징계령", "280455"),
+    }
+
+    for node_id, (law_name, mst) in expected.items():
+        node = nodes[node_id]
+        assert len(node.body.strip()) >= 160, node_id
+        assert node.verified == "2026-08-04"
+        assert node.legal_review["state"] == "verified"
+        assert node.legal_review["applicable_as_of"] == "2026-08-04"
+        assert node.legal_review["unresolved"] == []
+        assert node.legal_review["sources"][0]["law_name"] == law_name
+        assert node.legal_review["sources"][0]["mst"] == mst
+        assert node.legal_review["sources"][0]["official_url"].startswith("https://www.law.go.kr/")
+
+    assert "조교" in nodes["law-gyoyukgongmuwon-2"].summary
+    assert "60일" in nodes["law-gyoyuk-jinggye-ryeong"].body
+    assert "15일" in nodes["law-gyoyuk-jinggye-ryeong"].body
 
 
 def test_built_html_contains_persistent_dark_mode_and_glass_surfaces(tmp_path):
