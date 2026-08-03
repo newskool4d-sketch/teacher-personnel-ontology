@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "pip3 install -r requirements.txt && python3 build.py",
+  "buildCommand": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/python build.py",
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/교원인사_온톨로지.html" }
