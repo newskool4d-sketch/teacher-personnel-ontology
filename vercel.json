@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pip3 install -r requirements.txt && python3 build.py",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/교원인사_온톨로지.html" }
+  ]
+}

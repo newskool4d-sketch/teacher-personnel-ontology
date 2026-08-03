@@ -68,6 +68,14 @@ py -B build.py
 dist/교원인사_온톨로지.html
 ```
 
+## Vercel 배포
+
+`vercel.json`에 빌드 커맨드(`pip3 install -r requirements.txt && python3 build.py`)와 output 디렉터리(`dist`)를 지정해 두었습니다. Vercel 대시보드에서 이 저장소를 Import하면 별도 설정 없이 자동 인식됩니다(Framework Preset: Other).
+
+- 산출물 파일명이 `교원인사_온톨로지.html`이라 모든 경로를 이 파일로 라우팅하는 rewrite 규칙을 함께 넣었습니다. 앱 내부 이동은 해시 라우팅(`#/node/...` 등)이라 서버 라우팅과 무관하게 정상 동작합니다.
+- Vercel 빌드 이미지의 `python3`/`pip3` 가용 여부는 계정 환경에 따라 다를 수 있어, 최초 배포 시 빌드 로그를 확인해 실패하면 Vercel 프로젝트 설정에서 Node.js 대신 Python 런타임을 명시하거나 빌드 커맨드를 조정해야 할 수 있습니다.
+- 계정 연결·프로젝트 생성·환경 변수 등록은 사용자가 Vercel 대시보드에서 직접 진행합니다.
+
 ## 검증
 
 ```powershell
