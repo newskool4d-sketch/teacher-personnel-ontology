@@ -22,7 +22,7 @@
   pages: {중등: "434-437", 초등: "449-464"}
   verified: "2026-08-02"
 
-- id: law-gyoyuggongmuwon-act
+- id: law-gyoyukgongmuwon-act
   type: 법령·조문
   chapter: 0
   scope: 공통
@@ -30,8 +30,8 @@
   summary: 교육공무원의 신분·자격·임용·보수·징계 등을 국가공무원법의 특별법으로 규율하는 법률(교육부 소관). 현행 시행일 2026.2.15.
   body: |
     교육공무원의 정의(§2)·휴직(§44~45)·기간제교원(§32)·자격기준 등 인사 전반의 근간이
-    되는 법률이다. 세부 조문별 노드는 law-gongmuwon-2·law-gongmuwon-44·law-gongmuwon-45·
-    law-gongmuwon-qualification·law-gyoyuggongmuwonbeop-32 참고.
+    되는 법률이다. 세부 조문별 노드는 law-gyoyukgongmuwon-2·law-gyoyukgongmuwon-44·law-gyoyukgongmuwon-45·
+    law-gyoyukgongmuwon-qualification·law-gyoyukgongmuwon-32 참고.
 
     korean-law-mcp 확인(2026-08-02): 법령ID 001616, MST 273345, 공포 2025.8.14./시행
     2026.2.15. 2026.11.20. 시행 예정 개정 1건 존재(세부 확인필요).
@@ -112,7 +112,7 @@
   summary: 근무시간·초과근무·연가 등 국가공무원법 복무 의무(§56~66)의 세부 시행기준을 정하는 대통령령. 현행 시행일 2026.6.23.
   body: |
     국가공무원법 복무 장(law-gukgong-56-66)의 위임에 따른 시행령으로, 교원 복무의 세부
-    기준에도 준용된다. 다만 교원 근무시간(work-hours-teacher)의 직접 근거는 실무도우미
+    기준에도 준용된다. 다만 교원 근무시간(num-work-hours-teacher)의 직접 근거는 실무도우미
     원문상 1985년 문교부 예규로 파악되어 이 노드와 근거법령 엣지로 직접 연결하지는
     않았다 — 두 규범의 정확한 적용 관계는 원문 대조가 필요하다(확인필요).
 

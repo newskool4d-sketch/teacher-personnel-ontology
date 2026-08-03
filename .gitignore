@@ -3,3 +3,5 @@ __pycache__/
 dist/
 .superpowers/
 tmp/
+.pytest-tmp/
+.pytest_cache/

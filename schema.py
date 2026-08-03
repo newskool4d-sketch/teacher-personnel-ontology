@@ -8,6 +8,14 @@ import yaml
 VALID_TYPES = {"개념", "법령·조문", "수치·기한", "절차", "서식", "Q&A·유권해석", "감사지적사례", "NEIS작업"}
 VALID_SCOPES = {"공통", "중등", "초등"}
 VALID_EDGE_TYPES = {"근거법령", "기한수치", "필요서식", "관련해석", "상위개념", "유의", "절차단계"}
+# 엣지 타입별 target(대상) 노드 type 제약 — 확인된 데이터 패턴이 100% 일관된 경우만 강제한다.
+# (상위개념·유의·절차단계는 현재 챕터별 방향·조합이 아직 통일되지 않아 제약을 걸지 않음 — 별도 정리 필요)
+EDGE_TARGET_TYPE_CONSTRAINTS = {
+    "근거법령": {"법령·조문"},
+    "기한수치": {"수치·기한"},
+    "필요서식": {"서식"},
+    "관련해석": {"Q&A·유권해석", "감사지적사례"},
+}
 VALID_LEGAL_REVIEW_STATES = {"verified", "partial", "needs_review", "conflict"}
 VALID_LEGAL_SOURCE_STATUSES = {"현행", "시행예정"}
 REQUIRED_LEGAL_REVIEW_FIELDS = {
@@ -57,6 +65,8 @@ class Node:
             errors.append(f"[{self.id}] summary는 필수")
         elif len(self.summary) > 120:
             errors.append(f"[{self.id}] summary는 120자 이내 권장(현재 {len(self.summary)}자)")
+        if self.verified and not DATE_PATTERN.fullmatch(self.verified):
+            errors.append(f"[{self.id}] verified는 YYYY-MM-DD 형식이어야 함")
         errors.extend(self._validate_legal_review())
         return errors
 
@@ -172,16 +182,35 @@ def load_edges(edges_path: Path) -> list[Edge]:
 def validate_graph(nodes: list[Node], edges: list[Edge]) -> list[str]:
     errors: list[str] = []
     seen_ids: set[str] = set()
+    node_by_id: dict[str, Node] = {}
     for n in nodes:
         errors.extend(n.validate())
         if n.id in seen_ids:
             errors.append(f"중복 id: {n.id}")
         seen_ids.add(n.id)
+        node_by_id[n.id] = n
 
+    seen_edges: set[tuple[str, str, str]] = set()
     for e in edges:
         errors.extend(e.validate())
         if e.source not in seen_ids:
             errors.append(f"고아 엣지: source '{e.source}' 노드 없음 ({e.source}->{e.target})")
         if e.target not in seen_ids:
             errors.append(f"고아 엣지: target '{e.target}' 노드 없음 ({e.source}->{e.target})")
+            continue
+        if e.source == e.target:
+            errors.append(f"자기루프 엣지: {e.source}->{e.target} ({e.type})")
+        edge_key = (e.source, e.target, e.type)
+        if edge_key in seen_edges:
+            errors.append(f"중복 엣지: {e.source}->{e.target} ({e.type})")
+        seen_edges.add(edge_key)
+
+        if e.source in node_by_id:
+            allowed_targets = EDGE_TARGET_TYPE_CONSTRAINTS.get(e.type)
+            target_node = node_by_id.get(e.target)
+            if allowed_targets is not None and target_node is not None and target_node.type not in allowed_targets:
+                errors.append(
+                    f"엣지 타입-노드 타입 불일치: {e.source}->{e.target} ({e.type})는 "
+                    f"target type이 {sorted(allowed_targets)} 중 하나여야 하나 '{target_node.type}'임"
+                )
     return errors

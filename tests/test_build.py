@@ -24,7 +24,7 @@ def test_public_text_removes_internal_law_lookup_markers():
     assert "현행 법령 원문" in public
     assert "현행 법령 원문 원문" not in public
     assert "확인필요" not in public
-    assert "소속 시·도교육청 지침 또는 관련 법령 확인" in public
+    assert "관련 법령 및 소속 시·도교육청 지침에서 확인" in public
 
 
 def test_build_produces_valid_html_with_embedded_json(tmp_path):

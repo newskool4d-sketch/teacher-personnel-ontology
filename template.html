@@ -4,24 +4,15 @@
 <meta charset="utf-8">
 <title>교원인사 온톨로지</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
 <style>
-@font-face {
-  font-family: 'Pretendard Variable';
-  src: url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
-  font-weight: 45 920;
-  font-display: swap;
-}
 :root {
   --bg: #FAF7F0; --ink: #1A1A18; --accent: #1E3A5F; --danger: #A63A2E;
   --rule: #D8D2C4; --surface: #FFFFFF; --surface-2: #F1EDE3;
   --ch0: #8A8578; --ch1: #3B3A36; --ch2: #1E3A5F; --ch3: #2E6E65;
   --ch4: #4A6B2A; --ch5: #A63A2E; --ch6: #B07D2B; --ch7: #6B4A7E;
   --review-verified: #2E6E65; --review-partial: #8A5B00;
-  --font-display: 'Noto Serif KR', 'MaruBuri', Batang, serif;
-  --font-body: 'Pretendard Variable', Pretendard, -apple-system, 'Malgun Gothic', sans-serif;
+  --font-display: 'MaruBuri', Batang, 'Nanum Myeongjo', serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 40px;
 }
 @media (prefers-color-scheme: dark) {
@@ -91,6 +82,8 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
   body { background: #fff; color: #000; font-size: 11pt; }
   .print-chapter { page-break-after: always; }
   .print-chapter:last-child { page-break-after: auto; }
+  #public-footer { margin-left: 0; padding: 12pt 0; }
+  .public-footer-grid { grid-template-columns: 1fr; }
 }
 .graph-tooltip { position: fixed; display: none; background: var(--surface); border: 1px solid var(--rule);
   padding: 4px 10px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10; }
@@ -371,7 +364,7 @@ button, select { color: var(--ink); }
       <button type="button" class="scope-option" data-scope="중등">중등교원</button>
       <button type="button" class="scope-option" data-scope="초등">초등교원</button>
     </div>
-    <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 2026-08-02</div>
+    <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 __BUILD_DATE__</div>
   </header>
   <div class="app-shell">
     <aside id="left-nav"></aside>
@@ -384,12 +377,18 @@ button, select { color: var(--ink); }
     <div class="public-footer-grid">
       <section><h2>자료의 기준</h2><p>매년 발행되는 2026 교원인사 실무도우미를 해당 연도 업무의 기본 기준으로 삼아 재구성했습니다. 법적 효력이 있는 법령·공문 원문을 대체하지 않습니다.</p></section>
       <section><h2>지역별 적용</h2><p>교육청별 절차·서식·제출기한이 다른 업무는 소속 시·도교육청의 해당 연도 지침과 시행 공문을 함께 확인합니다.</p></section>
-      <section><h2>기준과 출처</h2><p>중등 2026. 3. 1.·초등 2026. 2. 15. 실무도우미 기반, 법령 검토 기준일 2026. 8. 2. 항목별 원문 쪽수와 공식 법령 링크를 제공합니다.</p></section>
+      <section><h2>기준과 출처</h2><p>중등 2026. 3. 1.·초등 2026. 2. 15. 실무도우미 기반, 법령 검토 기준일 __REVIEW_AS_OF__. 항목별 원문 쪽수와 공식 법령 링크를 제공합니다.</p></section>
+      <section><h2>원저작물 및 이용범위</h2><p>원문인 "2026 교원인사 실무도우미(중등·초등)"의 저작권은 발행 기관(인천광역시교육청 중등교육과·초등교육과)에 있습니다. 이 페이지는 원문을 요약·재구성한 내부 업무 참고 자료이며, 원문을 대체하지 않습니다. 무단 전재·재배포를 제한하며, 배포 범위는 발행 기관의 이용 허락 범위를 따릅니다.</p></section>
     </div>
   </div>
 </footer>
 <script>
 const ONTOLOGY = __ONTOLOGY_DATA__;
+
+const ESCAPE_MAP = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'};
+function escapeHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ESCAPE_MAP[ch]);
+}
 
 const CHAPTER_NAMES = {0:'부록',1:'교육공무원 의의',2:'임용 일반',3:'휴직과 복직',
   4:'복무',5:'상훈 및 징계',6:'호봉 및 승급',7:'계약제 교원'};
@@ -711,8 +710,8 @@ function renderGraph(main) {
   function updateInspector(node, graph, matches) {
     if (node) {
       const connections = graph.edges.filter(edge => edge.source === node.id || edge.target === node.id).length;
-      inspector.innerHTML = `<span class="graph-inspector-kicker">${node.chapter === 0 ? '부록' : `제${node.chapter}장`} · ${node.type}</span>
-        <h2>${node.title}</h2><p>${node.summary}</p>
+      inspector.innerHTML = `<span class="graph-inspector-kicker">${node.chapter === 0 ? '부록' : `제${node.chapter}장`} · ${escapeHtml(node.type)}</span>
+        <h2>${escapeHtml(node.title)}</h2><p>${escapeHtml(node.summary)}</p>
         <div class="graph-inspector-meta"><span>직접 연결 ${connections}개</span><span>클릭하여 상세 열기</span></div>`;
     } else if (query) {
       inspector.innerHTML = `<span class="graph-inspector-kicker">검색 결과</span><h2>${matches.size}개 항목</h2>
@@ -974,18 +973,18 @@ function renderNode(main, id) {
   const outgoing = edgesFrom(id).map(e => ({ edge: e, node: findNode(e.target) })).filter(x => x.node);
   const incoming = edgesTo(id).map(e => ({ edge: e, node: findNode(e.source) })).filter(x => x.node);
   const group = type => outgoing.filter(x => x.edge.type === type);
-  const chip = (label, href, cls) => `<a class="chip ${cls || ''}" href="${href}">${label}</a>`;
+  const chip = (label, href, cls) => `<a class="chip ${cls || ''}" href="${href}">${escapeHtml(label)}</a>`;
 
-  const refsHtml = (n.refs || []).map(r => `<span class="chip chip-law">${r}</span>`).join(' ');
+  const refsHtml = (n.refs || []).map(r => `<span class="chip chip-law">${escapeHtml(r)}</span>`).join(' ');
   const lawsHtml = group('근거법령').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
   const numsHtml = group('기한수치').map(x => chip(x.node.title, `#/node/${x.node.id}`, 'chip-num')).join(' ');
   const formsHtml = group('필요서식').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
   const qaHtml = group('관련해석').map(x =>
-    `<div class="qa-item"><p>${x.node.summary}</p><p class="qa-source">${(x.node.refs || []).join(', ')}</p></div>`).join('');
+    `<div class="qa-item"><p>${escapeHtml(x.node.summary)}</p><p class="qa-source">${(x.node.refs || []).map(escapeHtml).join(', ')}</p></div>`).join('');
   const noteEdges = group('유의');
   const auditNotes = noteEdges.filter(x => x.node.type === '감사지적사례');
   const otherNotes = noteEdges.filter(x => x.node.type !== '감사지적사례');
-  const auditHtml = auditNotes.map(x => `<div class="audit-warning"><p>${x.node.summary}</p></div>`).join('');
+  const auditHtml = auditNotes.map(x => `<div class="audit-warning"><p>${escapeHtml(x.node.summary)}</p></div>`).join('');
   const noteChipsHtml = otherNotes.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
   const backlinksHtml = incoming.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
 
@@ -993,23 +992,23 @@ function renderNode(main, id) {
   const pages = n.pages || {};
   const pagesHtml = pages[scope]
     ? `${scope} ${pages[scope]}쪽` + (pages['공통'] ? ` · 공통 ${pages['공통']}쪽` : '')
-    : Object.entries(pages).map(([k, v]) => `${k} ${v}쪽`).join(' · ');
+    : (Object.entries(pages).filter(([, v]) => v).map(([k, v]) => `${k} ${v}쪽`).join(' · ') || '원문 쪽수 미기재');
   const review = n.legal_review || {};
   const reviewFooter = review.state
     ? `${reviewMeta(n).label} · 법령 적용 기준 ${review.applicable_as_of}`
     : '';
 
   const chapterLabel = n.chapter === 0 ? '부록' : `제${n.chapter}장`;
-  const refsRail = (n.refs || []).map(r => `<span class="chip chip-law">${r}</span>`).join('');
+  const refsRail = (n.refs || []).map(r => `<span class="chip chip-law">${escapeHtml(r)}</span>`).join('');
   main.innerHTML = `
     <nav class="breadcrumb" aria-label="현재 위치">
-      <a href="#/">홈</a><span>/</span><a href="#/chapter/${n.chapter}">${chapterLabel} ${CHAPTER_NAMES[n.chapter]}</a><span>/</span><span>${n.title}</span>
+      <a href="#/">홈</a><span>/</span><a href="#/chapter/${n.chapter}">${chapterLabel} ${CHAPTER_NAMES[n.chapter]}</a><span>/</span><span>${escapeHtml(n.title)}</span>
     </nav>
     <div class="node-card" style="--chapter-color: var(--ch${n.chapter})">
       <div class="node-card-header">
-        <span class="chapter-tag" style="color:var(--ch${n.chapter})">${chapterLabel} · ${n.type}</span>
-        <h1>${n.title}</h1>
-        <p class="summary">${n.summary}</p>
+        <span class="chapter-tag" style="color:var(--ch${n.chapter})">${chapterLabel} · ${escapeHtml(n.type)}</span>
+        <h1>${escapeHtml(n.title)}</h1>
+        <p class="summary">${escapeHtml(n.summary)}</p>
         <div class="node-header-meta">${renderReviewBadge(n)}<span class="chapter-tag">${n.scope} 기준</span></div>
       </div>
       <div class="node-detail-grid">
@@ -1076,17 +1075,25 @@ function initSearch() {
       const pageLabel = pages[scope] ? `${scope} ${pages[scope]}쪽` : '원문 쪽수 미기재';
       return `<a class="search-result" href="#/node/${m.id}">
         <span class="chapter-dot" style="background:var(--ch${m.chapter})"></span>
-        <span class="search-result-copy"><strong>${m.title}</strong><span>${m.summary}</span></span>
-        <span class="search-result-meta">${m.type}<br>${pageLabel}</span>
+        <span class="search-result-copy"><strong>${escapeHtml(m.title)}</strong><span>${escapeHtml(m.summary)}</span></span>
+        <span class="search-result-meta">${escapeHtml(m.type)}<br>${pageLabel}</span>
       </a>`;
     }).join('') || '<p class="no-result">일치하는 항목이 없습니다.</p>';
     const countHtml = allMatches.length
       ? `<p class="search-result-count">${scope} 기준 ${allMatches.length}개 항목 모두 표시</p>` : '';
     results.innerHTML = countHtml + listHtml;
   });
-  document.addEventListener('keydown', e => {
-    if (e.key === '/' && document.activeElement !== bar) { e.preventDefault(); bar.focus(); }
-  });
+  if (!window.__searchShortcutBound) {
+    window.__searchShortcutBound = true;
+    document.addEventListener('keydown', e => {
+      const active = document.activeElement;
+      const inField = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+      if (e.key === '/' && !inField) {
+        const currentBar = document.getElementById('search-bar');
+        if (currentBar) { e.preventDefault(); currentBar.focus(); }
+      }
+    });
+  }
 }
 
 function renderTable(main) {
@@ -1115,12 +1122,12 @@ function renderTable(main) {
         <thead><tr><th data-col="0">항목</th><th data-col="1">장</th><th data-col="2">내용</th><th data-col="3">원문 위치</th><th data-col="4">관련 법령</th><th data-col="5">기준 안내</th></tr></thead>
         <tbody>
           ${numNodes.map(n => `
-            <tr data-title="${n.title}" data-review-state="${reviewMeta(n).state}">
-              <td><a href="#/node/${n.id}">${n.title}</a></td>
+            <tr data-title="${escapeHtml(n.title)}" data-review-state="${reviewMeta(n).state}">
+              <td><a href="#/node/${n.id}">${escapeHtml(n.title)}</a></td>
               <td>${n.chapter === 0 ? '부록' : n.chapter + '장'}</td>
-              <td>${n.summary}</td>
-              <td>${pageLabel(n)}</td>
-              <td>${(n.refs || []).join(', ') || '별도 조문 미기재'}</td>
+              <td>${escapeHtml(n.summary)}</td>
+              <td>${escapeHtml(pageLabel(n))}</td>
+              <td>${(n.refs || []).map(escapeHtml).join(', ') || '별도 조문 미기재'}</td>
               <td>${renderReviewBadge(n) || '—'}${reviewReason(n) ? `<small class="review-reason">${reviewReason(n)}</small>` : ''}</td>
             </tr>`).join('')}
         </tbody>
@@ -1170,9 +1177,9 @@ function renderChapterHub(main, chapterNum) {
     <div class="chapter-node-grid">
       ${nodes.map(n => `
         <a class="mini-card" href="#/node/${n.id}" style="border-left-color:var(--ch${n.chapter})">
-          <span class="mini-card-type">${n.type}</span>
-          <strong>${n.title}</strong>
-          <p>${n.summary}</p>
+          <span class="mini-card-type">${escapeHtml(n.type)}</span>
+          <strong>${escapeHtml(n.title)}</strong>
+          <p>${escapeHtml(n.summary)}</p>
           ${renderReviewBadge(n) ? `<span class="mini-card-review">${renderReviewBadge(n)}</span>` : ''}
         </a>`).join('')}
     </div>`;
@@ -1188,7 +1195,7 @@ function renderPrint(main) {
         <section class="print-chapter">
           <h2 style="color:var(--ch${c})">제${c}장 ${CHAPTER_NAMES[c]}</h2>
           <table><thead><tr><th>항목</th><th>기준</th><th>원문 위치</th><th>기준 안내</th></tr></thead><tbody>
-            ${numNodes.filter(n => n.chapter === c && (n.scope === '공통' || n.scope === scope)).map(n => `<tr><td>${n.title}</td><td>${n.summary}</td><td>${(n.pages || {})[scope] || '-'}</td><td>${reviewMeta(n).label || '—'}</td></tr>`).join('') || '<tr><td colspan="4">해당 장 수치 데이터 없음</td></tr>'}
+            ${numNodes.filter(n => n.chapter === c && (n.scope === '공통' || n.scope === scope)).map(n => `<tr><td>${escapeHtml(n.title)}</td><td>${escapeHtml(n.summary)}</td><td>${escapeHtml((n.pages || {})[scope] || '-')}</td><td>${reviewMeta(n).label || '—'}</td></tr>`).join('') || '<tr><td colspan="4">해당 장 수치 데이터 없음</td></tr>'}
           </tbody></table>
         </section>`).join('')}
     </div>

@@ -1,4 +1,5 @@
 """전체 빌드 파이프라인: 로드 -> 검증 -> 레이아웃 -> 검색인덱스 -> 템플릿 주입 -> dist 출력"""
+import datetime
 import json
 import re
 import sys
@@ -47,8 +48,12 @@ def sanitize_public_text(text: str) -> str:
     )
     result = result.replace("API 응답", "공식 조회 자료")
     result = result.replace(
+        "세부 확인필요",
+        "세부 사항은 관련 법령 및 소속 시·도교육청 지침에서 확인",
+    )
+    result = result.replace(
         "확인필요",
-        "세부 적용은 소속 시·도교육청 지침 또는 관련 법령 확인",
+        "관련 법령 및 소속 시·도교육청 지침에서 확인",
     )
     result = re.sub(r",\s*,", ",", result)
     result = re.sub(r"\(\s*,", "(", result)
@@ -67,12 +72,24 @@ def sanitize_public_value(value):
     return value
 
 
+def public_pages(pages: dict) -> dict:
+    """pages 필드는 원문 쪽수 표기용이므로 문장형 치환 대상에서 제외하고,
+    '확인필요' placeholder는 빈 값으로 비워 template의 '원문 쪽수 미기재' 폴백을 쓴다."""
+    return {
+        scope: ("" if value.strip() == "확인필요" else value)
+        for scope, value in (pages or {}).items()
+    }
+
+
 def public_node_dict(node) -> dict:
     """내부 검증 메타데이터를 제외한 공개용 노드 사전을 만든다."""
-    data = sanitize_public_value(asdict(node))
+    raw = asdict(node)
+    pages = raw.pop("pages", {})
+    data = sanitize_public_value(raw)
+    data["pages"] = public_pages(pages)
     data["refs"] = [
         ref for ref in data.get("refs", [])
-        if ref.strip() != "세부 적용은 소속 시·도교육청 지침 또는 관련 법령 확인"
+        if ref.strip() != "관련 법령 및 소속 시·도교육청 지침에서 확인"
     ]
     data["body"] = render_body(sanitize_public_text(node.body)) if node.body else ""
 
@@ -86,6 +103,21 @@ def public_node_dict(node) -> dict:
 
 def render_body(raw_md: str) -> str:
     return md_lib.markdown(raw_md, extensions=["tables"])
+
+
+def latest_review_date(nodes) -> str:
+    """전체 노드의 legal_review.checked_at 중 최댓값(가장 최근 검토일)을 구한다."""
+    dates = [
+        n.legal_review["checked_at"]
+        for n in nodes
+        if n.legal_review and n.legal_review.get("checked_at")
+    ]
+    return max(dates) if dates else datetime.date.today().isoformat()
+
+
+def format_korean_date(iso_date: str) -> str:
+    year, month, day = iso_date.split("-")
+    return f"{year}. {int(month)}. {int(day)}."
 
 
 def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PATH, dist_path=DIST_PATH) -> Path:
@@ -114,6 +146,8 @@ def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PAT
     template_html = Path(template_path).read_text(encoding="utf-8")
     data_json = json.dumps(data, ensure_ascii=False)
     output_html = template_html.replace("__ONTOLOGY_DATA__", data_json)
+    output_html = output_html.replace("__BUILD_DATE__", datetime.date.today().isoformat())
+    output_html = output_html.replace("__REVIEW_AS_OF__", format_korean_date(latest_review_date(nodes)))
 
     dist_path = Path(dist_path)
     dist_path.parent.mkdir(parents=True, exist_ok=True)
