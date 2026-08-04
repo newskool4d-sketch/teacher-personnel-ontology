@@ -116,6 +116,20 @@
   refs: ["국가공무원법 §33"]
   pages: {중등: "21-41", 초등: "21-44"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제33조 공식 원문 대조"
+    unresolved: []
+    applicability: "국가공무원법이 적용되는 신규·특별임용 결격사유 심사"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제33조제3호"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제33조"
 
 - id: num-disqual-probation-2y
   type: 수치·기한
@@ -126,6 +140,20 @@
   refs: ["국가공무원법 §33"]
   pages: {중등: "21-41", 초등: "21-44"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제33조 공식 원문 대조"
+    unresolved: []
+    applicability: "국가공무원법이 적용되는 신규·특별임용 결격사유 심사"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제33조제4호"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제33조"
 
 - id: num-disqual-dismissal-pamyeon-5y
   type: 수치·기한
@@ -136,6 +164,20 @@
   refs: ["국가공무원법 §33"]
   pages: {중등: "21-41", 초등: "21-44"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제33조 공식 원문 대조"
+    unresolved: []
+    applicability: "국가공무원법이 적용되는 신규·특별임용 결격사유 심사"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제33조제7호"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제33조"
 
 - id: num-disqual-dismissal-haeim-3y
   type: 수치·기한
@@ -146,6 +188,20 @@
   refs: ["국가공무원법 §33"]
   pages: {중등: "21-41", 초등: "21-44"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제33조 공식 원문 대조"
+    unresolved: []
+    applicability: "국가공무원법이 적용되는 신규·특별임용 결격사유 심사"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제33조제8호"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제33조"
 
 - id: num-disqual-minor-sexcrime-20y
   type: 수치·기한
@@ -169,6 +225,27 @@
   refs: ["국가공무원법 §33 6의4", "교육공무원법 §10의4"]
   pages: {중등: "21-41", 초등: "21-44"}
   verified: "2026-08-03"
+  legal_review:
+    state: partial
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제33조·제10조의4 공식 원문 대조"
+    unresolved:
+      - "국가공무원법 §33 6의4 각 목(기산점·벌금형·치료감호 포함 여부)의 세부 문언은 원문 재대조 필요"
+    applicability: "교육공무원 채용 시 미성년자 대상 성범죄 결격사유 판단(교육공무원법 §10의4가 국가공무원법 §33보다 우선 적용)"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제33조제6호의4"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제33조"
+      - law_name: "교육공무원법"
+        article: "제10조의4제2호"
+        mst: "273345"
+        effective_date: "2026-02-15"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교육공무원법/제10조의4"
 
 - id: disqual-education-official-10-4
   type: 개념

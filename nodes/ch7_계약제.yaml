@@ -282,6 +282,26 @@
   refs: ["근로자퇴직급여 보장법 §9①②", "근로자퇴직급여 보장법 §10"]
   pages: {중등: "315-433", 초등: "328-448"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제9조·제10조 공식 원문 대조(재확인)"
+    unresolved: []
+    applicability: "기간제교원(근로자)의 퇴직금 지급기한·소멸시효 판단. 2026-09-18 시행 예정 일부개정(공포 2026-03-17, 제21475호) 있음 — 시행 후 §9·§10 변동 여부 재확인 필요"
+    sources:
+      - law_name: "근로자퇴직급여 보장법"
+        article: "제9조제1항·제2항"
+        mst: "284455"
+        effective_date: "2026-07-01"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/근로자퇴직급여보장법/제9조"
+      - law_name: "근로자퇴직급여 보장법"
+        article: "제10조"
+        mst: "284455"
+        effective_date: "2026-07-01"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/근로자퇴직급여보장법/제10조"
 
 - id: qa-contract-severance-364days
   type: Q&A·유권해석

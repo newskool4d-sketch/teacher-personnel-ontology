@@ -526,6 +526,21 @@
   refs: ["국가공무원법 §83조의2"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: partial
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제83조의2 공식 원문 대조"
+    unresolved:
+      - "①1호 각 목(10년 시효 대상 비위 유형)의 구체 문언은 재조회에서 목록 단위로 확인되지 않음 — '성비위 10년'이 각 목과 정확히 일치하는지 원문 재대조 필요"
+    applicability: "국가공무원법이 적용되는 교육공무원 징계의결 요구 시효 판단"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제83조의2제1항"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제83조의2"
 
 - id: discipline-committee
   type: 개념
@@ -606,6 +621,20 @@
   refs: ["교육공무원 징계령 §7"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제7조 공식 원문 대조"
+    unresolved: []
+    applicability: "교육공무원 징계위원회의 징계등 의결 기한 판단"
+    sources:
+      - law_name: "교육공무원 징계령"
+        article: "제7조"
+        mst: "280455"
+        effective_date: "2025-12-23"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교육공무원징계령/제7조"
 
 - id: num-discipline-execution-deadline
   type: 수치·기한
@@ -619,6 +648,20 @@
   refs: ["교육공무원 징계령 §17"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제17조 공식 원문 대조"
+    unresolved: []
+    applicability: "교육공무원 징계등 처분권자의 처분 집행 기한 판단"
+    sources:
+      - law_name: "교육공무원 징계령"
+        article: "제17조제1항"
+        mst: "280455"
+        effective_date: "2025-12-23"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교육공무원징계령/제17조"
 
 - id: proc-discipline-flow
   type: 절차
@@ -719,6 +762,21 @@
   refs: ["교육공무원 징계령"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: partial
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색으로 공포일·시행일(2025-12-23) 일치 확인"
+    unresolved:
+      - "별표 자체(경/중 비위 유형별 세부 양정 구간)의 조합표 내용은 원문 별표 대조 필요"
+    applicability: "2025-12-23 개정 교육공무원 징계령이 적용되는 징계양정 판단"
+    sources:
+      - law_name: "교육공무원 징계령"
+        article: "별표(징계양정기준)"
+        mst: "280455"
+        effective_date: "2025-12-23"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교육공무원징계령"
 
 - id: num-discipline-dui-standard
   type: 수치·기한
@@ -786,6 +844,21 @@
   refs: ["국가공무원법 §78의2"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-03"
+  legal_review:
+    state: needs_review
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제78조의2 공식 원문 대조(재확인)"
+    unresolved:
+      - "\"고지 후 60일 이내 납부\"의 법적 근거를 특정하지 못함 — §78의2④는 '납부기간 내'로만 규정. 공무원 징계령 시행규칙 등 하위 규정 확인 필요"
+    applicability: "국가공무원법이 적용되는 교육공무원 징계부가금 부과·납부 판단"
+    sources:
+      - law_name: "국가공무원법"
+        article: "제78조의2"
+        mst: "286457"
+        effective_date: "2026-06-02"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/국가공무원법/제78조의2"
 
 - id: discipline-mitigation
   type: 개념
@@ -837,6 +910,22 @@
   refs: ["교육공무원 인사기록 및 인사사무 처리 규칙 §8의2"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-03"
+  legal_review:
+    state: partial
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제8조의2 공식 원문 대조(재확인)"
+    unresolved:
+      - "직위해제 2년(②1호)은 원문 직접 확인. 징계처분별(견책3·감봉5·정직7·강등9년) 세부는 ①1호 각 목 문언을 재조회에서 목록 단위로 확인하지 못함"
+      - "불문(경고) 1년의 근거 조문 미특정"
+    applicability: "교육공무원 인사기록카드의 징계·직위해제 처분 말소 시점 판단"
+    sources:
+      - law_name: "교육공무원 인사기록 및 인사사무 처리 규칙"
+        article: "제8조의2"
+        mst: "285461"
+        effective_date: "2026-04-14"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교육공무원인사기록및인사사무처리규칙/제8조의2"
 
 - id: num-discipline-homeroom-exclusion
   type: 수치·기한
@@ -963,6 +1052,20 @@
   refs: ["교원의 지위 향상 및 교육활동 보호를 위한 특별법 §9①"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제9조 공식 원문 대조"
+    unresolved: []
+    applicability: "교원의 소청심사 청구기한 판단"
+    sources:
+      - law_name: "교원의 지위 향상 및 교육활동 보호를 위한 특별법"
+        article: "제9조제1항"
+        mst: "283357"
+        effective_date: "2026-02-19"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교원의지위향상및교육활동보호를위한특별법/제9조"
 
 - id: num-appeal-decision-deadline
   type: 수치·기한
@@ -976,6 +1079,20 @@
   refs: ["교원의 지위 향상 및 교육활동 보호를 위한 특별법 §10①"]
   pages: {중등: "236-283", 초등: "257-298"}
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제10조 공식 원문 대조"
+    unresolved: []
+    applicability: "교원소청심사위원회의 결정기한 판단"
+    sources:
+      - law_name: "교원의 지위 향상 및 교육활동 보호를 위한 특별법"
+        article: "제10조제1항"
+        mst: "283357"
+        effective_date: "2026-02-19"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교원의지위향상및교육활동보호를위한특별법/제10조"
 
 - id: num-appeal-lawsuit-deadline
   type: 수치·기한
@@ -1001,6 +1118,20 @@
   pages: {중등: "236-283", 초등: "257-298"}
   aliases: ["행정소송제소기한"]
   verified: "2026-08-02"
+  legal_review:
+    state: verified
+    applicable_as_of: "2026-08-04"
+    checked_at: "2026-08-04"
+    method: "korean-law-mcp 현행 법령 검색 후 제10조 공식 원문 대조 — 중등판 요약(90일)과 원문 불일치 확인, 원문·초등판(30일)이 정답"
+    unresolved: []
+    applicability: "소청심사 결정에 불복한 행정소송 제소기한 판단(실무도우미 중등판 90일 표기는 오류)"
+    sources:
+      - law_name: "교원의 지위 향상 및 교육활동 보호를 위한 특별법"
+        article: "제10조제4항"
+        mst: "283357"
+        effective_date: "2026-02-19"
+        status: "현행"
+        official_url: "https://www.law.go.kr/법령/교원의지위향상및교육활동보호를위한특별법/제10조"
 
 - id: law-teacher-status-act-10
   type: 법령·조문
