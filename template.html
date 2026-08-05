@@ -27,6 +27,9 @@
   --glass-border: rgba(255, 255, 255, .8); --glass-highlight: rgba(255, 255, 255, .68);
   --glass-shadow: 0 18px 48px rgba(45, 53, 63, .11);
   --ambient-a: #CFE0EF; --ambient-b: #E9DDEC;
+  --glass-cyan: #67DCEB; --glass-violet: #A98BFF; --glass-pink: #F58BB7;
+  --glass-lime: #B9E879; --glass-amber: #FFD071; --glass-blue: #78A9FF;
+  --glass-mint: #73E0BD; --glass-coral: #FF9B8E;
   --font-display: 'MaruBuri', Batang, 'Nanum Myeongjo', serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 40px;
@@ -40,6 +43,9 @@
   --glass-border: rgba(255, 255, 255, .13); --glass-highlight: rgba(255, 255, 255, .09);
   --glass-shadow: 0 22px 58px rgba(0, 0, 0, .34);
   --ambient-a: #173653; --ambient-b: #3A2948;
+  --glass-cyan: #2A9EAF; --glass-violet: #7258C7; --glass-pink: #B94E7D;
+  --glass-lime: #6D9D39; --glass-amber: #B47E26; --glass-blue: #416BB4;
+  --glass-mint: #318F76; --glass-coral: #B65F55;
   /* 다크모드 전용 장색 보정 — 그래프 점·게이트 테두리의 식별 대비를 유지한다. */
   --ch1: #AAA69D; --ch2: #8FB7DE; --ch3: #6CB9AD; --ch4: #91B966;
   --ch5: #E07769; --ch6: #D9A956; --ch7: #BE9CD1;
@@ -53,6 +59,9 @@ body {
   background:
     radial-gradient(circle at 8% 4%, color-mix(in srgb, var(--ambient-a) 72%, transparent) 0, transparent 34rem),
     radial-gradient(circle at 96% 28%, color-mix(in srgb, var(--ambient-b) 58%, transparent) 0, transparent 30rem),
+    radial-gradient(circle at 22% 78%, color-mix(in srgb, var(--glass-cyan) 18%, transparent) 0, transparent 28rem),
+    radial-gradient(circle at 74% 10%, color-mix(in srgb, var(--glass-pink) 14%, transparent) 0, transparent 24rem),
+    radial-gradient(circle at 84% 82%, color-mix(in srgb, var(--glass-lime) 14%, transparent) 0, transparent 26rem),
     var(--bg);
   background-attachment: fixed;
   color: var(--ink); font-family: var(--font-body);
@@ -251,6 +260,10 @@ button, select { color: var(--ink); }
 .home-stat:nth-last-child(-n+2) { border-bottom: 0; }
 .home-stat strong { display: block; font-family: var(--font-display); font-size: 34px; line-height: 1.2; color: var(--accent); }
 .home-stat span { display: block; margin-top: 6px; font-size: 12px; line-height: 1.45; opacity: .78; }
+.home-stat:nth-child(1) strong { color: var(--glass-cyan); }
+.home-stat:nth-child(2) strong { color: var(--glass-violet); }
+.home-stat:nth-child(3) strong { color: var(--glass-mint); }
+.home-stat:nth-child(4) strong { color: var(--glass-coral); }
 .search-panel { margin-top: 30px; padding: 10px; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 48px color-mix(in srgb, var(--ink) 7%, transparent); }
 .search-panel .search-bar { max-width: none; min-height: 54px; border: 0; padding: 10px 14px; background: transparent; outline: none; }
 .search-results { max-width: none; max-height: min(58vh, 620px); overflow-y: auto; }
@@ -270,7 +283,7 @@ button, select { color: var(--ink); }
 .home-section-heading p { max-width: 560px; margin: 0; font-size: 14px; opacity: .62; }
 .chapter-gate { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; }
 .chapter-gate-item { position: relative; min-height: 180px; padding: 18px; border: 1px solid var(--rule); border-top: 5px solid var(--chapter-color); border-radius: 10px; background: color-mix(in srgb, var(--surface) 72%, transparent); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
-.chapter-gate-item:hover { transform: translateY(-3px); border-color: var(--chapter-color); box-shadow: 0 14px 32px color-mix(in srgb, var(--ink) 7%, transparent); }
+.chapter-gate-item:hover { transform: translateY(-3px); border-color: var(--chapter-color); box-shadow: 0 14px 32px color-mix(in srgb, var(--chapter-color) 24%, transparent); }
 .chapter-gate-item .chapter-num { font-size: 38px; line-height: 1; }
 .chapter-gate-item .chapter-name { display: block; margin-top: 30px; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
 .chapter-gate-item .chapter-desc { display: block; margin-top: 7px; font-size: 12px; line-height: 1.5; opacity: .78; }
@@ -363,6 +376,15 @@ button, select { color: var(--ink); }
   backdrop-filter: blur(18px) saturate(135%);
   box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
 }
+.chapter-gate-item,
+.mini-card {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--chapter-color) 18%, transparent), transparent 58%),
+    var(--glass);
+}
+.home-links a:nth-child(1) { background: linear-gradient(135deg, color-mix(in srgb, var(--glass-cyan) 16%, transparent), transparent 62%), var(--glass); }
+.home-links a:nth-child(2) { background: linear-gradient(135deg, color-mix(in srgb, var(--glass-violet) 16%, transparent), transparent 62%), var(--glass); }
+.home-links a:nth-child(3) { background: linear-gradient(135deg, color-mix(in srgb, var(--glass-amber) 16%, transparent), transparent 62%), var(--glass); }
 .graph-stage {
   border-color: var(--glass-border);
   background:
