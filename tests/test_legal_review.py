@@ -105,8 +105,8 @@ def test_built_html_exposes_review_state_in_detail_and_numeric_table(tmp_path):
     html = output.read_text(encoding="utf-8")
 
     assert "기준과 관련 법령" in html
-    assert "<th data-col=\"3\">실무도우미 수록 쪽</th>" in html
-    assert "<th data-col=\"5\">기준 안내</th>" in html
+    assert "<th data-col=\"3\">실무도우미에서 찾을 위치</th>" in html
+    assert "<th data-col=\"5\">법령 안내</th>" in html
     assert "기존 확인일 기록" not in html
     assert "적용 시 확인" in html
     assert "시·도교육청 지침 확인" in html
@@ -128,7 +128,14 @@ def test_built_html_contains_editorial_navigation_and_honor_law_nodes(tmp_path):
     assert "1. 학교급 선택" in html
     assert 'id="public-footer"' in html
     assert "법적 효력이 있는 법령·공문 원문을 대체하지 않습니다" in html
-    assert "3차원 지식 지도" in html
+    assert "업무 관계 지도" in html
+    assert "목록에서 찾기" in html
+    assert 'id="graph-list"' in html
+    assert 'id="graph-list-jump"' in html
+    assert "업무 관계 지도에서 찾기" in html
+    assert "판단할 기준 확인" in html
+    assert "실무도우미에서 찾을 위치" in html
+    assert ".graph-instructions" in html and "font-size: 13px" in html
     assert 'id="graph-chapter-filter"' in html
     assert "클릭: 선택 고정 · Esc: 선택 해제" in html
     assert "let selectedId = null" in html
