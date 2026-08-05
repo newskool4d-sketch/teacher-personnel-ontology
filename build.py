@@ -59,6 +59,10 @@ def sanitize_public_text(text: str) -> str:
     result = re.sub(r"\(\s*,", "(", result)
     result = re.sub(r",\s*\)", ")", result)
     result = re.sub(r"\(\s*\)", "", result)
+    # 식별자를 지운 자리에 남는 군더더기 공백 정리(마크다운 들여쓰기·표는 건드리지 않는다)
+    result = re.sub(r"\([ \t]+", "(", result)
+    result = re.sub(r"[ \t]+\)", ")", result)
+    result = re.sub(r",[ \t]{2,}", ", ", result)
     return result
 
 
@@ -105,6 +109,63 @@ def render_body(raw_md: str) -> str:
     return md_lib.markdown(raw_md, extensions=["tables"])
 
 
+# 공개 화면에 남아서는 안 되는 표현 — 내부 조회 도구·식별자와 일반 독자가 모르는 그래프 용어
+FORBIDDEN_PUBLIC_TERMS = (
+    ("내부 조회 도구명", re.compile(r"korean-law-mcp")),
+    ("내부 식별자", re.compile(r"\bMST\b|법령ID|행정규칙일련번호|행정규칙ID")),
+    ("그래프 전문용어", re.compile(r"노드|엣지|온톨로지")),
+    ("영문 기술용어", re.compile(r"\bAPI\b|\brefs\b|\bcaveat\b|\bplaceholder\b")),
+    ("내부 조회 함수명", re.compile(r"\b(?:get|search|legal)_[a-z_]+\b")),
+)
+
+
+def assert_public_text_clean(public_nodes: list[dict], search: list[dict], node_ids: set[str]) -> None:
+    """공개 텍스트에 내부 용어나 영문 항목 ID가 남아 있으면 빌드를 중단한다.
+
+    본문 상호참조는 `[한글 제목](#/node/아이디)` 링크로만 노출되어야 하며,
+    링크 href는 검사 대상에서 제외한다. 화면에 그려지는 노드 텍스트와
+    검색어로 쓰이는 haystack을 함께 검사한다.
+    """
+    id_like = re.compile(r"(?<![\w/#-])([a-z][a-z0-9]*(?:-[a-z0-9]+)+)(?![\w-])")
+    problems: list[str] = []
+
+    targets = [(d["id"], "본문", f"{d['title']}\n{d['summary']}\n{d['body']}") for d in public_nodes]
+    targets += [(d["id"], "검색어", d["haystack"]) for d in search]
+
+    for node_id, where, text in targets:
+        if where == "검색어" and "#/node/" in text:
+            problems.append(
+                f"[{node_id}] 검색어에 링크 주소가 남음 — 검색 인덱스는 보이는 제목만 담아야 함"
+            )
+        visible = re.sub(r'href="#/node/[a-z0-9-]+"', "", text)
+
+        for label, pattern in FORBIDDEN_PUBLIC_TERMS:
+            found = pattern.search(visible)
+            if found:
+                problems.append(f"[{node_id}] {where}에 {label} 노출: {found.group(0)!r}")
+
+        for match in id_like.finditer(visible):
+            if match.group(1) in node_ids:
+                problems.append(
+                    f"[{node_id}] {where}에 영문 항목 ID 노출: {match.group(1)!r} "
+                    "— `[한글 제목](#/node/아이디)` 형태의 링크로 작성할 것"
+                )
+
+    # 괄호가 이어진 문장이 마크다운 링크로 잘못 변환되면 본문이 깨진 링크가 된다
+    for data in public_nodes:
+        for href in re.findall(r'<a href="([^"]*)"', data["body"]):
+            if not (href.startswith("#/node/") or href.startswith("http")):
+                problems.append(
+                    f"[{data['id']}] 잘못된 본문 링크 주소: {href!r} "
+                    "— 대괄호 뒤에 괄호가 이어져 마크다운 링크로 해석된 것은 아닌지 확인할 것"
+                )
+
+    if problems:
+        raise SystemExit(
+            f"공개 텍스트 검사 실패 ({len(problems)}건):\n" + "\n".join(problems)
+        )
+
+
 def latest_review_date(nodes) -> str:
     """전체 노드의 legal_review.checked_at 중 최댓값(가장 최근 검토일)을 구한다."""
     dates = [
@@ -126,11 +187,15 @@ def build_payload(nodes, edges) -> dict:
     if errors:
         raise SystemExit(f"스키마 검증 실패 ({len(errors)}건):\n" + "\n".join(errors))
 
+    public_nodes = [public_node_dict(node) for node in nodes]
+    search = sanitize_public_value(build_search_index(nodes))
+    assert_public_text_clean(public_nodes, search, {node.id for node in nodes})
+
     return {
-        "nodes": [public_node_dict(node) for node in nodes],
+        "nodes": public_nodes,
         "edges": [asdict(e) for e in edges],
         "layout": compute_layout(nodes, edges),
-        "search": sanitize_public_value(build_search_index(nodes)),
+        "search": search,
         "meta": {"nodeCount": len(nodes), "edgeCount": len(edges)},
     }
 
