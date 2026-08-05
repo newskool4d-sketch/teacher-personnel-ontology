@@ -3,7 +3,18 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from build import build, render_body, sanitize_public_text, NODES_DIR, EDGES_PATH
+from build import (
+    build,
+    build_payload,
+    format_korean_date,
+    latest_review_date,
+    public_node_dict,
+    render_body,
+    sanitize_public_text,
+    NODES_DIR,
+    EDGES_PATH,
+)
+from schema import Node
 from schema import load_nodes, load_edges, validate_graph
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -25,6 +36,64 @@ def test_public_text_removes_internal_law_lookup_markers():
     assert "현행 법령 원문 원문" not in public
     assert "확인필요" not in public
     assert "관련 법령 및 소속 시·도교육청 지침에서 확인" in public
+
+
+def test_public_node_dict_removes_internal_review_metadata_and_unknown_pages():
+    node = Node(
+        id="sample-node",
+        type="법령·조문",
+        title="샘플",
+        chapter=1,
+        scope="공통",
+        summary="공개 요약",
+        pages={"중등": "확인필요", "초등": "12-13"},
+        legal_review={
+            "state": "partial",
+            "applicable_as_of": "2026-08-01",
+            "checked_at": "2026-08-02",
+            "method": "내부 검토",
+            "unresolved": ["확인필요"],
+            "applicability": "공통",
+            "sources": [{
+                "law_name": "예시법",
+                "article": "제1조",
+                "mst": "123",
+                "effective_date": "2026-01-01",
+                "status": "현행",
+                "official_url": "https://www.law.go.kr/법령/예시법/제1조",
+            }],
+        },
+    )
+
+    public = public_node_dict(node)
+
+    assert public["pages"] == {"중등": "", "초등": "12-13"}
+    assert "method" not in public["legal_review"]
+    assert "mst" not in public["legal_review"]["sources"][0]
+    assert "확인필요" not in public["legal_review"]["unresolved"][0]
+
+
+def test_review_date_helpers_use_latest_iso_date():
+    nodes = [
+        Node(id="a", type="개념", title="A", chapter=1, scope="공통", summary="a",
+             legal_review={"checked_at": "2026-08-01"}),
+        Node(id="b", type="개념", title="B", chapter=1, scope="공통", summary="b",
+             legal_review={"checked_at": "2026-08-04"}),
+        Node(id="c", type="개념", title="C", chapter=1, scope="공통", summary="c"),
+    ]
+
+    assert latest_review_date(nodes) == "2026-08-04"
+    assert format_korean_date("2026-08-04") == "2026. 8. 4."
+
+
+def test_build_payload_separates_validated_data_from_file_output():
+    nodes = load_nodes(FIXTURES / "sample_nodes")
+    edges = load_edges(FIXTURES / "sample_edges.yaml")
+
+    payload = build_payload(nodes, edges)
+
+    assert payload["meta"] == {"nodeCount": 2, "edgeCount": 1}
+    assert set(payload) == {"nodes", "edges", "layout", "search", "meta"}
 
 
 def test_build_produces_valid_html_with_embedded_json(tmp_path):

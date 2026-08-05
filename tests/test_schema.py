@@ -58,6 +58,17 @@ def test_validate_graph_clean_data_has_no_errors():
     assert validate_graph(nodes, edges) == []
 
 
+def test_validate_graph_enforces_target_type_for_constrained_edge():
+    nodes = [
+        Node(id="source", type="개념", title="출발", chapter=1, scope="공통", summary="요약"),
+        Node(id="wrong-target", type="개념", title="잘못된 대상", chapter=1, scope="공통", summary="요약"),
+    ]
+
+    errors = validate_graph(nodes, [Edge(source="source", target="wrong-target", type="근거법령")])
+
+    assert any("엣지 타입-노드 타입 불일치" in error for error in errors)
+
+
 def test_validate_rejects_string_chapter_without_crashing():
     # 실제 사례: YAML에서 chapter: "3" 처럼 따옴표를 쳐서 문자열로 파싱된 경우
     n = Node(id="leave-sick", type="개념", title="x", chapter="3",

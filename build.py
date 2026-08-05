@@ -120,28 +120,25 @@ def format_korean_date(iso_date: str) -> str:
     return f"{year}. {int(month)}. {int(day)}."
 
 
-def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PATH, dist_path=DIST_PATH) -> Path:
-    nodes = load_nodes(nodes_dir)
-    edges = load_edges(edges_path)
-
+def build_payload(nodes, edges) -> dict:
+    """검증된 도메인 객체를 공개 HTML에 주입할 직렬화 payload로 변환한다."""
     errors = validate_graph(nodes, edges)
     if errors:
         raise SystemExit(f"스키마 검증 실패 ({len(errors)}건):\n" + "\n".join(errors))
 
-    coords = compute_layout(nodes, edges)
-    search_idx = sanitize_public_value(build_search_index(nodes))
-
-    node_dicts = []
-    for n in nodes:
-        node_dicts.append(public_node_dict(n))
-
-    data = {
-        "nodes": node_dicts,
+    return {
+        "nodes": [public_node_dict(node) for node in nodes],
         "edges": [asdict(e) for e in edges],
-        "layout": coords,
-        "search": search_idx,
+        "layout": compute_layout(nodes, edges),
+        "search": sanitize_public_value(build_search_index(nodes)),
         "meta": {"nodeCount": len(nodes), "edgeCount": len(edges)},
     }
+
+
+def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PATH, dist_path=DIST_PATH) -> Path:
+    nodes = load_nodes(nodes_dir)
+    edges = load_edges(edges_path)
+    data = build_payload(nodes, edges)
 
     template_html = Path(template_path).read_text(encoding="utf-8")
     data_json = json.dumps(data, ensure_ascii=False)

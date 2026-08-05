@@ -131,6 +131,8 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 .graph-inspector-kicker { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .graph-inspector h2 { margin: 6px 0 8px; font-size: 20px; line-height: 1.35; }
 .graph-inspector p { margin: 0; font-size: 13px; line-height: 1.55; opacity: .72; }
+.graph-inspector-link { display: inline-flex; margin-top: 12px; padding: 6px 9px; border: 1px solid var(--accent); border-radius: 7px; color: var(--accent); font-size: 12px; font-weight: 750; text-decoration: none; }
+.graph-inspector-link:hover, .graph-inspector-link:focus-visible { background: var(--accent); color: var(--surface); }
 .graph-inspector-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
 .graph-inspector-meta span { padding: 3px 7px; border: 1px solid var(--rule); border-radius: 999px; font-size: 10px; }
 .graph-legend h2 { margin: 0 0 10px; font-size: 15px; }
@@ -726,9 +728,9 @@ function renderGraph(main) {
       </div>
       <div class="graph-workspace">
         <div id="graph-stage" class="graph-stage">
-          <canvas id="graph-canvas" aria-label="회전 가능한 3차원 지식 지도"></canvas>
+          <canvas id="graph-canvas" tabindex="0" aria-label="회전 가능한 3차원 지식 지도"></canvas>
           <div class="graph-depth-label">3차원 회전 보기</div>
-          <div class="graph-instructions">왼쪽 버튼을 누른 채 드래그하여 회전 · 휠로 확대·축소 · 항목 클릭으로 상세 열기</div>
+          <div class="graph-instructions">왼쪽 버튼 드래그: 회전 · 휠: 확대·축소 · 클릭: 선택 고정 · Esc: 선택 해제</div>
         </div>
         <aside class="graph-side">
           <section id="graph-inspector" class="graph-inspector" aria-live="polite">
@@ -743,6 +745,13 @@ function renderGraph(main) {
               <span class="graph-legend-item"><i class="graph-legend-shape shape-diamond"></i>법령·조문</span>
               <span class="graph-legend-item"><i class="graph-legend-shape shape-square"></i>수치·기한</span>
               <span class="graph-legend-item"><i class="graph-legend-shape shape-triangle"></i>절차</span>
+            </div>
+            <h2 style="margin-top:14px">관계선</h2>
+            <div class="graph-legend-list graph-edge-key">
+              <span class="graph-legend-item">━━ 근거법령</span>
+              <span class="graph-legend-item">┅┅ 기한·수치</span>
+              <span class="graph-legend-item">➜ 절차단계</span>
+              <span class="graph-legend-item">··· 유의·해석</span>
             </div>
             <div class="graph-chapter-key">${chapterKey}</div>
           </section>
@@ -762,6 +771,8 @@ function renderGraph(main) {
   const inkColor = css.getPropertyValue('--ink').trim();
   const surfaceColor = css.getPropertyValue('--surface').trim();
   const ruleColor = css.getPropertyValue('--rule').trim();
+  const accentColor = css.getPropertyValue('--accent').trim();
+  const dangerColor = css.getPropertyValue('--danger').trim();
   const chColor = chapter => css.getPropertyValue(`--ch${chapter}`).trim();
   const layout = ONTOLOGY.layout;
   const scopeNodes = ONTOLOGY.nodes.filter(node => node.scope === '공통' || node.scope === scope);
@@ -800,6 +811,7 @@ function renderGraph(main) {
   let pitch = 0.2;
   let zoom = 1;
   let hoverId = null;
+  let selectedId = null;
   let selectedChapter = 'all';
   let query = '';
   let projected = new Map();
@@ -878,9 +890,11 @@ function renderGraph(main) {
   function updateInspector(node, graph, matches) {
     if (node) {
       const connections = graph.edges.filter(edge => edge.source === node.id || edge.target === node.id).length;
+      const selectionState = selectedId === node.id ? '선택 고정됨 · Esc로 해제' : '마우스 올림';
       inspector.innerHTML = `<span class="graph-inspector-kicker">${node.chapter === 0 ? '부록' : `제${node.chapter}장`} · ${escapeHtml(node.type)}</span>
         <h2>${escapeHtml(node.title)}</h2><p>${escapeHtml(node.summary)}</p>
-        <div class="graph-inspector-meta"><span>직접 연결 ${connections}개</span><span>클릭하여 상세 열기</span></div>`;
+        <div class="graph-inspector-meta"><span>직접 연결 ${connections}개</span><span>${selectionState}</span></div>
+        <a class="graph-inspector-link" href="#/node/${node.id}">상세 열기</a>`;
     } else if (query) {
       inspector.innerHTML = `<span class="graph-inspector-kicker">검색 결과</span><h2>${matches.size}개 항목</h2>
         <p>일치하는 노드가 밝게 표시됩니다. 노드에 마우스를 올리면 이름과 연결 관계를 확인할 수 있습니다.</p>`;
@@ -890,27 +904,30 @@ function renderGraph(main) {
     }
   }
 
-  function drawLabels(candidates, priorityIds) {
+  function drawLabels(candidates, priorityIds, focusId, degreeById) {
     const boxes = [];
     let count = 0;
+    const score = item => (priorityIds.has(item.node.id) ? 1000 : 0)
+      + (degreeById.get(item.node.id) || 0) * 14
+      + item.point.scale * 80
+      + (item.point.z < 420 ? 18 : 0);
     const ordered = [...candidates].sort((a, b) => {
-      const aPriority = priorityIds.has(a.node.id) ? 1 : 0;
-      const bPriority = priorityIds.has(b.node.id) ? 1 : 0;
-      return bPriority - aPriority || a.point.z - b.point.z;
+      return score(b) - score(a) || a.point.z - b.point.z;
     });
     for (const item of ordered) {
-      const mustShow = item.node.id === hoverId;
+      const mustShow = item.node.id === focusId;
       if (count >= 48 && !mustShow) continue;
-      if (count >= 34 && !priorityIds.has(item.node.id)) continue;
-      const fontSize = priorityIds.has(item.node.id) ? 13 : 11;
-      ctx.font = `${priorityIds.has(item.node.id) ? 750 : 620} ${fontSize}px ${css.getPropertyValue('--font-body').trim()}`;
+      if (count >= 36 && !priorityIds.has(item.node.id)) continue;
+      const isPriority = priorityIds.has(item.node.id);
+      const fontSize = isPriority ? 13 : 11;
+      ctx.font = `${isPriority ? 750 : 620} ${fontSize}px ${css.getPropertyValue('--font-body').trim()}`;
       const width = Math.min(230, ctx.measureText(item.node.title).width + 12);
       const x = item.point.x + item.point.radius + 5;
       const y = item.point.y - fontSize - 3;
       const box = {x, y, width, height: fontSize + 8};
       const overlaps = boxes.some(other => !(box.x + box.width < other.x || box.x > other.x + other.width || box.y + box.height < other.y || box.y > other.y + other.height));
       if (overlaps && !mustShow) continue;
-      ctx.globalAlpha = priorityIds.has(item.node.id) ? .96 : .7;
+      ctx.globalAlpha = isPriority ? .96 : .7;
       ctx.fillStyle = surfaceColor;
       ctx.strokeStyle = ruleColor;
       ctx.lineWidth = 1;
@@ -930,11 +947,14 @@ function renderGraph(main) {
     if (disposed) return;
     const graph = activeGraph();
     const matches = matchingIds(graph.nodes);
+    const focusId = selectedId || hoverId;
+    if (focusId && !graph.ids.has(focusId)) selectedId = null;
+    const activeFocusId = selectedId || hoverId;
     const neighbors = new Set();
-    if (hoverId && graph.ids.has(hoverId)) {
-      neighbors.add(hoverId);
+    if (activeFocusId && graph.ids.has(activeFocusId)) {
+      neighbors.add(activeFocusId);
       graph.edges.forEach(edge => {
-        if (edge.source === hoverId || edge.target === hoverId) {
+        if (edge.source === activeFocusId || edge.target === activeFocusId) {
           neighbors.add(edge.source); neighbors.add(edge.target);
         }
       });
@@ -945,18 +965,40 @@ function renderGraph(main) {
 
     graph.edges.forEach(edge => {
       const from = projected.get(edge.source), to = projected.get(edge.target);
-      const connected = !hoverId || (neighbors.has(edge.source) && neighbors.has(edge.target));
+      const connected = !activeFocusId || (neighbors.has(edge.source) && neighbors.has(edge.target));
       const searchRelated = !query || matches.has(edge.source) || matches.has(edge.target);
-      ctx.globalAlpha = connected && searchRelated ? .32 : .055;
-      ctx.strokeStyle = ruleColor;
-      ctx.lineWidth = connected && hoverId ? 1.5 : .8;
+      const edgeStyle = {
+        '근거법령': {color: accentColor, dash: [], arrow: false},
+        '기한수치': {color: chColor(6), dash: [6, 4], arrow: false},
+        '절차단계': {color: chColor(4), dash: [], arrow: true},
+        '필요서식': {color: chColor(7), dash: [2, 4], arrow: false},
+        '관련해석': {color: chColor(5), dash: [2, 5], arrow: false},
+        '유의': {color: dangerColor, dash: [1, 5], arrow: false},
+        '상위개념': {color: chColor(1), dash: [], arrow: false},
+      }[edge.type] || {color: ruleColor, dash: [], arrow: false};
+      ctx.globalAlpha = connected && searchRelated ? .42 : .045;
+      ctx.strokeStyle = edgeStyle.color;
+      ctx.lineWidth = connected && activeFocusId ? 1.7 : 1;
+      ctx.setLineDash(edgeStyle.dash);
       ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y); ctx.stroke();
+      if (edgeStyle.arrow && connected && searchRelated) {
+        const angle = Math.atan2(to.y - from.y, to.x - from.x);
+        const arrowSize = 6;
+        ctx.fillStyle = edgeStyle.color;
+        ctx.beginPath();
+        ctx.moveTo(to.x, to.y);
+        ctx.lineTo(to.x - Math.cos(angle - .45) * arrowSize, to.y - Math.sin(angle - .45) * arrowSize);
+        ctx.lineTo(to.x - Math.cos(angle + .45) * arrowSize, to.y - Math.sin(angle + .45) * arrowSize);
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.setLineDash([]);
     });
 
     const ordered = graph.nodes.map(node => ({node, point: projected.get(node.id)})).sort((a, b) => b.point.z - a.point.z);
     ordered.forEach(({node, point}) => {
-      const focused = node.id === hoverId;
-      const connected = !hoverId || neighbors.has(node.id);
+      const focused = node.id === activeFocusId;
+      const selected = node.id === selectedId;
+      const connected = !activeFocusId || neighbors.has(node.id);
       const searchMatch = !query || matches.has(node.id);
       const radius = point.radius * (focused ? 1.75 : searchMatch && query ? 1.35 : 1);
       const depthAlpha = Math.max(.34, Math.min(1, 1.04 - (point.z + 800) / 2600));
@@ -966,15 +1008,29 @@ function renderGraph(main) {
       ctx.lineWidth = focused ? 3 : 1.2;
       drawNodeShape(node, point, radius);
       ctx.fill(); ctx.stroke();
+      if (selected) {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = accentColor;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(point.x, point.y, radius + 5, 0, Math.PI * 2); ctx.stroke();
+      }
     });
     ctx.globalAlpha = 1;
 
-    const priorityIds = new Set([...neighbors, ...matches]);
+    const degreeById = new Map(graph.nodes.map(node => [node.id, 0]));
+    graph.edges.forEach(edge => {
+      degreeById.set(edge.source, (degreeById.get(edge.source) || 0) + 1);
+      degreeById.set(edge.target, (degreeById.get(edge.target) || 0) + 1);
+    });
+    const coreIds = new Set([...graph.nodes]
+      .sort((a, b) => (degreeById.get(b.id) || 0) - (degreeById.get(a.id) || 0))
+      .slice(0, 12).map(node => node.id));
+    const priorityIds = new Set([...neighbors, ...matches, ...coreIds]);
     const labelCandidates = ordered.filter(({node, point}) =>
       priorityIds.has(node.id) || (node.type === '개념' && point.scale > .55 && point.z < 420)
     );
-    drawLabels(labelCandidates, priorityIds);
-    updateInspector(hoverId ? nodeById.get(hoverId) : null, graph, matches);
+    drawLabels(labelCandidates, priorityIds, activeFocusId, degreeById);
+    updateInspector(activeFocusId ? nodeById.get(activeFocusId) : null, graph, matches);
   }
 
   function nodeAt(x, y) {
@@ -1049,7 +1105,7 @@ function renderGraph(main) {
     try { canvas.releasePointerCapture(event.pointerId); } catch (_) {}
     if (!wasMoved) {
       const hit = nodeAt(event.clientX - rect.left, event.clientY - rect.top);
-      if (hit) location.hash = `#/node/${hit.id}`;
+       if (hit) { selectedId = hit.id; hoverId = hit.id; draw(); }
     } else {
       startInertia();
     }
@@ -1057,7 +1113,7 @@ function renderGraph(main) {
   canvas.addEventListener('pointerup', finishPointer);
   canvas.addEventListener('pointercancel', finishPointer);
   canvas.addEventListener('pointerleave', () => {
-    if (!drag && hoverId) { hoverId = null; draw(); }
+    if (!drag && hoverId && hoverId !== selectedId) { hoverId = null; draw(); }
   });
   canvas.addEventListener('wheel', event => {
     event.preventDefault();
@@ -1066,9 +1122,12 @@ function renderGraph(main) {
   }, {passive: false});
 
   searchInput.addEventListener('input', event => { query = event.target.value.trim(); hoverId = null; draw(); });
-  chapterFilter.addEventListener('change', event => { selectedChapter = event.target.value; hoverId = null; draw(); });
+  chapterFilter.addEventListener('change', event => { selectedChapter = event.target.value; selectedId = null; hoverId = null; draw(); });
+  canvas.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { selectedId = null; hoverId = null; draw(); }
+  });
   resetButton.addEventListener('click', () => {
-    stopInertia(); yaw = -0.38; pitch = 0.2; zoom = 1; hoverId = null; query = ''; selectedChapter = 'all';
+    stopInertia(); yaw = -0.38; pitch = 0.2; zoom = 1; selectedId = null; hoverId = null; query = ''; selectedChapter = 'all';
     searchInput.value = ''; chapterFilter.value = 'all'; draw();
   });
 

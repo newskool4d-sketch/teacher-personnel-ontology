@@ -130,7 +130,10 @@ def test_built_html_contains_editorial_navigation_and_honor_law_nodes(tmp_path):
     assert "법적 효력이 있는 법령·공문 원문을 대체하지 않습니다" in html
     assert "3차원 지식 지도" in html
     assert 'id="graph-chapter-filter"' in html
-    assert "왼쪽 버튼을 누른 채 드래그하여 회전" in html
+    assert "클릭: 선택 고정 · Esc: 선택 해제" in html
+    assert "let selectedId = null" in html
+    assert "ctx.setLineDash(edgeStyle.dash)" in html
+    assert "const coreIds" in html
     assert "canvas.addEventListener('pointerdown'" in html
     assert "cameraDistance = 1450" in html
     assert "shape-diamond" in html
