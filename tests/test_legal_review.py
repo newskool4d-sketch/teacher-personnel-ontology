@@ -105,8 +105,8 @@ def test_built_html_exposes_review_state_in_detail_and_numeric_table(tmp_path):
     html = output.read_text(encoding="utf-8")
 
     assert "기준과 관련 법령" in html
-    assert "<th data-col=\"3\">실무도우미에서 찾을 위치</th>" in html
-    assert "<th data-col=\"5\">법령 안내</th>" in html
+    assert '<button type="button" class="table-sort" data-col="3">실무도우미에서 찾을 위치' in html
+    assert '<button type="button" class="table-sort" data-col="5">법령 안내' in html
     assert "기존 확인일 기록" not in html
     assert "적용 시 확인" in html
     assert "시·도교육청 지침 확인" in html
@@ -123,8 +123,9 @@ def test_built_html_contains_editorial_navigation_and_honor_law_nodes(tmp_path):
     assert 'class="node-detail-grid"' in html
     assert 'id="review-filter"' in html
     assert 'aria-label="학교급 선택"' in html
-    assert 'data-scope="중등">중등교원' in html
-    assert 'data-scope="초등">초등교원' in html
+    assert '"value": "중등", "label": "중등교원"' in html
+    assert '"value": "초등", "label": "초등교원"' in html
+    assert "renderScopeOptions()" in html
     assert "1. 학교급 선택" in html
     assert 'id="public-footer"' in html
     assert "법적 효력이 있는 법령·공문 원문을 대체하지 않습니다" in html
@@ -213,3 +214,139 @@ def test_built_html_contains_persistent_dark_mode_and_glass_surfaces(tmp_path):
     assert "function initThemeToggle()" in html
     assert "--glass:" in html
     assert "backdrop-filter: blur(18px)" in html
+
+
+def test_built_html_prioritizes_detail_content_before_reference_rail_on_mobile(tmp_path):
+    output = build(dist_path=tmp_path / "mobile-detail-order.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert ".node-primary { order: 1; }" in html
+    assert ".node-rail { position: static; order: 2; }" in html
+
+
+def test_built_html_limits_initial_graph_labels_by_viewport(tmp_path):
+    output = build(dist_path=tmp_path / "graph-label-density.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert "const compactViewport = canvas.clientWidth < 720;" in html
+    assert "const coreLimit = compactViewport ? 5 : 8;" in html
+    assert "const labelLimit = compactViewport ? 18 : 28;" in html
+    assert "const supportingLabelLimit = compactViewport ? 8 : 14;" in html
+
+
+def test_built_html_uses_readable_supporting_text_and_stable_display_font(tmp_path):
+    output = build(dist_path=tmp_path / "readable-type.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert "--text-support: 13px; --muted-readable: .74;" in html
+    assert "font-size: var(--text-support);" in html
+    assert "opacity: var(--muted-readable);" in html
+    assert "--font-display: Batang, 'AppleMyungjo', 'Noto Serif CJK KR', 'Nanum Myeongjo', serif;" in html
+    assert "MaruBuri" not in html
+
+
+def test_built_html_provides_keyboard_entry_to_main_content(tmp_path):
+    output = build(dist_path=tmp_path / "keyboard-entry.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<a class="skip-link" href="#main-content">본문으로 바로가기</a>' in html
+    assert '<main id="main-content" tabindex="-1">' in html
+    assert ".skip-link:focus-visible" in html
+    assert ".search-panel .search-bar:focus-visible" in html
+
+
+def test_built_html_orients_users_after_spa_route_changes(tmp_path):
+    output = build(dist_path=tmp_path / "route-context.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert "function updateRouteContext(main, focusContent = false)" in html
+    assert "document.title = pageTitle === APP_TITLE ? APP_TITLE : `${pageTitle} | ${APP_TITLE}`;" in html
+    assert "heading.setAttribute('tabindex', '-1');" in html
+    assert "heading.focus();" in html
+    assert "render({ focusContent: true });" in html
+    assert "function initSkipLink()" in html
+
+
+def test_built_html_announces_search_result_counts_without_repeating_the_list(tmp_path):
+    output = build(dist_path=tmp_path / "search-status.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<div id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>' in html
+    assert '<div id="search-results" class="search-results"></div>' in html
+    assert "status.textContent = `${scope} 기준 ${allMatches.length}개 항목`" in html
+
+
+def test_built_html_announces_filtered_table_count(tmp_path):
+    output = build(dist_path=tmp_path / "table-status.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<span id="table-count" class="table-count" role="status" aria-live="polite" aria-atomic="true">' in html
+
+
+def test_built_html_exposes_keyboard_table_sorting_and_direction(tmp_path):
+    output = build(dist_path=tmp_path / "table-sort.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert html.count('class="table-sort"') == 6
+    assert html.count('aria-sort="none"') == 6
+    assert "document.querySelectorAll('#numeric-table .table-sort')" in html
+    assert "activeHeader.setAttribute('aria-sort', asc ? 'ascending' : 'descending');" in html
+
+
+def test_built_html_explains_and_focuses_horizontally_scrollable_table(tmp_path):
+    output = build(dist_path=tmp_path / "table-scroll.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<p id="table-scroll-help" class="table-scroll-help">' in html
+    assert 'class="table-wrap" tabindex="0" role="region" aria-label="수치·기한 통합표" aria-describedby="table-scroll-help"' in html
+    assert ".table-wrap:focus-visible" in html
+
+
+def test_built_html_keeps_build_metadata_readable(tmp_path):
+    output = build(dist_path=tmp_path / "readable-build-info.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert ".build-info { grid-column: 1 / -1; margin: -10px 0 0; color: var(--ink); font-size: 13px; opacity: .68; }" in html
+
+
+def test_built_html_keeps_active_scope_contrast_in_both_themes(tmp_path):
+    output = build(dist_path=tmp_path / "scope-contrast.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert ".scope-option.active { background: var(--accent); color: var(--bg);" in html
+    assert ".scope-option.active { background: var(--accent); color: #fff;" not in html
+
+
+def test_built_html_names_repeated_navigation_landmarks(tmp_path):
+    output = build(dist_path=tmp_path / "named-landmarks.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<aside id="left-nav" aria-label="업무 탐색">' in html
+    assert '<nav class="left-nav-chapters" aria-label="장별 업무 탐색">' in html
+    assert '<nav class="left-nav-quicklinks" aria-label="빠른 탐색">' in html
+    assert '<aside class="node-rail" aria-label="출처와 관련 정보">' in html
+
+
+def test_built_html_uses_semantic_sections_for_named_home_groups(tmp_path):
+    output = build(dist_path=tmp_path / "semantic-home-groups.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert '<section class="home-stats" aria-label="데이터 현황">' in html
+    assert '<section class="getting-started" aria-label="사이트 이용 순서">' in html
+    assert '<div class="home-stats" aria-label="데이터 현황">' not in html
+    assert '<div class="getting-started" aria-label="사이트 이용 순서">' not in html
+
+
+def test_built_html_prints_footer_without_dark_glass_background(tmp_path):
+    output = build(dist_path=tmp_path / "print-footer.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert "#public-footer { background: #fff !important; color: #000; border-color: #999; -webkit-backdrop-filter: none; backdrop-filter: none; }" in html
+    assert ".public-footer-grid section h2, #public-footer a { color: #000; }" in html
+
+
+def test_built_html_does_not_print_transient_focus_outlines(tmp_path):
+    output = build(dist_path=tmp_path / "print-focus.html")
+    html = output.read_text(encoding="utf-8")
+
+    assert "#main-content:focus, #main-content h1:focus { outline: none; }" in html

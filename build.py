@@ -10,6 +10,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from schema import load_nodes, load_edges, validate_graph
 from layout import compute_layout
 from search_index import build_search_index
+from relations import RELATIONS
+from school_scope import SCHOOL_SCOPE
 import markdown as md_lib
 
 BASE = Path(__file__).parent
@@ -196,6 +198,8 @@ def build_payload(nodes, edges) -> dict:
         "edges": [asdict(e) for e in edges],
         "layout": compute_layout(nodes, edges),
         "search": search,
+        "relationSemantics": RELATIONS.public_contract(),
+        "schoolScope": SCHOOL_SCOPE.public_contract(),
         "meta": {"nodeCount": len(nodes), "edgeCount": len(edges)},
     }
 

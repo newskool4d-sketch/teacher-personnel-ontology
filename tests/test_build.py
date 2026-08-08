@@ -93,7 +93,66 @@ def test_build_payload_separates_validated_data_from_file_output():
     payload = build_payload(nodes, edges)
 
     assert payload["meta"] == {"nodeCount": 2, "edgeCount": 1}
-    assert set(payload) == {"nodes", "edges", "layout", "search", "meta"}
+    assert set(payload) == {
+        "nodes", "edges", "layout", "search", "relationSemantics", "schoolScope", "meta"
+    }
+
+
+def test_build_payload_exposes_semantics_for_every_relation_type():
+    nodes = load_nodes(FIXTURES / "sample_nodes")
+    edges = load_edges(FIXTURES / "sample_edges.yaml")
+
+    payload = build_payload(nodes, edges)
+    semantics = payload["relationSemantics"]
+
+    assert set(semantics) == {
+        "근거법령", "기한수치", "필요서식", "관련해석", "상위개념", "유의", "절차단계"
+    }
+    assert semantics["근거법령"]["targetTypes"] == ["법령·조문"]
+    assert semantics["절차단계"]["visual"] == {
+        "colorRole": "chapter-4", "dash": [], "arrow": True
+    }
+    assert all(data["outgoingLabel"] and data["incomingLabel"] for data in semantics.values())
+
+
+def test_build_payload_exposes_truthful_school_scope_contract():
+    nodes = load_nodes(FIXTURES / "sample_nodes")
+    edges = load_edges(FIXTURES / "sample_edges.yaml")
+
+    contract = build_payload(nodes, edges)["schoolScope"]
+
+    assert contract["default"] == "중등"
+    assert contract["sharedScope"] == "공통"
+    assert [option["value"] for option in contract["options"]] == ["중등", "초등"]
+    assert all(option["label"].endswith("교원") for option in contract["options"])
+    assert all(option["officialGuide"]["url"].startswith("https://") for option in contract["options"])
+    assert contract["selectionHelp"] == (
+        "학교급을 선택하면 실무도우미에서 찾을 위치와 공식 원문이 바뀝니다."
+    )
+
+
+def test_real_html_consumes_relation_contract_for_map_and_detail(tmp_path):
+    html = build(dist_path=tmp_path / "relation-contract.html").read_text(encoding="utf-8")
+
+    assert "const RELATION_SEMANTICS = ONTOLOGY.relationSemantics;" in html
+    assert "renderRelationLegend()" in html
+    assert "relationVisual(edge.type)" in html
+    assert "renderOutgoingRelations(outgoing)" in html
+    assert "'근거법령': {color:" not in html
+    assert "group('근거법령')" not in html
+
+
+def test_real_html_consumes_school_scope_contract_across_views(tmp_path):
+    html = build(dist_path=tmp_path / "school-scope-contract.html").read_text(encoding="utf-8")
+
+    assert "const SCHOOL_SCOPE = ONTOLOGY.schoolScope;" in html
+    assert "renderScopeOptions()" in html
+    assert "visibleNodesForScope(" in html
+    assert "pageLabelForScope(" in html
+    assert "officialGuideForScope(" in html
+    assert "const OFFICIAL_GUIDES =" not in html
+    assert 'class="scope-option" data-scope="중등"' not in html
+    assert "업무 항목과 실무도우미에서 찾을 위치가 함께 바뀝니다." not in html
 
 
 def test_build_produces_valid_html_with_embedded_json(tmp_path):

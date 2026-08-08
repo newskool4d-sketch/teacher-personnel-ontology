@@ -30,8 +30,9 @@
   --glass-cyan: #67DCEB; --glass-violet: #A98BFF; --glass-pink: #F58BB7;
   --glass-lime: #B9E879; --glass-amber: #FFD071; --glass-blue: #78A9FF;
   --glass-mint: #73E0BD; --glass-coral: #FF9B8E;
-  --font-display: 'MaruBuri', Batang, 'Nanum Myeongjo', serif;
+  --font-display: Batang, 'AppleMyungjo', 'Noto Serif CJK KR', 'Nanum Myeongjo', serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
+  --text-support: 13px; --muted-readable: .74;
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 40px;
   color-scheme: light;
 }
@@ -73,6 +74,19 @@ h2 { font-size: 28px; margin: var(--space-3) 0 var(--space-1); }
 a { color: var(--accent); }
 table { font-variant-numeric: tabular-nums; border-collapse: collapse; width: 100%; }
 th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--space-2); text-align: left; }
+.skip-link {
+  position: fixed; top: 8px; left: 8px; z-index: 100;
+  padding: 10px 14px; border-radius: 8px; background: var(--accent); color: var(--surface);
+  font-weight: 750; text-decoration: none; transform: translateY(calc(-100% - 16px));
+}
+.skip-link:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; transform: translateY(0); }
+#main-content:focus, #main-content h1:focus { outline: 3px solid var(--accent); }
+#main-content:focus { outline-offset: -3px; }
+#main-content h1:focus { outline-offset: 4px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
 
 #app-header { padding: 14px var(--space-3); border-bottom: 1px solid var(--rule); font-family: var(--font-display); }
 .build-info { font-family: var(--font-body); font-size: 12px; opacity: .72; margin-top: 4px; }
@@ -139,29 +153,29 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 .graph-inspector { min-height: 190px; }
 .graph-inspector-kicker { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .graph-inspector h2 { margin: 6px 0 8px; font-size: 20px; line-height: 1.35; }
-.graph-inspector p { margin: 0; font-size: 13px; line-height: 1.55; opacity: .72; }
+.graph-inspector p { margin: 0; font-size: var(--text-support); line-height: 1.55; opacity: var(--muted-readable); }
 .graph-inspector-link { display: inline-flex; margin-top: 12px; padding: 6px 9px; border: 1px solid var(--accent); border-radius: 7px; color: var(--accent); font-size: 12px; font-weight: 750; text-decoration: none; }
 .graph-inspector-link:hover, .graph-inspector-link:focus-visible { background: var(--accent); color: var(--surface); }
 .graph-inspector-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
 .graph-inspector-meta span { padding: 4px 8px; border: 1px solid var(--rule); border-radius: 999px; font-size: 12px; }
 .graph-legend h2 { margin: 0 0 10px; font-size: 15px; }
 .graph-legend-list { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 10px; }
-.graph-legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; line-height: 1.45; }
+.graph-legend-item { display: flex; align-items: center; gap: 7px; font-size: var(--text-support); line-height: 1.45; }
 .graph-legend-shape { width: 10px; height: 10px; flex: 0 0 auto; background: var(--accent); }
 .shape-circle { border-radius: 50%; }
 .shape-diamond { transform: rotate(45deg); }
 .shape-square { border-radius: 1px; }
 .shape-triangle { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 11px solid var(--accent); background: transparent; }
 .graph-chapter-key { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); }
-.graph-chapter-key span { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.graph-chapter-key span { display: flex; align-items: center; gap: 6px; font-size: var(--text-support); }
 .graph-list-panel { min-height: 180px; padding: 16px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface-2); }
 .graph-list-panel h2 { margin: 0 0 8px; font-size: 15px; }
-.graph-list-help { margin: 0 0 10px; font-size: 12px; line-height: 1.5; opacity: .82; }
+.graph-list-help { margin: 0 0 10px; font-size: var(--text-support); line-height: 1.5; opacity: .82; }
 .graph-list { display: grid; gap: 4px; max-height: 330px; overflow-y: auto; padding-right: 4px; }
 .graph-list-item { display: grid; grid-template-columns: 8px minmax(0, 1fr); gap: 8px; align-items: start; padding: 7px 8px; border: 1px solid transparent; border-radius: 7px; color: var(--ink); text-decoration: none; }
 .graph-list-item:hover, .graph-list-item:focus-visible, .graph-list-item.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
 .graph-list-item strong { display: block; font-size: 13px; line-height: 1.35; }
-.graph-list-item span { display: block; margin-top: 2px; font-size: 12px; line-height: 1.4; opacity: .78; }
+.graph-list-item span { display: block; margin-top: 2px; font-size: var(--text-support); line-height: 1.4; opacity: .78; }
 .graph-list-dot { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--accent); }
 .graph-empty { display: grid; place-items: center; height: 100%; color: var(--ink); opacity: .55; }
 
@@ -215,7 +229,7 @@ th, td { border-bottom: 1px solid var(--rule); padding: var(--space-1) var(--spa
 .chapter-node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-2); margin-top: var(--space-2); }
 .mini-card { display: block; border-left: 4px solid; padding: var(--space-2); background: var(--surface-2);
   text-decoration: none; color: var(--ink); border-radius: 4px; }
-.mini-card-type { font-size: 12px; opacity: .6; }
+.mini-card-type { font-size: var(--text-support); opacity: var(--muted-readable); }
 .chapter-gate { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-2); margin: var(--space-3) 0; }
 .chapter-gate-item { display: block; padding: var(--space-2); border-top: 4px solid var(--chapter-color);
   background: var(--surface-2); text-decoration: none; color: var(--ink); border-radius: 4px; }
@@ -243,13 +257,13 @@ button, select { color: var(--ink); }
 .scope-switcher { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--glass); font-family: var(--font-body); box-shadow: inset 0 1px 0 var(--glass-highlight); }
 .scope-switcher-label { padding: 0 7px; color: var(--ink); font-size: 12px; font-weight: 750; opacity: .78; }
 .scope-option { padding: 7px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font-size: 12px; font-weight: 750; cursor: pointer; }
-.scope-option.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 22%, transparent); }
+.scope-option.active { background: var(--accent); color: var(--bg); box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 22%, transparent); }
 .scope-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .theme-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 7px 11px; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--glass); color: var(--ink); box-shadow: inset 0 1px 0 var(--glass-highlight); font-family: var(--font-body); font-size: 12px; font-weight: 750; cursor: pointer; }
 .theme-toggle:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--glass-border)); background: var(--glass-strong); }
 .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .theme-toggle-icon { font-size: 16px; line-height: 1; }
-.build-info { grid-column: 1 / -1; margin: -10px 0 0; color: var(--ink); opacity: .48; }
+.build-info { grid-column: 1 / -1; margin: -10px 0 0; color: var(--ink); font-size: 13px; opacity: .68; }
 .app-shell { grid-template-columns: 264px minmax(0, 1fr); min-height: calc(100vh - 76px); }
 .app-shell > aside { position: sticky; top: 76px; height: calc(100vh - 76px); padding: 30px 22px; border-color: var(--glass-border); background: var(--glass); -webkit-backdrop-filter: blur(20px) saturate(135%); backdrop-filter: blur(20px) saturate(135%); box-shadow: inset -1px 0 0 var(--glass-highlight); }
 .app-shell > main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 56px clamp(28px, 5vw, 80px) 96px; }
@@ -269,41 +283,42 @@ button, select { color: var(--ink); }
 .home-stat:nth-child(odd) { border-right: 1px solid var(--rule); }
 .home-stat:nth-last-child(-n+2) { border-bottom: 0; }
 .home-stat strong { display: block; font-family: var(--font-display); font-size: 34px; line-height: 1.2; color: var(--accent); }
-.home-stat span { display: block; margin-top: 6px; font-size: 12px; line-height: 1.45; opacity: .78; }
+.home-stat span { display: block; margin-top: 6px; font-size: var(--text-support); line-height: 1.45; opacity: .78; }
 .home-stat:nth-child(1) strong { color: var(--glass-cyan); }
 .home-stat:nth-child(2) strong { color: var(--glass-violet); }
 .home-stat:nth-child(3) strong { color: var(--glass-mint); }
 .home-stat:nth-child(4) strong { color: var(--glass-coral); }
 .search-panel { margin-top: 30px; padding: 10px; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 48px color-mix(in srgb, var(--ink) 7%, transparent); }
 .search-panel .search-bar { max-width: none; min-height: 54px; border: 0; padding: 10px 14px; background: transparent; outline: none; }
+.search-panel .search-bar:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 .search-results { max-width: none; max-height: min(58vh, 620px); overflow-y: auto; }
-.search-result-count { position: sticky; top: 0; z-index: 1; margin: 0; padding: 9px 14px; border-top: 1px solid var(--rule); background: var(--surface); color: var(--accent); font-size: 12px; font-weight: 750; }
+.search-result-count { position: sticky; top: 0; z-index: 1; margin: 0; padding: 9px 14px; border-top: 1px solid var(--rule); background: var(--surface); color: var(--accent); font-size: var(--text-support); font-weight: 750; }
 .search-result { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: start; padding: 11px 14px; border-top: 1px solid var(--rule); border-radius: 6px; }
 .search-result:hover { background: var(--surface-2); }
 .search-result-copy strong { display: block; font-size: 14px; }
-.search-result-copy span { display: block; margin-top: 2px; color: var(--ink); font-size: 12px; line-height: 1.45; opacity: .62; }
-.search-result-meta { text-align: right; color: var(--ink); font-size: 12px; line-height: 1.5; opacity: .78; }
+.search-result-copy span { display: block; margin-top: 2px; color: var(--ink); font-size: var(--text-support); line-height: 1.45; opacity: var(--muted-readable); }
+.search-result-meta { text-align: right; color: var(--ink); font-size: var(--text-support); line-height: 1.5; font-weight: 500; opacity: .78; }
 .home-section { margin-top: 42px; }
 .getting-started { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: 18px; overflow: hidden; border: 1px solid var(--rule); border-radius: 10px; background: var(--rule); }
 .getting-started-item { padding: 16px; background: var(--surface-2); }
 .getting-started-item strong { display: block; margin-bottom: 4px; color: var(--accent); font-size: 13px; }
-.getting-started-item span { display: block; font-size: 12px; line-height: 1.55; opacity: .68; }
+.getting-started-item span { display: block; font-size: var(--text-support); line-height: 1.55; opacity: var(--muted-readable); }
 .home-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 16px; }
 .home-section-heading h2 { margin: 0; font-size: 30px; }
-.home-section-heading p { max-width: 560px; margin: 0; font-size: 14px; opacity: .62; }
+.home-section-heading p { max-width: 560px; margin: 0; font-size: 14px; opacity: var(--muted-readable); }
 .chapter-gate { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; }
 .chapter-gate-item { position: relative; min-height: 180px; padding: 18px; border: 1px solid var(--rule); border-top: 5px solid var(--chapter-color); border-radius: 10px; background: color-mix(in srgb, var(--surface) 72%, transparent); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
 .chapter-gate-item:hover { transform: translateY(-3px); border-color: var(--chapter-color); box-shadow: 0 14px 32px color-mix(in srgb, var(--chapter-color) 24%, transparent); }
 .chapter-gate-item .chapter-num { font-size: 38px; line-height: 1; }
 .chapter-gate-item .chapter-name { display: block; margin-top: 30px; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
-.chapter-gate-item .chapter-desc { display: block; margin-top: 7px; font-size: 12px; line-height: 1.5; opacity: .78; }
+.chapter-gate-item .chapter-desc { display: block; margin-top: 7px; font-size: var(--text-support); line-height: 1.5; opacity: .78; }
 .chapter-gate-item .chapter-count { position: absolute; right: 16px; top: 15px; font-size: 12px; opacity: .72; }
 .home-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0 0; }
 .home-links a { display: block; min-height: 116px; padding: 18px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface-2); color: var(--ink); }
 .home-links strong { display: block; margin-bottom: 6px; color: var(--accent); font-size: 18px; }
-.home-links span { display: block; font-family: var(--font-body); font-size: 13px; line-height: 1.5; opacity: .62; }
+.home-links span { display: block; font-family: var(--font-body); font-size: var(--text-support); line-height: 1.5; opacity: var(--muted-readable); }
 
-.breadcrumb { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; color: var(--ink); font-size: 12px; opacity: .58; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; color: var(--ink); font-size: var(--text-support); font-weight: 500; opacity: var(--muted-readable); }
 .breadcrumb a { color: inherit; text-decoration: none; }
 .node-card-header { padding: 6px 0 32px 28px; border-left-width: 5px; border-bottom: 1px solid var(--rule); }
 .node-card-header h1 { max-width: 980px; font-size: clamp(36px, 4.5vw, 60px); line-height: 1.17; letter-spacing: -.045em; }
@@ -340,10 +355,16 @@ button, select { color: var(--ink); }
 .table-toolbar { display: grid; grid-template-columns: minmax(240px, 1fr) 190px auto; gap: 10px; margin-bottom: 14px; }
 .table-toolbar .search-bar, .table-toolbar select { max-width: none; min-height: 46px; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
 .table-count { align-self: center; font-size: 13px; opacity: .62; }
-.table-wrap { overflow: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+.table-scroll-help { margin: -2px 0 10px; color: var(--ink); font-size: var(--text-support); opacity: var(--muted-readable); }
+.table-wrap { overflow: auto; overscroll-behavior-inline: contain; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+.table-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 #numeric-table { min-width: 920px; }
 #numeric-table thead { position: sticky; top: 0; z-index: 2; background: var(--surface-2); }
-#numeric-table th { padding: 12px 14px; color: var(--accent); font-size: 12px; letter-spacing: .04em; cursor: pointer; }
+#numeric-table th { padding: 0; color: var(--accent); font-size: 12px; letter-spacing: .04em; }
+.table-sort { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; padding: 12px 14px; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 750; letter-spacing: inherit; text-align: left; cursor: pointer; }
+.table-sort:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.table-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.sort-indicator { font-size: 14px; letter-spacing: 0; }
 #numeric-table td { padding: 13px 14px; vertical-align: top; font-size: 14px; line-height: 1.55; }
 #numeric-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 5%, var(--surface)); }
 #numeric-table td:first-child { min-width: 230px; font-weight: 700; }
@@ -355,7 +376,7 @@ button, select { color: var(--ink); }
 .mini-card { min-height: 164px; padding: 18px; border: 1px solid var(--rule); border-left: 5px solid; border-radius: 9px; background: color-mix(in srgb, var(--surface) 68%, transparent); transition: transform .16s ease, box-shadow .16s ease; }
 .mini-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 6%, transparent); }
 .mini-card strong { display: block; margin-top: 7px; font-family: var(--font-display); font-size: 18px; }
-.mini-card p { margin: 8px 0 0; font-size: 13px; line-height: 1.55; opacity: .68; }
+.mini-card p { margin: 8px 0 0; font-size: var(--text-support); line-height: 1.55; opacity: var(--muted-readable); }
 .mini-card-review { display: block; margin-top: 12px; }
 
 .print-sheet .print-title-row { display: flex; justify-content: space-between; align-items: end; gap: 24px; border-bottom: 2px solid var(--ink); }
@@ -462,7 +483,8 @@ body,
   .app-shell { grid-template-columns: minmax(0, 1fr); }
   .app-shell > main { padding: 38px 20px 72px; }
   .home-hero-grid, .node-detail-grid { grid-template-columns: 1fr; }
-  .node-rail { position: static; order: -1; }
+  .node-primary { order: 1; }
+  .node-rail { position: static; order: 2; }
   .source-panel dl { display: grid; grid-template-columns: 100px 1fr; column-gap: 12px; }
   .source-panel dt { margin-top: 8px; }
   .source-panel dd { margin-top: 8px; }
@@ -506,10 +528,16 @@ body,
   .print-chapter { break-after: page; }
   .print-chapter table { font-size: 9pt; }
   .print-chapter th, .print-chapter td { padding: 5pt; }
+  .skip-link { display: none !important; }
+  #main-content:focus, #main-content h1:focus { outline: none; }
+  .table-scroll-help { display: none; }
+  #public-footer { background: #fff !important; color: #000; border-color: #999; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .public-footer-grid section h2, #public-footer a { color: #000; }
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">본문으로 바로가기</a>
 <div id="app">
   <header id="app-header">
     <a class="brand" href="#/">
@@ -524,8 +552,6 @@ body,
     <div class="header-controls no-print">
       <div id="scope-toggle" class="scope-switcher" role="group" aria-label="학교급 선택">
         <span class="scope-switcher-label">학교급 선택</span>
-        <button type="button" class="scope-option" data-scope="중등">중등교원</button>
-        <button type="button" class="scope-option" data-scope="초등">초등교원</button>
       </div>
       <button id="theme-toggle" class="theme-toggle" type="button">
         <span id="theme-toggle-icon" class="theme-toggle-icon" aria-hidden="true">☾</span>
@@ -535,8 +561,8 @@ body,
     <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 __BUILD_DATE__</div>
   </header>
   <div class="app-shell">
-    <aside id="left-nav"></aside>
-    <main id="main">로딩 중…</main>
+    <aside id="left-nav" aria-label="업무 탐색"></aside>
+    <main id="main-content" tabindex="-1">로딩 중…</main>
   </div>
 </div>
 <footer id="public-footer">
@@ -552,6 +578,9 @@ body,
 </footer>
 <script>
 const ONTOLOGY = __ONTOLOGY_DATA__;
+const RELATION_SEMANTICS = ONTOLOGY.relationSemantics;
+const SCHOOL_SCOPE = ONTOLOGY.schoolScope;
+const APP_TITLE = '교원인사 업무 안내서';
 
 const ESCAPE_MAP = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'};
 function escapeHtml(value) {
@@ -571,16 +600,24 @@ const CHAPTER_DESCRIPTIONS = {
   7:'기간제교원 채용·계약·복무'
 };
 
-const OFFICIAL_GUIDES = {
-  중등: {
-    label: '2026 중등 실무도우미 공식 원문',
-    url: 'https://edubook.ice.go.kr/src/viewer/main.php?category=1&host=main&page=1&site=20260304_170151'
-  },
-  초등: {
-    label: '2026 초등 실무도우미 공식 자료실',
-    url: 'https://ice.go.kr/ice/na/ntt/selectNttList.do?bbsId=2086&mi=12307'
-  }
-};
+function relationVisual(relationType) {
+  return RELATION_SEMANTICS[relationType]?.visual || {colorRole: 'rule', dash: [], arrow: false};
+}
+
+function relationCssColor(colorRole) {
+  if (colorRole === 'accent') return 'var(--accent)';
+  if (colorRole === 'danger') return 'var(--danger)';
+  const chapter = /^chapter-(\d+)$/.exec(colorRole || '');
+  return chapter ? `var(--ch${chapter[1]})` : 'var(--rule)';
+}
+
+function renderRelationLegend() {
+  return Object.entries(RELATION_SEMANTICS).map(([, semantics]) => {
+    const visual = semantics.visual || {};
+    const marker = visual.arrow ? '➜' : (visual.dash || []).length ? '┅┅' : '━━';
+    return `<span class="graph-legend-item"><i style="color:${relationCssColor(visual.colorRole)}">${marker}</i>${escapeHtml(semantics.outgoingLabel)}</span>`;
+  }).join('');
+}
 
 const THEME_KEY = 'ontology-theme';
 function getTheme() {
@@ -614,10 +651,52 @@ function initThemeToggle() {
   });
 }
 
-function getScope() { return localStorage.getItem('ontology-scope') || '중등'; }
-function setScope(scope) { localStorage.setItem('ontology-scope', scope); render(); }
+function scopeOptionFor(scope) {
+  return SCHOOL_SCOPE.options.find(option => option.value === scope);
+}
+
+function getScope() {
+  const saved = localStorage.getItem('ontology-scope');
+  return scopeOptionFor(saved) ? saved : SCHOOL_SCOPE.default;
+}
+
+function setScope(scope) {
+  if (!scopeOptionFor(scope)) return;
+  localStorage.setItem('ontology-scope', scope);
+  render();
+}
+
+function renderScopeOptions() {
+  const group = document.getElementById('scope-toggle');
+  group.querySelectorAll('[data-scope]').forEach(button => button.remove());
+  group.insertAdjacentHTML('beforeend', SCHOOL_SCOPE.options.map(option =>
+    `<button type="button" class="scope-option" data-scope="${escapeHtml(option.value)}">${escapeHtml(option.label)}</button>`
+  ).join(''));
+}
+
+function visibleNodesForScope(nodes, scope = getScope()) {
+  return nodes.filter(node => node.scope === SCHOOL_SCOPE.sharedScope || node.scope === scope);
+}
+
+function pageLabelForScope(item, scope = getScope(), missingLabel = '실무도우미에서 찾을 위치 미기재') {
+  const pages = item.pages || {};
+  const labels = [];
+  if (pages[scope]) labels.push(`${scope} ${pages[scope]}쪽`);
+  if (SCHOOL_SCOPE.sharedScope !== scope && pages[SCHOOL_SCOPE.sharedScope]) {
+    labels.push(`${SCHOOL_SCOPE.sharedScope} ${pages[SCHOOL_SCOPE.sharedScope]}쪽`);
+  }
+  if (labels.length) return labels.join(' · ');
+  const fallback = Object.entries(pages).find(([, value]) => value);
+  return fallback ? `${fallback[0]} ${fallback[1]}쪽` : missingLabel;
+}
+
+function officialGuideForScope(scope = getScope()) {
+  return (scopeOptionFor(scope) || scopeOptionFor(SCHOOL_SCOPE.default)).officialGuide;
+}
+
 function initScopeToggle() {
   const group = document.getElementById('scope-toggle');
+  renderScopeOptions();
   const buttons = Array.from(group.querySelectorAll('[data-scope]'));
   const sync = () => {
     const current = getScope();
@@ -637,7 +716,7 @@ function initScopeToggle() {
 function renderHome(main) {
   const chapters = [1,2,3,4,5,6,7,0];
   const scope = getScope();
-  const visibleNodes = ONTOLOGY.nodes.filter(n => n.scope === '공통' || n.scope === scope);
+  const visibleNodes = visibleNodesForScope(ONTOLOGY.nodes, scope);
   const explicitReviews = visibleNodes.filter(n => n.legal_review && n.legal_review.state);
   const conflictReviews = explicitReviews.filter(n => n.legal_review.state === 'conflict');
   const numericNodes = visibleNodes.filter(n => n.type === '수치·기한');
@@ -649,22 +728,23 @@ function renderHome(main) {
           <h1 class="display"><span class="home-hero-title-line">규정은 빠르게 찾고,</span><span class="home-hero-title-line">판단에 집중하세요.</span></h1>
           <p class="home-lede">중등·초등 실무도우미 905쪽 분량을 업무 항목, 수치, 법령, 절차로 연결했습니다. 실무도우미에서 찾을 위치와 판단할 기준을 함께 확인하세요.</p>
         </div>
-        <div class="home-stats" aria-label="데이터 현황">
+        <section class="home-stats" aria-label="데이터 현황">
           <div class="home-stat"><strong>${visibleNodes.length}</strong><span>${scope} 기준 지식 항목</span></div>
           <div class="home-stat"><strong>${numericNodes.length}</strong><span>수치·기한 항목</span></div>
           <div class="home-stat"><strong>${explicitReviews.length}</strong><span>관련 법령 안내 항목</span></div>
           <div class="home-stat"><strong>${conflictReviews.length}</strong><span>현행 법령과 다른 항목</span></div>
-        </div>
+        </section>
       </div>
       <div class="search-panel">
         <input id="search-bar" class="search-bar" aria-label="교원인사 업무 검색" placeholder="업무명, 법령, 수치, 초성으로 검색하세요. 예: 퇴직포상, ㅇㅇㅎㅈ" autocomplete="off">
+        <div id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
         <div id="search-results" class="search-results"></div>
       </div>
-      <div class="getting-started" aria-label="사이트 이용 순서">
-        <div class="getting-started-item"><strong>1. 학교급 선택</strong><span>화면 상단에서 중등교원 또는 초등교원을 선택하세요. 업무 항목과 실무도우미에서 찾을 위치가 함께 바뀝니다.</span></div>
+      <section class="getting-started" aria-label="사이트 이용 순서">
+        <div class="getting-started-item"><strong>1. 학교급 선택</strong><span>화면 상단에서 학교급을 선택하세요. ${escapeHtml(SCHOOL_SCOPE.selectionHelp)}</span></div>
         <div class="getting-started-item"><strong>2. 업무 찾기</strong><span>검색하거나 장별 메뉴를 선택해 필요한 제도·수치·절차로 이동합니다.</span></div>
         <div class="getting-started-item"><strong>3. 판단할 기준 확인</strong><span>① 실무도우미에서 찾을 위치 확인 → ② 관련 법령 확인 → ③ 소속 교육청 지침 확인 순서로 판단합니다.</span></div>
-      </div>
+      </section>
     </div>
     <section class="home-section">
       <div class="home-section-heading">
@@ -701,20 +781,48 @@ function parseHash() {
   return (location.hash.slice(1) || '/').split('/').filter(Boolean);
 }
 
-function render() {
+function updateRouteContext(main, focusContent = false) {
+  const heading = main.querySelector('h1');
+  const isHome = parseHash().length === 0;
+  const pageTitle = isHome || !heading
+    ? APP_TITLE
+    : heading.innerText.replace(/\s+/g, ' ').trim();
+  document.title = pageTitle === APP_TITLE ? APP_TITLE : `${pageTitle} | ${APP_TITLE}`;
+  if (!focusContent) return;
+  if (heading) {
+    heading.setAttribute('tabindex', '-1');
+    heading.focus();
+  } else {
+    main.focus();
+  }
+}
+
+function initSkipLink() {
+  const skipLink = document.querySelector('.skip-link');
+  const main = document.getElementById('main-content');
+  if (!skipLink || !main) return;
+  skipLink.addEventListener('click', event => {
+    event.preventDefault();
+    main.focus();
+    main.scrollIntoView({ block: 'start' });
+  });
+}
+
+function render({ focusContent = false } = {}) {
   if (typeof window.__viewCleanup === 'function') {
     window.__viewCleanup();
     window.__viewCleanup = null;
   }
   const parts = parseHash();
-  const main = document.getElementById('main');
-  if (parts.length === 0) return renderHome(main);
-  if (parts[0] === 'graph' && typeof renderGraph === 'function') return renderGraph(main);
-  if (parts[0] === 'node' && parts[1] && typeof renderNode === 'function') return renderNode(main, parts[1]);
-  if (parts[0] === 'table' && typeof renderTable === 'function') return renderTable(main);
-  if (parts[0] === 'chapter' && parts[1] && typeof renderChapterHub === 'function') return renderChapterHub(main, Number(parts[1]));
-  if (parts[0] === 'print' && typeof renderPrint === 'function') return renderPrint(main);
-  main.innerHTML = '<p>준비 중인 화면입니다.</p>';
+  const main = document.getElementById('main-content');
+  if (parts.length === 0) renderHome(main);
+  else if (parts[0] === 'graph' && typeof renderGraph === 'function') renderGraph(main);
+  else if (parts[0] === 'node' && parts[1] && typeof renderNode === 'function') renderNode(main, parts[1]);
+  else if (parts[0] === 'table' && typeof renderTable === 'function') renderTable(main);
+  else if (parts[0] === 'chapter' && parts[1] && typeof renderChapterHub === 'function') renderChapterHub(main, Number(parts[1]));
+  else if (parts[0] === 'print' && typeof renderPrint === 'function') renderPrint(main);
+  else main.innerHTML = '<p>준비 중인 화면입니다.</p>';
+  updateRouteContext(main, focusContent);
 }
 
 function renderLeftNav() {
@@ -722,12 +830,12 @@ function renderLeftNav() {
   if (!nav) return;
   const chapters = [1,2,3,4,5,6,7,0];
   nav.innerHTML = `
-    <nav class="left-nav-chapters">
+    <nav class="left-nav-chapters" aria-label="장별 업무 탐색">
       ${chapters.map(c => `
         <a href="#/chapter/${c}"><span class="chapter-dot" style="background:var(--ch${c})"></span>${c === 0 ? '부록' : '제' + c + '장 ' + CHAPTER_NAMES[c]}</a>`).join('')}
     </nav>
     <hr class="left-nav-divider">
-    <nav class="left-nav-quicklinks">
+    <nav class="left-nav-quicklinks" aria-label="빠른 탐색">
       <a href="#/graph">지식 지도</a>
       <a href="#/table">수치·기한 통합표</a>
       <a href="#/print">인쇄용 요약</a>
@@ -744,8 +852,17 @@ function highlightLeftNav() {
   });
 }
 
-window.addEventListener('hashchange', () => { render(); highlightLeftNav(); });
-window.addEventListener('DOMContentLoaded', () => { initThemeToggle(); initScopeToggle(); renderLeftNav(); render(); });
+window.addEventListener('hashchange', () => {
+  render({ focusContent: true });
+  highlightLeftNav();
+});
+window.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
+  initScopeToggle();
+  initSkipLink();
+  renderLeftNav();
+  render();
+});
 
 function renderGraph(main) {
   const scope = getScope();
@@ -790,10 +907,7 @@ function renderGraph(main) {
             </div>
             <h2 style="margin-top:14px">관계선</h2>
             <div class="graph-legend-list graph-edge-key">
-              <span class="graph-legend-item">━━ 근거법령</span>
-              <span class="graph-legend-item">┅┅ 기한·수치</span>
-              <span class="graph-legend-item">➜ 절차단계</span>
-              <span class="graph-legend-item">··· 유의·해석</span>
+              ${renderRelationLegend()}
             </div>
             <div class="graph-chapter-key">${chapterKey}</div>
           </section>
@@ -824,8 +938,14 @@ function renderGraph(main) {
   const accentColor = css.getPropertyValue('--accent').trim();
   const dangerColor = css.getPropertyValue('--danger').trim();
   const chColor = chapter => css.getPropertyValue(`--ch${chapter}`).trim();
+  const relationColor = colorRole => {
+    if (colorRole === 'accent') return accentColor;
+    if (colorRole === 'danger') return dangerColor;
+    const chapter = /^chapter-(\d+)$/.exec(colorRole || '');
+    return chapter ? chColor(chapter[1]) : ruleColor;
+  };
   const layout = ONTOLOGY.layout;
-  const scopeNodes = ONTOLOGY.nodes.filter(node => node.scope === '공통' || node.scope === scope);
+  const scopeNodes = visibleNodesForScope(ONTOLOGY.nodes, scope);
   const scopeIds = new Set(scopeNodes.map(node => node.id));
   const scopeEdges = ONTOLOGY.edges.filter(edge => scopeIds.has(edge.source) && scopeIds.has(edge.target));
   const nodeById = new Map(scopeNodes.map(node => [node.id, node]));
@@ -968,7 +1088,7 @@ function renderGraph(main) {
     graphList.setAttribute('aria-label', `${ordered.length}개 업무 항목 목록`);
   }
 
-  function drawLabels(candidates, priorityIds, focusId, degreeById) {
+  function drawLabels(candidates, priorityIds, focusId, degreeById, labelLimit, supportingLabelLimit) {
     const boxes = [];
     let count = 0;
     const score = item => (priorityIds.has(item.node.id) ? 1000 : 0)
@@ -980,8 +1100,8 @@ function renderGraph(main) {
     });
     for (const item of ordered) {
       const mustShow = item.node.id === focusId;
-      if (count >= 48 && !mustShow) continue;
-      if (count >= 36 && !priorityIds.has(item.node.id)) continue;
+      if (count >= labelLimit && !mustShow) continue;
+      if (count >= supportingLabelLimit && !priorityIds.has(item.node.id)) continue;
       const isPriority = priorityIds.has(item.node.id);
       const fontSize = isPriority ? 13 : 11;
       ctx.font = `${isPriority ? 750 : 620} ${fontSize}px ${css.getPropertyValue('--font-body').trim()}`;
@@ -1031,15 +1151,8 @@ function renderGraph(main) {
       const from = projected.get(edge.source), to = projected.get(edge.target);
       const connected = !activeFocusId || (neighbors.has(edge.source) && neighbors.has(edge.target));
       const searchRelated = !query || matches.has(edge.source) || matches.has(edge.target);
-      const edgeStyle = {
-        '근거법령': {color: accentColor, dash: [], arrow: false},
-        '기한수치': {color: chColor(6), dash: [6, 4], arrow: false},
-        '절차단계': {color: chColor(4), dash: [], arrow: true},
-        '필요서식': {color: chColor(7), dash: [2, 4], arrow: false},
-        '관련해석': {color: chColor(5), dash: [2, 5], arrow: false},
-        '유의': {color: dangerColor, dash: [1, 5], arrow: false},
-        '상위개념': {color: chColor(1), dash: [], arrow: false},
-      }[edge.type] || {color: ruleColor, dash: [], arrow: false};
+      const visual = relationVisual(edge.type);
+      const edgeStyle = {color: relationColor(visual.colorRole), dash: visual.dash || [], arrow: Boolean(visual.arrow)};
       ctx.globalAlpha = connected && searchRelated ? .42 : .045;
       ctx.strokeStyle = edgeStyle.color;
       ctx.lineWidth = connected && activeFocusId ? 1.7 : 1;
@@ -1086,14 +1199,27 @@ function renderGraph(main) {
       degreeById.set(edge.source, (degreeById.get(edge.source) || 0) + 1);
       degreeById.set(edge.target, (degreeById.get(edge.target) || 0) + 1);
     });
+    const compactViewport = canvas.clientWidth < 720;
+    const coreLimit = compactViewport ? 5 : 8;
+    const labelLimit = compactViewport ? 18 : 28;
+    const supportingLabelLimit = compactViewport ? 8 : 14;
     const coreIds = new Set([...graph.nodes]
       .sort((a, b) => (degreeById.get(b.id) || 0) - (degreeById.get(a.id) || 0))
-      .slice(0, 12).map(node => node.id));
+      .slice(0, coreLimit).map(node => node.id));
     const priorityIds = new Set([...neighbors, ...matches, ...coreIds]);
     const labelCandidates = ordered.filter(({node, point}) =>
-      priorityIds.has(node.id) || (node.type === '개념' && point.scale > .55 && point.z < 420)
+      priorityIds.has(node.id) || (node.type === '개념'
+        && point.scale > (compactViewport ? .72 : .64)
+        && point.z < (compactViewport ? 220 : 320))
     );
-    drawLabels(labelCandidates, priorityIds, activeFocusId, degreeById);
+    drawLabels(
+      labelCandidates,
+      priorityIds,
+      activeFocusId,
+      degreeById,
+      labelLimit,
+      supportingLabelLimit,
+    );
     updateInspector(activeFocusId ? nodeById.get(activeFocusId) : null, graph, matches);
   }
 
@@ -1262,34 +1388,63 @@ function renderLegalReview(n) {
     </section>`;
 }
 
+function renderRelationChips(items, className = '') {
+  return items.map(({node}) =>
+    `<a class="chip ${className}" href="#/node/${node.id}">${escapeHtml(node.title)}</a>`
+  ).join(' ');
+}
+
+function renderOutgoingRelation(relationType, items) {
+  const semantics = RELATION_SEMANTICS[relationType];
+  if (!semantics || !items.length) return '';
+
+  if (semantics.detailKind === 'interpretation') {
+    const content = items.map(({node}) =>
+      `<div class="qa-item"><p>${escapeHtml(node.summary)}</p><p class="qa-source">${(node.refs || []).map(escapeHtml).join(', ')}</p></div>`
+    ).join('');
+    return `<section class="wide"><h2>${escapeHtml(semantics.outgoingLabel)}</h2>${content}</section>`;
+  }
+
+  if (semantics.detailKind === 'caution') {
+    const auditItems = items.filter(({node}) => node.type === '감사지적사례');
+    const otherItems = items.filter(({node}) => node.type !== '감사지적사례');
+    const otherSection = otherItems.length
+      ? `<section><h2>${escapeHtml(semantics.outgoingLabel)}</h2>${renderRelationChips(otherItems)}</section>` : '';
+    const auditSection = auditItems.length
+      ? `<section class="wide"><h2>감사·실무 유의</h2>${auditItems.map(({node}) => `<div class="audit-warning"><p>${escapeHtml(node.summary)}</p></div>`).join('')}</section>` : '';
+    return otherSection + auditSection;
+  }
+
+  const chipClass = semantics.detailKind === 'number' ? 'chip-num' : '';
+  return `<section><h2>${escapeHtml(semantics.outgoingLabel)}</h2>${renderRelationChips(items, chipClass)}</section>`;
+}
+
+function renderOutgoingRelations(outgoing) {
+  return Object.keys(RELATION_SEMANTICS).map(relationType =>
+    renderOutgoingRelation(relationType, outgoing.filter(({edge}) => edge.type === relationType))
+  ).join('');
+}
+
+function renderIncomingRelations(incoming) {
+  return Object.entries(RELATION_SEMANTICS).map(([relationType, semantics]) => {
+    const items = incoming.filter(({edge}) => edge.type === relationType);
+    return items.length
+      ? `<section class="backlinks"><h3>${escapeHtml(semantics.incomingLabel)}</h3>${renderRelationChips(items)}</section>` : '';
+  }).join('');
+}
+
 function renderNode(main, id) {
   const n = findNode(id);
   if (!n) { main.innerHTML = '<p>항목을 찾을 수 없습니다.</p>'; return; }
 
   const outgoing = edgesFrom(id).map(e => ({ edge: e, node: findNode(e.target) })).filter(x => x.node);
   const incoming = edgesTo(id).map(e => ({ edge: e, node: findNode(e.source) })).filter(x => x.node);
-  const group = type => outgoing.filter(x => x.edge.type === type);
-  const chip = (label, href, cls) => `<a class="chip ${cls || ''}" href="${href}">${escapeHtml(label)}</a>`;
-
-  const refsHtml = (n.refs || []).map(r => `<span class="chip chip-law">${escapeHtml(r)}</span>`).join(' ');
-  const lawsHtml = group('근거법령').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
-  const numsHtml = group('기한수치').map(x => chip(x.node.title, `#/node/${x.node.id}`, 'chip-num')).join(' ');
-  const formsHtml = group('필요서식').map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
-  const qaHtml = group('관련해석').map(x =>
-    `<div class="qa-item"><p>${escapeHtml(x.node.summary)}</p><p class="qa-source">${(x.node.refs || []).map(escapeHtml).join(', ')}</p></div>`).join('');
-  const noteEdges = group('유의');
-  const auditNotes = noteEdges.filter(x => x.node.type === '감사지적사례');
-  const otherNotes = noteEdges.filter(x => x.node.type !== '감사지적사례');
-  const auditHtml = auditNotes.map(x => `<div class="audit-warning"><p>${escapeHtml(x.node.summary)}</p></div>`).join('');
-  const noteChipsHtml = otherNotes.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
-  const backlinksHtml = incoming.map(x => chip(x.node.title, `#/node/${x.node.id}`)).join(' ');
+  const relationSectionsHtml = renderOutgoingRelations(outgoing);
+  const backlinksHtml = renderIncomingRelations(incoming);
 
   const scope = getScope();
-  const officialGuide = OFFICIAL_GUIDES[scope];
-  const pages = n.pages || {};
-  const pagesHtml = pages[scope]
-    ? `${scope} ${pages[scope]}쪽` + (pages['공통'] ? ` · 공통 ${pages['공통']}쪽` : '')
-    : (Object.entries(pages).filter(([, v]) => v).map(([k, v]) => `${k} ${v}쪽`).join(' · ') || '실무도우미에서 찾을 위치 미기재');
+  const officialGuide = officialGuideForScope(scope);
+  const pagesHtml = pageLabelForScope(n, scope);
   const review = n.legal_review || {};
   const reviewFooter = review.state
     ? `${reviewMeta(n).label} · 법령 확인 기준일 ${review.applicable_as_of}`
@@ -1313,20 +1468,15 @@ function renderNode(main, id) {
           <div class="node-card-body">${n.body || '<p>핵심 요약과 출처 정보를 확인하세요.</p>'}</div>
           ${renderLegalReview(n)}
           <div class="node-section-grid">
-            ${lawsHtml ? `<section><h2>관련 법령·개념</h2>${lawsHtml}</section>` : ''}
-            ${numsHtml ? `<section><h2>기한·수치</h2>${numsHtml}</section>` : ''}
-            ${formsHtml ? `<section><h2>필요 서식</h2>${formsHtml}</section>` : ''}
-            ${noteChipsHtml ? `<section><h2>관련 유의</h2>${noteChipsHtml}</section>` : ''}
-            ${qaHtml ? `<section class="wide"><h2>관련 Q&A·유권해석</h2>${qaHtml}</section>` : ''}
-            ${auditHtml ? `<section class="wide"><h2>감사·실무 유의</h2>${auditHtml}</section>` : ''}
+            ${relationSectionsHtml}
           </div>
         </article>
-        <aside class="node-rail">
+        <aside class="node-rail" aria-label="출처와 관련 정보">
           <section class="source-panel">
             <h2>출처와 적용 범위</h2>
             <dl>
               <dt>실무도우미에서 찾을 위치</dt><dd>${pagesHtml || '찾을 위치 미기재'}</dd>
-              <dt>공식 원문</dt><dd><a class="official-source-link" href="${officialGuide.url}" target="_blank" rel="noopener noreferrer">${officialGuide.label}</a></dd>
+              <dt>공식 원문</dt><dd><a class="official-source-link" href="${escapeHtml(officialGuide.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(officialGuide.label)}</a></dd>
               <dt>적용 범위</dt><dd>${n.scope}</dd>
               ${renderReviewBadge(n) ? `<dt>기준 안내</dt><dd>${renderReviewBadge(n)}</dd>` : ''}
               ${reviewReason(n) ? `<dt>적용 시 확인</dt><dd>${reviewReason(n)}</dd>` : ''}
@@ -1334,7 +1484,7 @@ function renderNode(main, id) {
             </dl>
             ${refsRail ? `<div class="node-meta" style="margin-top:14px">${refsRail}</div>` : ''}
           </section>
-          ${backlinksHtml ? `<section class="backlinks"><h3>이 항목을 참조하는 개념</h3>${backlinksHtml}</section>` : ''}
+          ${backlinksHtml}
           ${reviewFooter ? `<footer class="node-meta">${reviewFooter}</footer>` : ''}
         </aside>
       </div>
@@ -1354,32 +1504,35 @@ function toChosung(text) {
 function initSearch() {
   const bar = document.getElementById('search-bar');
   const results = document.getElementById('search-results');
-  if (!bar) return;
+  const status = document.getElementById('search-status');
+  if (!bar || !results || !status) return;
   bar.addEventListener('input', () => {
     const q = bar.value.trim();
-    if (!q) { results.innerHTML = ''; return; }
+    if (!q) {
+      results.innerHTML = '';
+      status.textContent = '';
+      return;
+    }
     const scope = getScope();
     const normalizedQuery = q.toLocaleLowerCase('ko-KR');
     const isChosungQuery = /^[ㄱ-ㅎ\s\d]+$/.test(q);
     const qChosung = toChosung(q);
-    const allMatches = ONTOLOGY.search.filter(item => {
-      if (!(item.scope === '공통' || item.scope === scope)) return false;
+    const allMatches = visibleNodesForScope(ONTOLOGY.search, scope).filter(item => {
       const textMatch = item.haystack.toLocaleLowerCase('ko-KR').includes(normalizedQuery);
       const chosungMatch = isChosungQuery && item.chosung.includes(qChosung);
       return textMatch || chosungMatch;
     });
     const listHtml = allMatches.map(m => {
-      const pages = m.pages || {};
-      const pageLabel = pages[scope] ? `${scope} ${pages[scope]}쪽` : '실무도우미에서 찾을 위치 미기재';
       return `<a class="search-result" href="#/node/${m.id}">
         <span class="chapter-dot" style="background:var(--ch${m.chapter})"></span>
         <span class="search-result-copy"><strong>${escapeHtml(m.title)}</strong><span>${escapeHtml(m.summary)}</span></span>
-        <span class="search-result-meta">${escapeHtml(m.type)}<br>${pageLabel}</span>
+        <span class="search-result-meta">${escapeHtml(m.type)}<br>${escapeHtml(pageLabelForScope(m, scope))}</span>
       </a>`;
     }).join('') || '<p class="no-result">일치하는 항목이 없습니다.</p>';
     const countHtml = allMatches.length
       ? `<p class="search-result-count">${scope} 기준 ${allMatches.length}개 항목 모두 표시</p>` : '';
     results.innerHTML = countHtml + listHtml;
+    status.textContent = `${scope} 기준 ${allMatches.length}개 항목`;
   });
   if (!window.__searchShortcutBound) {
     window.__searchShortcutBound = true;
@@ -1396,13 +1549,7 @@ function initSearch() {
 
 function renderTable(main) {
   const scope = getScope();
-  const numNodes = ONTOLOGY.nodes.filter(n => n.type === '수치·기한' && (n.scope === '공통' || n.scope === scope));
-  const pageLabel = n => {
-    const pages = n.pages || {};
-    if (pages[scope]) return `${scope} ${pages[scope]}쪽`;
-    const first = Object.entries(pages)[0];
-    return first ? `${first[0]} ${first[1]}쪽` : '쪽수 미기재';
-  };
+  const numNodes = visibleNodesForScope(ONTOLOGY.nodes, scope).filter(n => n.type === '수치·기한');
   main.innerHTML = `
     <div class="table-hero"><div><p class="section-kicker">수치·기한 모아보기</p><h1>수치·기한 통합표</h1><p>${scope} 기준으로 기간·금액·횟수와 실무도우미 수록 쪽을 함께 봅니다.</p></div></div>
     <div class="table-toolbar">
@@ -1414,24 +1561,32 @@ function renderTable(main) {
         <option value="conflict">현행 법령 함께 확인</option>
         <option value="needs_review">시·도교육청 지침 확인</option>
       </select>
-      <span id="table-count" class="table-count">${numNodes.length}개 항목</span>
+      <span id="table-count" class="table-count" role="status" aria-live="polite" aria-atomic="true">${numNodes.length}개 항목</span>
     </div>
-    <div class="table-wrap"><table id="numeric-table">
-        <thead><tr><th data-col="0">항목</th><th data-col="1">장</th><th data-col="2">내용</th><th data-col="3">실무도우미에서 찾을 위치</th><th data-col="4">관련 법령</th><th data-col="5">법령 안내</th></tr></thead>
+    <p id="table-scroll-help" class="table-scroll-help">작은 화면에서는 표 영역을 좌우로 스크롤해 모든 열을 볼 수 있습니다.</p>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="수치·기한 통합표" aria-describedby="table-scroll-help"><table id="numeric-table">
+        <thead><tr>
+          <th scope="col" data-col="0" aria-sort="none"><button type="button" class="table-sort" data-col="0">항목 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+          <th scope="col" data-col="1" aria-sort="none"><button type="button" class="table-sort" data-col="1">장 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+          <th scope="col" data-col="2" aria-sort="none"><button type="button" class="table-sort" data-col="2">내용 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+          <th scope="col" data-col="3" aria-sort="none"><button type="button" class="table-sort" data-col="3">실무도우미에서 찾을 위치 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+          <th scope="col" data-col="4" aria-sort="none"><button type="button" class="table-sort" data-col="4">관련 법령 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+          <th scope="col" data-col="5" aria-sort="none"><button type="button" class="table-sort" data-col="5">법령 안내 <span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+        </tr></thead>
         <tbody>
           ${numNodes.map(n => `
             <tr data-title="${escapeHtml(n.title)}" data-review-state="${reviewMeta(n).state}">
               <td><a href="#/node/${n.id}">${escapeHtml(n.title)}</a></td>
               <td>${n.chapter === 0 ? '부록' : n.chapter + '장'}</td>
               <td>${escapeHtml(n.summary)}</td>
-              <td>${escapeHtml(pageLabel(n))}</td>
+              <td>${escapeHtml(pageLabelForScope(n, scope, '쪽수 미기재'))}</td>
               <td>${(n.refs || []).map(escapeHtml).join(', ') || '별도 조문 미기재'}</td>
               <td>${renderReviewBadge(n) || '—'}${reviewReason(n) ? `<small class="review-reason">${reviewReason(n)}</small>` : ''}</td>
             </tr>`).join('')}
         </tbody>
       </table></div>`;
-  document.querySelectorAll('#numeric-table th').forEach(th => {
-    th.addEventListener('click', () => sortTable(Number(th.dataset.col)));
+  document.querySelectorAll('#numeric-table .table-sort').forEach(button => {
+    button.addEventListener('click', () => sortTable(Number(button.dataset.col)));
   });
   const applyFilters = () => {
     const q = document.getElementById('table-filter').value.trim();
@@ -1453,7 +1608,7 @@ function renderTable(main) {
 function sortTable(colIdx) {
   const tbody = document.querySelector('#numeric-table tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
-  const asc = tbody.dataset.sortCol == colIdx && tbody.dataset.sortDir !== 'asc';
+  const asc = tbody.dataset.sortCol != colIdx || tbody.dataset.sortDir !== 'asc';
   rows.sort((a, b) => {
     const av = a.children[colIdx].textContent, bv = b.children[colIdx].textContent;
     return asc ? av.localeCompare(bv, 'ko') : bv.localeCompare(av, 'ko');
@@ -1461,11 +1616,18 @@ function sortTable(colIdx) {
   rows.forEach(r => tbody.appendChild(r));
   tbody.dataset.sortCol = colIdx;
   tbody.dataset.sortDir = asc ? 'asc' : 'desc';
+  document.querySelectorAll('#numeric-table th[aria-sort]').forEach(header => {
+    header.setAttribute('aria-sort', 'none');
+    header.querySelector('.sort-indicator').textContent = '↕';
+  });
+  const activeHeader = document.querySelector(`#numeric-table th[data-col="${colIdx}"]`);
+  activeHeader.setAttribute('aria-sort', asc ? 'ascending' : 'descending');
+  activeHeader.querySelector('.sort-indicator').textContent = asc ? '↑' : '↓';
 }
 
 function renderChapterHub(main, chapterNum) {
   const scope = getScope();
-  const nodes = ONTOLOGY.nodes.filter(n => n.chapter === chapterNum && (n.scope === '공통' || n.scope === scope));
+  const nodes = visibleNodesForScope(ONTOLOGY.nodes, scope).filter(n => n.chapter === chapterNum);
   main.innerHTML = `
     <div class="chapter-heading">
       <p class="section-kicker">${chapterNum === 0 ? '부록 안내' : `제${chapterNum}장`}</p>
@@ -1484,8 +1646,8 @@ function renderChapterHub(main, chapterNum) {
 }
 
 function renderPrint(main) {
-  const numNodes = ONTOLOGY.nodes.filter(n => n.type === '수치·기한');
   const scope = getScope();
+  const numNodes = visibleNodesForScope(ONTOLOGY.nodes, scope).filter(n => n.type === '수치·기한');
   main.innerHTML = `
     <div class="print-sheet">
       <div class="print-title-row"><div><p class="section-kicker">2026 교원인사 실무 참고자료</p><h1>교원인사 실무 요약</h1><p class="print-meta">${scope} 기준 · 실무도우미 수록 쪽과 관련 법령 안내 포함</p></div></div>
@@ -1493,7 +1655,7 @@ function renderPrint(main) {
         <section class="print-chapter">
           <h2 style="color:var(--ch${c})">제${c}장 ${CHAPTER_NAMES[c]}</h2>
           <table><thead><tr><th>항목</th><th>기준</th><th>실무도우미에서 찾을 위치</th><th>법령 안내</th></tr></thead><tbody>
-            ${numNodes.filter(n => n.chapter === c && (n.scope === '공통' || n.scope === scope)).map(n => `<tr><td>${escapeHtml(n.title)}</td><td>${escapeHtml(n.summary)}</td><td>${escapeHtml((n.pages || {})[scope] || '-')}</td><td>${reviewMeta(n).label || '—'}</td></tr>`).join('') || '<tr><td colspan="4">해당 장 수치 데이터 없음</td></tr>'}
+            ${numNodes.filter(n => n.chapter === c).map(n => `<tr><td>${escapeHtml(n.title)}</td><td>${escapeHtml(n.summary)}</td><td>${escapeHtml(pageLabelForScope(n, scope, '-'))}</td><td>${reviewMeta(n).label || '—'}</td></tr>`).join('') || '<tr><td colspan="4">해당 장 수치 데이터 없음</td></tr>'}
           </tbody></table>
         </section>`).join('')}
     </div>

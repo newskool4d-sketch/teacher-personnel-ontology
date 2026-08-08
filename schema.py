@@ -5,17 +5,12 @@ from pathlib import Path
 import re
 import yaml
 
+from relations import RELATIONS
+from school_scope import SCHOOL_SCOPE
+
 VALID_TYPES = {"개념", "법령·조문", "수치·기한", "절차", "서식", "Q&A·유권해석", "감사지적사례", "NEIS작업"}
-VALID_SCOPES = {"공통", "중등", "초등"}
-VALID_EDGE_TYPES = {"근거법령", "기한수치", "필요서식", "관련해석", "상위개념", "유의", "절차단계"}
-# 엣지 타입별 target(대상) 노드 type 제약 — 확인된 데이터 패턴이 100% 일관된 경우만 강제한다.
-# (상위개념·유의·절차단계는 현재 챕터별 방향·조합이 아직 통일되지 않아 제약을 걸지 않음 — 별도 정리 필요)
-EDGE_TARGET_TYPE_CONSTRAINTS = {
-    "근거법령": {"법령·조문"},
-    "기한수치": {"수치·기한"},
-    "필요서식": {"서식"},
-    "관련해석": {"Q&A·유권해석", "감사지적사례"},
-}
+VALID_SCOPES = SCHOOL_SCOPE.valid_node_scopes
+VALID_EDGE_TYPES = RELATIONS.types
 VALID_LEGAL_REVIEW_STATES = {"verified", "partial", "needs_review", "conflict"}
 VALID_LEGAL_SOURCE_STATUSES = {"현행", "시행예정"}
 REQUIRED_LEGAL_REVIEW_FIELDS = {
@@ -152,7 +147,7 @@ class Edge:
     type: str
 
     def validate(self) -> list[str]:
-        if self.type not in VALID_EDGE_TYPES:
+        if self.type not in RELATIONS:
             return [f"[{self.source}->{self.target}] 알 수 없는 edge type: {self.type}"]
         return []
 
@@ -206,7 +201,7 @@ def validate_graph(nodes: list[Node], edges: list[Edge]) -> list[str]:
         seen_edges.add(edge_key)
 
         if e.source in node_by_id:
-            allowed_targets = EDGE_TARGET_TYPE_CONSTRAINTS.get(e.type)
+            allowed_targets = RELATIONS.allowed_targets(e.type)
             target_node = node_by_id.get(e.target)
             if allowed_targets is not None and target_node is not None and target_node.type not in allowed_targets:
                 errors.append(
