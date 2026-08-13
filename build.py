@@ -21,6 +21,21 @@ def render_body(raw_md: str) -> str:
     return md_lib.markdown(raw_md, extensions=["tables"])
 
 
+def _embed_json(payload: object) -> str:
+    # <script> 블록에 그대로 삽입되므로 HTML/JS를 깨는 문자를 이스케이프한다.
+    # (node title/summary/body에 </script> 리터럴이 있어도 스크립트 조기 종료를
+    # 막는다. JSON 값 안에서는 JS가 동일 문자로 디코딩해 표시에는 영향 없음.)
+    text = json.dumps(payload, ensure_ascii=False)
+    esc = chr(92)  # backslash for \uXXXX JSON escapes
+    return (
+        text.replace("<", esc + "u003c")
+        .replace(">", esc + "u003e")
+        .replace("&", esc + "u0026")
+        .replace(chr(0x2028), esc + "u2028")
+        .replace(chr(0x2029), esc + "u2029")
+    )
+
+
 def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PATH, dist_path=DIST_PATH) -> Path:
     nodes = load_nodes(nodes_dir)
     edges = load_edges(edges_path)
@@ -47,7 +62,7 @@ def build(nodes_dir=NODES_DIR, edges_path=EDGES_PATH, template_path=TEMPLATE_PAT
     }
 
     template_html = Path(template_path).read_text(encoding="utf-8")
-    data_json = json.dumps(data, ensure_ascii=False)
+    data_json = _embed_json(data)
     output_html = template_html.replace("__ONTOLOGY_DATA__", data_json)
 
     dist_path = Path(dist_path)
