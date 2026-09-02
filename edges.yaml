@@ -163,6 +163,21 @@
 - {source: honor-recommend-restriction, target: law-honors-act-8, type: 근거법령}
 - {source: honor-recommend-restriction, target: law-government-commendation-19, type: 근거법령}
 - {source: honor-recommend-restriction, target: law-civil-servant-discipline-rule-4, type: 근거법령}
+# 정부포상 추천 절차·서식 (2026-08-06 신설) — 진입: honor-overview → 절차 → 단계별 개념·수치·서식
+- {source: honor-overview, target: proc-honor-recommendation, type: 절차단계}
+- {source: honor-overview, target: num-honor-award-schedule, type: 기한수치}
+- {source: proc-honor-recommendation, target: law-honors-act-5, type: 근거법령}
+- {source: proc-honor-recommendation, target: law-government-commendation-6, type: 근거법령}
+- {source: proc-honor-recommendation, target: num-honor-award-schedule, type: 기한수치}
+- {source: proc-honor-recommendation, target: num-honor-recommend-deadline, type: 기한수치}
+- {source: proc-honor-recommendation, target: num-honor-reaward-ban, type: 기한수치}
+- {source: proc-honor-recommendation, target: num-honor-retirement-years, type: 기한수치}
+- {source: proc-honor-recommendation, target: form-honor-reprimand-statement, type: 필요서식}
+- {source: proc-honor-recommendation, target: honor-recommend-restriction, type: 절차단계}
+- {source: proc-honor-recommendation, target: honor-service-period-calculation, type: 절차단계}
+- {source: honor-service-period-calculation, target: honor-overview, type: 상위개념}
+- {source: honor-service-period-calculation, target: num-honor-retirement-years, type: 기한수치}
+- {source: form-honor-reprimand-statement, target: law-civil-servant-discipline-rule-4, type: 근거법령}
 - {source: discipline-overview, target: law-gukgong-78, type: 근거법령}
 - {source: discipline-overview, target: law-gyoyuk-jinggye-ryeong, type: 근거법령}
 - {source: discipline-overview, target: num-discipline-statute-limitation, type: 기한수치}
