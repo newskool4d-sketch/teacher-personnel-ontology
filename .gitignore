@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 dist/
 .superpowers/
+tmp/
+.pytest-tmp/
+.pytest_cache/
+
+.vercel
+.env*
+output/playwright/
