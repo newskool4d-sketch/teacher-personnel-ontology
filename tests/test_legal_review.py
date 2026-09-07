@@ -241,7 +241,8 @@ def test_built_html_uses_readable_supporting_text_and_stable_display_font(tmp_pa
     assert "--text-support: 13px; --muted-readable: .74;" in html
     assert "font-size: var(--text-support);" in html
     assert "opacity: var(--muted-readable);" in html
-    assert "--font-display: Batang, 'AppleMyungjo', 'Noto Serif CJK KR', 'Nanum Myeongjo', serif;" in html
+    # The refreshed UI uses installed Korean sans fonts, with no webfont dependency.
+    assert "--font-display: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;" in html
     assert "MaruBuri" not in html
 
 

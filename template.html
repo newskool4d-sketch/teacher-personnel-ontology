@@ -11,6 +11,7 @@
     const saved = localStorage.getItem('ontology-theme');
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = saved === 'dark' || saved === 'light' ? saved : preferred;
+    document.documentElement.dataset.motion = localStorage.getItem('ontology-motion') === 'off' ? 'off' : 'on';
   } catch (_) {
     document.documentElement.dataset.theme = 'light';
   }
@@ -18,10 +19,10 @@
 </script>
 <style>
 :root {
-  --bg: #FAF7F0; --ink: #1A1A18; --accent: #1E3A5F; --danger: #A63A2E;
-  --rule: #D8D2C4; --surface: #FFFFFF; --surface-2: #F1EDE3;
-  --ch0: #8A8578; --ch1: #3B3A36; --ch2: #1E3A5F; --ch3: #2E6E65;
-  --ch4: #4A6B2A; --ch5: #A63A2E; --ch6: #B07D2B; --ch7: #6B4A7E;
+  --bg: #F4F5FB; --ink: #25273F; --accent: #5140B5; --danger: #B73753;
+  --rule: #DCE0ED; --surface: #FFFFFF; --surface-2: #F1F0F9;
+  --ch0: #59677C; --ch1: #6855C9; --ch2: #335ED4; --ch3: #177366;
+  --ch4: #226D97; --ch5: #B23756; --ch6: #8A5B10; --ch7: #963D9D;
   --review-verified: #2E6E65; --review-partial: #8A5B00;
   --glass: rgba(255, 255, 255, .58); --glass-strong: rgba(255, 255, 255, .76);
   --glass-border: rgba(255, 255, 255, .8); --glass-highlight: rgba(255, 255, 255, .68);
@@ -30,15 +31,15 @@
   --glass-cyan: #67DCEB; --glass-violet: #A98BFF; --glass-pink: #F58BB7;
   --glass-lime: #B9E879; --glass-amber: #FFD071; --glass-blue: #78A9FF;
   --glass-mint: #73E0BD; --glass-coral: #FF9B8E;
-  --font-display: Batang, 'AppleMyungjo', 'Noto Serif CJK KR', 'Nanum Myeongjo', serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
   --text-support: 13px; --muted-readable: .74;
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 40px;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
-  --bg: #10151B; --ink: #EDF0EA; --accent: #8FB7DE; --danger: #E07769;
-  --rule: #35404A; --surface: #1A2129; --surface-2: #222B35;
+  --bg: #101321; --ink: #EDF0FF; --accent: #C0B4FF; --danger: #FF9BAE;
+  --rule: #343950; --surface: #1B2034; --surface-2: #242A41;
   --review-verified: #78C6B9; --review-partial: #F0C56A;
   --glass: rgba(24, 32, 41, .62); --glass-strong: rgba(25, 33, 42, .8);
   --glass-border: rgba(255, 255, 255, .13); --glass-highlight: rgba(255, 255, 255, .09);
@@ -48,8 +49,8 @@
   --glass-lime: #6D9D39; --glass-amber: #B47E26; --glass-blue: #416BB4;
   --glass-mint: #318F76; --glass-coral: #B65F55;
   /* 다크모드 전용 장색 보정 — 그래프 점·게이트 테두리의 식별 대비를 유지한다. */
-  --ch1: #AAA69D; --ch2: #8FB7DE; --ch3: #6CB9AD; --ch4: #91B966;
-  --ch5: #E07769; --ch6: #D9A956; --ch7: #BE9CD1;
+  --ch0: #B3BDD4; --ch1: #BEACFF; --ch2: #9AB9FF; --ch3: #83D8BF; --ch4: #8BD4EF;
+  --ch5: #FFA4BA; --ch6: #F4CE80; --ch7: #E7AEED;
   color-scheme: dark;
 }
 
@@ -534,6 +535,300 @@ body,
   #public-footer { background: #fff !important; color: #000; border-color: #999; -webkit-backdrop-filter: none; backdrop-filter: none; }
   .public-footer-grid section h2, #public-footer a { color: #000; }
 }
+/* Prism workspace: shared surfaces, navigation, motion and responsive reading. */
+:root {
+  --muted: #60647C; --glass-border: rgba(255,255,255,.94);
+  --glass: rgba(255,255,255,.8); --glass-strong: rgba(255,255,255,.94);
+  --glass-shadow: 0 8px 26px rgba(54,48,105,.055);
+  --hero-bg: #EBE8FF; --hero-orb: #D0C3FF; --on-accent: #FFF;
+}
+:root[data-theme="dark"] {
+  --muted: #B4BBD3; --glass-border: #3D435F;
+  --glass: rgba(29,34,54,.9); --glass-strong: rgba(29,34,54,.97);
+  --glass-shadow: 0 10px 30px rgba(0,0,0,.16);
+  --hero-bg: #262440; --hero-orb: #5F489B; --on-accent: #171B2D;
+}
+body { background: radial-gradient(ellipse at 85% 0%, color-mix(in srgb, var(--glass-violet) 12%, transparent), transparent 45%), var(--bg); font-size: 16px; line-height: 1.7; }
+a, button, input, select, summary { -webkit-tap-highlight-color: transparent; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.ui-icon { display: block; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+#app-header { min-height: 82px; padding: 14px 30px; gap: 8px 24px; border-bottom: 1px solid var(--rule); box-shadow: none; }
+.brand { align-items: center; gap: 11px; }
+.brand-mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 31px; height: 31px; transform: rotate(-8deg); }
+.brand-mark i { border-radius: 5px; background: #8973E8; }
+.brand-mark i:nth-child(2) { background: #69B8E9; border-radius: 5px 10px 5px 5px; }
+.brand-mark i:nth-child(3) { background: #E5AC67; border-radius: 5px 5px 5px 10px; }
+.brand-mark i:nth-child(4) { background: #D88DBC; }
+.brand-copy { display: grid; gap: 0; }
+.brand-title { font-size: 16px; font-weight: 800; letter-spacing: -.035em; }
+.brand-subtitle { color: var(--muted); font-size: 10px; font-weight: 600; letter-spacing: .04em; }
+.header-nav { gap: 5px; }
+.header-nav a { padding: 9px 13px; color: var(--muted); }
+.header-nav a[aria-current="page"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
+.header-controls { gap: 7px; }
+.scope-switcher { border: 1px solid var(--rule); border-radius: 11px; background: var(--surface-2); box-shadow: none; }
+.scope-switcher-label { font-size: 11px; opacity: 1; color: var(--muted); }
+.scope-option { min-height: 34px; }
+.theme-toggle, .motion-toggle { display: inline-flex; align-items: center; justify-content: center; width: 38px; min-height: 38px; padding: 7px; border: 1px solid var(--rule); border-radius: 11px; background: var(--surface); color: var(--ink); box-shadow: none; cursor: pointer; }
+.theme-toggle-label { display: none; }
+.motion-toggle .ui-icon { width: 17px; height: 17px; }
+.motion-toggle[aria-pressed="true"] { color: var(--accent); background: var(--surface-2); }
+.build-info { display: none; }
+.app-shell { grid-template-columns: 218px minmax(0,1fr); }
+.app-shell > aside { top: 82px; height: calc(100vh - 82px); padding: 28px 16px; background: color-mix(in srgb, var(--surface) 65%, transparent); border-right: 1px solid var(--rule); box-shadow: none; overflow-y: auto; }
+.app-shell > main { max-width: 1450px; padding: 34px clamp(24px,3.3vw,52px) 64px; overflow: visible; min-width: 0; }
+.nav-caption { margin: 24px 12px 10px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+.nav-home { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); font-size: 14px; font-weight: 750; text-decoration: none; }
+.nav-home .ui-icon { width: 18px; height: 18px; }
+.left-nav-chapters { gap: 6px; }
+.left-nav-chapters a { gap: 11px; min-height: 44px; padding: 7px 10px; font-size: 13px; }
+.nav-number { display: grid; place-items: center; min-width: 26px; height: 27px; border-radius: 8px; color: var(--chapter-color); background: color-mix(in srgb, var(--chapter-color) 11%, var(--surface)); font-size: 10px; font-weight: 800; }
+.left-nav-chapters a:hover { background: var(--surface-2); }
+.left-nav-chapters a.active, .left-nav-quicklinks a.active { box-shadow: none; color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.left-nav-quicklinks a { display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: 13px; color: var(--muted); }
+.left-nav-quicklinks .ui-icon { width: 17px; height: 17px; }
+.nav-guide { margin-top: 32px; padding: 17px 14px; border: 1px solid var(--rule); border-radius: 15px; background: linear-gradient(125deg,color-mix(in srgb,var(--glass-violet) 12%,var(--surface)),var(--surface)); }
+.nav-guide strong { font-size: 12px; }
+.nav-guide p { margin: 7px 0 10px; font-size: 12px; color: var(--muted); line-height: 1.65; }
+.nav-guide a { font-size: 12px; font-weight: 750; text-decoration: none; }
+.home-hero { position: relative; isolation: isolate; padding: 32px; margin: 0; border: 1px solid var(--glass-border); border-radius: 26px; background: linear-gradient(112deg, var(--hero-bg), color-mix(in srgb,var(--hero-bg) 55%,var(--surface)) 68%, color-mix(in srgb,var(--glass-pink) 12%,var(--surface))); box-shadow: var(--glass-shadow); }
+.home-hero-grid { grid-template-columns: minmax(0,1.25fr) minmax(290px,.9fr); gap: 18px; align-items: center; }
+.hero-copy { min-width: 0; }
+.home-hero:focus-within { z-index: 4; }
+.home-hero .home-kicker { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 20px; padding: 4px 10px; border: 1px solid color-mix(in srgb,var(--accent) 15%,transparent); border-radius: 99px; color: var(--accent); background: color-mix(in srgb,var(--surface) 65%,transparent); opacity: 1; font-size: 10px; letter-spacing: .05em; }
+.kicker-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.home-hero h1 { margin: 0 0 15px; font-size: clamp(31px,3.1vw,46px); line-height: 1.36; letter-spacing: -.055em; font-weight: 800; text-wrap: initial; }
+.home-hero-title-line { display: block; }
+.home-hero-title-line + .home-hero-title-line { color: var(--accent); }
+.home-hero-title-line + .home-hero-title-line::before { content: none; }
+.home-hero .home-lede { max-width: 480px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.9; opacity: 1; }
+.search-panel { position: relative; z-index: 3; margin-top: 23px; padding: 0; border: 1px solid color-mix(in srgb,var(--accent) 22%,var(--surface)); border-radius: 14px; background: var(--surface); box-shadow: 0 8px 22px color-mix(in srgb,var(--accent) 8%,transparent); backdrop-filter: none; }
+.search-input-row { display: flex; align-items: center; gap: 10px; padding: 0 14px; }
+.search-input-row > .ui-icon { width: 18px; color: var(--accent); }
+.search-panel .search-bar { min-width: 0; min-height: 54px; padding: 12px 0; font-size: 13px; }
+.search-bar::placeholder { color: var(--muted); opacity: 1; }
+.search-panel:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+.search-panel .search-bar:focus-visible { outline: none; }
+.search-shortcut { padding: 0 5px; border: 1px solid var(--rule); border-radius: 5px; color: var(--muted); font: 12px var(--font-body); }
+.search-results:not(:empty) { position: absolute; top: calc(100% + 8px); left: 0; right: 0; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 40px rgba(28,24,58,.18); }
+.search-result { grid-template-columns: 8px minmax(0,1fr); padding: 12px; }
+.search-result-meta { grid-column: 2; text-align: left; }
+.search-result-copy strong { font-size: 13px; }
+.search-result-copy span { font-size: 12px; }
+.search-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 12px; color: var(--muted); font-size: 11px; }
+.search-suggestions button { min-height: 30px; padding: 3px 10px; border: 1px solid color-mix(in srgb,var(--accent) 12%,transparent); border-radius: 99px; color: var(--accent); background: color-mix(in srgb,var(--surface) 65%,transparent); font-size: 11px; cursor: pointer; }
+.search-suggestions button:hover { background: var(--surface); }
+.knowledge-preview { min-width: 0; position: relative; }
+.preview-caption { display: flex; justify-content: center; align-items: center; gap: 7px; font-size: 10px; color: var(--muted); }
+.preview-caption .ui-icon { width: 13px; height: 13px; }
+.preview-stage { position: relative; height: 300px; }
+.preview-stage::before { content: ''; position: absolute; width: 225px; height: 225px; top: 25px; left: calc(50% - 112px); border-radius: 50%; background: radial-gradient(circle at 33% 26%,var(--surface),var(--hero-orb) 68%,color-mix(in srgb,var(--glass-blue) 50%,var(--hero-orb))); opacity: .78; box-shadow: inset -12px -15px 30px color-mix(in srgb,var(--accent) 13%,transparent),0 16px 45px color-mix(in srgb,var(--accent) 12%,transparent); animation: prism-breathe 8s ease-in-out infinite; }
+.preview-paths { position: absolute; width: 100%; height: 100%; overflow: visible; }
+.preview-paths path { fill: none; stroke: color-mix(in srgb,var(--accent) 55%,transparent); stroke-width: 1; stroke-dasharray: 4 5; animation: prism-flow 16s linear infinite; }
+.preview-paths ellipse { fill: none; stroke: color-mix(in srgb,var(--accent) 20%,transparent); stroke-width: .7; }
+.preview-node { position: absolute; z-index: 1; width: 43%; padding: 11px 12px; border: 1px solid var(--glass-border); border-radius: 12px; color: var(--ink); background: var(--glass-strong); box-shadow: 0 8px 24px color-mix(in srgb,var(--accent) 12%,transparent); text-decoration: none; backdrop-filter: blur(10px); transition: transform .22s ease,box-shadow .22s ease; }
+.preview-node:hover { transform: translateY(-4px); box-shadow: 0 12px 30px color-mix(in srgb,var(--accent) 20%,transparent); }
+.preview-node small { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; color: var(--chapter-color); font-size: 9px; font-weight: 800; }
+.preview-node small::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.preview-node strong { display: block; font-size: 11px; line-height: 1.65; word-break: keep-all; }
+.preview-node-0 { left: 0; top: 19px; }
+.preview-node-1 { right: 0; top: 38px; }
+.preview-node-2 { left: 0; bottom: 14px; }
+.preview-node-3 { right: 0; bottom: 0; }
+.preview-core { position: absolute; z-index: 2; left: 50%; top: 49%; transform: translate(-50%,-50%); display: flex; align-items: center; gap: 8px; padding: 15px 19px; border: 1px solid color-mix(in srgb,var(--accent) 30%,var(--surface)); border-radius: 17px; background: var(--accent); color: var(--on-accent); box-shadow: 0 8px 28px color-mix(in srgb,var(--accent) 28%,transparent); font-size: 15px; font-weight: 800; white-space: nowrap; text-decoration: none; }
+.preview-core .ui-icon { width: 19px; }
+.preview-link { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 17px; color: var(--accent); font-size: 11px; font-weight: 750; text-decoration: none; }
+.preview-link .ui-icon { width: 15px; height: 15px; }
+.home-stats { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0; margin-top: 20px; border: 1px solid var(--rule); border-radius: 17px; background: var(--glass); }
+.home-stat { display: flex; align-items: center; gap: 12px; min-height: 87px; padding: 16px 19px; border: 0; }
+.home-stat:nth-child(odd) { border: 0; }
+.home-stat + .home-stat { border-left: 1px solid var(--rule); }
+.stat-symbol { display: grid; place-items: center; flex: 0 0 auto; width: 39px; height: 39px; border-radius: 12px; background: color-mix(in srgb,var(--stat-color) 11%,var(--surface)); color: var(--stat-color); }
+.home-stat:nth-child(1) { --stat-color: var(--ch2); }
+.home-stat:nth-child(2) { --stat-color: var(--ch1); }
+.home-stat:nth-child(3) { --stat-color: var(--ch3); }
+.home-stat:nth-child(4) { --stat-color: var(--ch5); }
+.home-stat strong, .home-stat:nth-child(n) strong { color: var(--ink); font: 800 26px/1.15 var(--font-display); letter-spacing: -.035em; }
+.home-stat span { color: var(--muted); opacity: 1; margin-top: 5px; font-size: 10px; }
+.start-guide { margin: 15px 0 0; border-bottom: 1px solid var(--rule); }
+.start-guide summary { padding: 8px 2px 15px; color: var(--muted); font-size: 12px; cursor: pointer; }
+.getting-started { margin: 0 0 16px; border-radius: 13px; }
+.getting-started-item { background: var(--surface); }
+.home-section { margin-top: 30px; }
+.home-section-heading { gap: 18px; align-items: center; margin-bottom: 17px; }
+.section-kicker { margin: 0 0 5px; font-size: 10px; letter-spacing: .06em; color: var(--muted); }
+.home-section-heading h2 { font-size: 22px; font-weight: 800; letter-spacing: -.04em; }
+.home-section-heading p { max-width: 350px; font-size: 11px; opacity: 1; color: var(--muted); }
+.section-link { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; font-size: 11px; color: var(--muted); text-decoration: none; }
+.section-link .ui-icon { width: 14px; height: 14px; }
+.chapter-gate { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+.chapter-gate-item { min-height: 186px; padding: 18px; border: 1px solid color-mix(in srgb,var(--chapter-color) 17%,var(--surface)); border-radius: 18px; background: linear-gradient(145deg,color-mix(in srgb,var(--chapter-color) 10%,var(--surface)),color-mix(in srgb,var(--chapter-color) 4%,var(--surface))); box-shadow: 0 4px 14px color-mix(in srgb,var(--chapter-color) 4%,transparent); backdrop-filter: none; transition: transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease,border-color .25s ease; }
+.chapter-gate-item:hover, .chapter-gate-item:focus-visible { transform: translateY(-6px); border-color: var(--chapter-color); box-shadow: 0 14px 30px color-mix(in srgb,var(--chapter-color) 16%,transparent); }
+.chapter-icon { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 11px; color: var(--chapter-color); background: color-mix(in srgb,var(--chapter-color) 13%,var(--surface)); }
+.chapter-gate-item .chapter-num { position: absolute; top: 23px; right: 18px; color: var(--chapter-color); font-size: 11px; font-weight: 800; opacity: .85; }
+.chapter-gate-item .chapter-name { margin-top: 17px; font-size: 15px; font-weight: 800; }
+.chapter-gate-item .chapter-desc { min-height: 34px; margin-top: 5px; color: var(--muted); opacity: 1; font-size: 11px; }
+.chapter-gate-item .chapter-count { position: static; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; color: var(--chapter-color); opacity: 1; font-size: 10px; font-weight: 700; }
+.chapter-count .ui-icon { width: 18px; height: 18px; transition: transform .2s ease; }
+.chapter-gate-item:hover .chapter-count .ui-icon { transform: translateX(3px); }
+.home-links { gap: 14px; }
+.home-links a { position: relative; min-height: 115px; padding: 21px; border: 1px solid var(--rule); border-radius: 17px; box-shadow: none; }
+.home-links strong { color: var(--ink); font-size: 14px; }
+.home-links span { color: var(--muted); font-size: 12px; opacity: 1; }
+.home-links a:hover { border-color: var(--accent); }
+.source-note { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 27px; color: var(--muted); font-size: 11px; }
+.source-note a { color: var(--accent); font-weight: 650; }
+.mini-card { border-radius: 16px; background: var(--glass-strong); }
+.mini-card strong { font-size: 16px; }
+.chapter-node-grid { grid-template-columns: repeat(auto-fill,minmax(min(100%,280px),1fr)); }
+.chapter-heading, .table-hero, .graph-heading { padding: 24px; border: 1px solid var(--rule); border-radius: 20px; background: var(--glass); }
+.chapter-heading h1, .table-hero h1, .graph-heading h1 { font-size: clamp(26px,3vw,38px); line-height: 1.45; }
+.chapter-heading p, .table-hero p, .table-count { color: var(--muted); opacity: 1; }
+.node-card-header { padding: 25px 28px; border: 1px solid var(--rule); border-left: 5px solid var(--chapter-color); border-radius: 20px; background: linear-gradient(120deg,color-mix(in srgb,var(--chapter-color) 8%,var(--surface)),var(--surface)); }
+.node-card-header h1 { font-size: clamp(27px,3.4vw,43px); line-height: 1.5; word-break: keep-all; }
+.node-card-header .summary { font-size: 16px; color: var(--muted); opacity: 1; }
+.node-header-meta { flex-wrap: wrap; }
+.node-detail-grid { grid-template-columns: minmax(0,1fr) 260px; gap: 28px; }
+.node-card-body { padding: 25px; border: 1px solid var(--rule); border-radius: 18px; background: var(--surface); line-height: 1.95; }
+.node-card-body h2 { font-size: 22px; }
+.node-rail { top: 104px; }
+.source-panel, .backlinks, .legal-review, .node-section-grid > section { border-radius: 16px; background: var(--glass-strong); }
+.source-panel dt { font-size: 11px; }
+.source-panel dd { overflow-wrap: anywhere; }
+.body-table-region { overflow-x: auto; max-width: 100%; margin: 18px 0; border: 1px solid var(--rule); border-radius: 11px; overscroll-behavior-inline: contain; }
+.body-table-region:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.body-table-region table { margin: 0; min-width: 560px; border-top: 0; }
+.body-table-region th, .body-table-region td { padding: 12px; font-size: 13px; vertical-align: top; }
+.body-table-help { margin: 8px 0; font-size: 12px; color: var(--muted); }
+.qa-source { color: var(--muted); opacity: 1; }
+.app-shell > aside, .search-results { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+.nav-guide { margin-top: 22px; }
+.nav-guide p { font-size: 11px; }
+.home-stat span, .chapter-gate-item .chapter-desc, .home-links span, .preview-link, .search-suggestions, .search-suggestions button { font-size: 12px; }
+.preview-node strong { font-size: 12px; }
+.preview-node small, .preview-caption, .chapter-gate-item .chapter-count { font-size: 11px; }
+.graph-workspace { min-height: 570px; }
+.graph-stage { min-height: 570px; border-radius: 20px; }
+.graph-inspector, .graph-legend, .graph-list-panel, .table-wrap { border-radius: 16px; }
+.graph-list-item > span { opacity: 1; }
+.graph-list-item > span > span { color: var(--muted); opacity: 1; }
+#public-footer { margin-left: 218px; padding: 30px clamp(24px,3.3vw,52px); background: color-mix(in srgb,var(--surface) 50%,var(--bg)); border-color: var(--rule); }
+.public-footer-title { font-size: 14px; font-weight: 750; }
+.public-footer-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 28px; }
+.public-footer-grid section p { color: var(--muted); font-size: 12px; opacity: 1; }
+#public-footer { transition: none; }
+@keyframes prism-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes prism-flow { to { stroke-dashoffset: -90; } }
+@keyframes prism-breathe { 50% { transform: translateY(-6px) scale(1.025); } }
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) #main-content > :not(.print-sheet) { animation: prism-enter .45s ease both; }
+  :root:not([data-motion="off"]) #main-content > :nth-child(2) { animation-delay: .045s; }
+  :root:not([data-motion="off"]) #main-content > :nth-child(n+3) { animation-delay: .09s; }
+}
+:root[data-motion="off"] *, :root[data-motion="off"] *::before, :root[data-motion="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+.preview-paused .preview-paths path, .preview-paused .preview-stage::before { animation-play-state: paused; }
+@supports not (backdrop-filter: blur(10px)) {
+  #app-header, .app-shell > aside, .preview-node, .home-stats, .source-panel, .mini-card { background: var(--surface); }
+}
+@media (max-width: 1180px) {
+  #app-header { grid-template-columns: 1fr auto; padding-inline: 22px; }
+  .header-nav { display: none; }
+  .app-shell { grid-template-columns: 195px minmax(0,1fr); }
+  .app-shell > main { padding: 26px 24px 56px; }
+  .home-hero { padding: 25px; }
+  .home-hero-grid { grid-template-columns: minmax(0,1.2fr) minmax(235px,.85fr); gap: 16px; }
+  .home-hero h1 { font-size: 32px; }
+  .home-stat { padding: 16px 12px; gap: 8px; }
+  .stat-symbol { width: 31px; height: 34px; }
+  .home-stat strong { font-size: 24px; }
+  .chapter-gate { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .node-detail-grid { grid-template-columns: minmax(0,1fr); }
+  .node-rail { position: static; }
+  #public-footer { margin-left: 195px; }
+}
+@media (max-width: 900px) {
+  #app-header { position: relative; padding: 15px 22px; gap: 13px; }
+  .header-nav { display: flex; grid-column: 1 / -1; order: 3; padding-top: 3px; border-top: 1px solid var(--rule); }
+  .header-nav a { padding: 7px 12px; }
+  .app-shell { grid-template-columns: minmax(0,1fr); }
+  .app-shell > aside { display: none; }
+  .app-shell > main { padding: 22px 22px 44px; }
+  .home-hero-grid { grid-template-columns: minmax(0,1.2fr) minmax(225px,.8fr); }
+  .home-hero h1 { font-size: 33px; }
+  .home-links { grid-template-columns: 1fr; }
+  .graph-stage { min-height: 55vh; }
+  #public-footer { margin-left: 0; }
+}
+@media (max-width: 680px) {
+  .home-hero-grid { grid-template-columns: minmax(0,1fr); }
+  .knowledge-preview { margin: 16px auto 0; width: 100%; max-width: 360px; }
+  .preview-stage { height: 320px; }
+  .preview-stage::before { top: 12px; }
+  .home-hero h1 { font-size: clamp(29px,6.5vw,38px); }
+  .home-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .home-stat { padding: 15px; }
+  .home-stat:nth-child(3) { border-left: 0; }
+  .home-stat:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .home-stat span { font-size: 11px; }
+  .home-section-heading { align-items: end; }
+  .home-section-heading > p { display: none; }
+  .node-card-body { padding: 18px; }
+  .public-footer-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  #app-header { padding: 15px 16px 8px; grid-template-columns: 1fr; }
+  .brand-title { font-size: 15px; }
+  .brand-subtitle { display: block; }
+  .header-controls { gap: 6px; }
+  .scope-switcher { justify-content: start; }
+  .scope-switcher-label { padding: 0 4px; }
+  .scope-option { flex: 1; font-size: 11px; padding-inline: 6px; }
+  .theme-toggle, .motion-toggle { flex: 0 0 36px; width: 36px; }
+  .header-nav { gap: 3px; }
+  .header-nav a { flex: 1; padding: 7px 4px; text-align: center; font-size: 12px; }
+  .app-shell > main { padding: 17px 14px 40px; }
+  .home-hero { padding: 23px 19px; border-radius: 21px; }
+  .home-hero .home-kicker { font-size: 9px; margin-bottom: 16px; }
+  .home-hero .home-lede { font-size: 12px; }
+  .search-input-row { gap: 7px; padding: 0 11px; }
+  .search-panel .search-bar { font-size: 12px; }
+  .search-shortcut { display: none; }
+  .home-section-heading h2 { font-size: 20px; }
+  .home-section-heading { display: flex; }
+  .chapter-gate { gap: 10px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .chapter-gate-item { min-height: 186px; padding: 14px; }
+  .chapter-gate-item .chapter-num { top: 20px; right: 14px; }
+  .chapter-gate-item .chapter-name { font-size: 13px; }
+  .chapter-gate-item .chapter-desc { font-size: 12px; line-height: 1.7; }
+  .chapter-icon { width: 32px; height: 32px; }
+  .section-link { font-size: 10px; }
+  .node-card-header { padding: 20px; }
+  .source-panel dl { grid-template-columns: 1fr; gap: 0; }
+  .node-card-body { padding: 15px; font-size: 15px; }
+  .node-section-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .chapter-gate-item:hover, .mini-card:hover, .preview-node:hover { transform: none; }
+}
+@media (forced-colors: active) {
+  .brand-mark i, .kicker-dot { background: CanvasText; }
+  .preview-stage::before { display: none; }
+  .preview-paths path, .preview-paths ellipse { stroke: CanvasText; }
+  .chapter-icon, .stat-symbol, .nav-number, .preview-core { border: 1px solid CanvasText; }
+}
+@media print {
+  *, *::before, *::after { animation: none !important; transition: none !important; box-shadow: none !important; }
+  .app-shell { display: block; }
+  .app-shell > main { padding: 0; max-width: none; }
+  #public-footer { margin-left: 0; }
+  .knowledge-preview, .start-guide, .body-table-help { display: none; }
+  .body-table-region { overflow: visible; border: 0; }
+  .body-table-region table { min-width: 0; }
+  .node-card-header, .node-card-body, .source-panel, .legal-review { background: #fff; color: #000; border-color: #999; }
+  .public-footer-grid section p { color: #000; }
+  .print-chapter h2, body a { color: #000 !important; }
+}
 </style>
 </head>
 <body>
@@ -541,10 +836,12 @@ body,
 <div id="app">
   <header id="app-header">
     <a class="brand" href="#/">
-      <span class="brand-title">교원인사 업무 안내서</span>
-      <span class="brand-subtitle">교원인사 지식지도</span>
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="brand-copy"><span class="brand-title">교원인사 업무 안내서</span>
+      <span class="brand-subtitle">2026 인천 · 교원인사 지식지도</span></span>
     </a>
     <nav class="header-nav no-print" aria-label="주요 화면">
+      <a href="#/">홈</a>
       <a href="#/graph">지식 지도</a>
       <a href="#/table">수치·기한</a>
       <a href="#/print">인쇄 요약</a>
@@ -557,6 +854,7 @@ body,
         <span id="theme-toggle-icon" class="theme-toggle-icon" aria-hidden="true">☾</span>
         <span id="theme-toggle-label" class="theme-toggle-label">다크 모드</span>
       </button>
+      <button id="motion-toggle" class="motion-toggle" type="button" aria-label="애니메이션 멈추기" aria-pressed="false" title="애니메이션 멈추기"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
     </div>
     <div class="build-info">기준: 2026 교원인사 실무도우미(중등 2026.3.1./초등 2026.2.15.) · 빌드 __BUILD_DATE__</div>
   </header>
@@ -599,6 +897,117 @@ const CHAPTER_DESCRIPTIONS = {
   6:'호봉 획정·승급·경력 환산',
   7:'기간제교원 채용·계약·복무'
 };
+
+const UI_ICONS = {
+  home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-8H9v8H4a1 1 0 0 1-1-1Z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+  arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
+  graph: '<circle cx="12" cy="12" r="3"/><circle cx="4" cy="4" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="5" cy="20" r="2"/><circle cx="20" cy="20" r="2"/><path d="m6 6 4 4m4 0 4-4M7 18l3-4m4 0 4 4"/>',
+  table: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 10h18M9 10v10m6-10v10"/>',
+  print: '<path d="M7 8V3h10v5M7 17H3V9h18v8h-4M7 14h10v7H7Z"/><path d="M17 11h1"/>',
+  book: '<path d="M12 5v16M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2Z"/>',
+  person: '<circle cx="12" cy="7" r="4"/><path d="M4 21v-3a6 6 0 0 1 6-5h4a6 6 0 0 1 6 5v3M9 17v4m6-4v4"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V3h8v4M3 12c6 4 12 4 18 0M10 13h4"/>',
+  leaf: '<path d="M5 19c-5-10 5-15 15-15 0 10-5 20-15 15Zm0 0L15 9M4 20l-1 1"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',
+  award: '<circle cx="12" cy="9" r="6"/><path d="m7 14-2 8 7-4 7 4-2-8"/>',
+  chart: '<path d="M4 3v17h17M8 15l4-5 4 2 5-7M17 5h4v4"/>',
+  document: '<path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8m-8 4h5"/>',
+  compare: '<path d="M5 7h14l-4-4M19 17H5l4 4M19 7l-4 4M5 17l4-4"/>'
+};
+const CHAPTER_ICONS = {0:'book',1:'person',2:'briefcase',3:'leaf',4:'clock',5:'award',6:'chart',7:'document'};
+function uiIcon(name) {
+  return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${UI_ICONS[name] || UI_ICONS.book}</svg>`;
+}
+
+function initMotionToggle() {
+  const button = document.getElementById('motion-toggle');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sync = () => {
+    const paused = document.documentElement.dataset.motion === 'off' || reduced.matches;
+    button.setAttribute('aria-pressed', String(paused));
+    const label = reduced.matches ? '기기 설정에 따라 애니메이션 줄임' : paused ? '애니메이션 켜기' : '애니메이션 멈추기';
+    button.setAttribute('aria-label', label);
+    button.title = label;
+    button.disabled = reduced.matches;
+    button.innerHTML = paused ? uiIcon('graph') : '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>';
+  };
+  button.addEventListener('click', () => {
+    const mode = document.documentElement.dataset.motion === 'off' ? 'on' : 'off';
+    document.documentElement.dataset.motion = mode;
+    try { localStorage.setItem('ontology-motion', mode); } catch (_) { /* Session setting still works. */ }
+    sync();
+    if (parseHash()[0] === 'graph') render();
+  });
+  reduced.addEventListener?.('change', () => {
+    sync();
+    if (parseHash()[0] === 'graph') render();
+  });
+  sync();
+}
+
+function renderKnowledgePreview(visibleNodes) {
+  const core = visibleNodes.find(n => n.id === 'leave-childcare');
+  if (!core) return '';
+  const connected = ONTOLOGY.edges.filter(e => e.source === core.id)
+    .map(edge => ({edge, node: visibleNodes.find(n => n.id === edge.target)})).filter(item => item.node);
+  const uniqueTypes = [...new Set(connected.map(item => item.node.type))];
+  const items = uniqueTypes.map(type => connected.find(item => item.node.type === type)).slice(0,4);
+  const colors = ['var(--ch2)','var(--ch3)','var(--ch6)','var(--ch7)'];
+  const paths = ['M160 136 Q65 155 65 50','M160 136 Q235 155 260 65','M160 136 Q75 125 65 245','M160 136 Q240 135 260 250'];
+  return `<section class="knowledge-preview" aria-label="육아휴직 관련 업무 미리보기">
+    <div class="preview-caption">${uiIcon('graph')}하나의 업무, 연결되는 기준</div>
+    <div class="preview-stage">
+      <svg class="preview-paths" viewBox="0 0 320 282" preserveAspectRatio="none" aria-hidden="true">
+        <ellipse cx="160" cy="140" rx="137" ry="85" transform="rotate(-30 160 140)"/>
+        ${items.map((_,i) => `<path d="${paths[i]}"/>`).join('')}
+      </svg>
+      <a class="preview-core" href="#/node/${core.id}">${uiIcon('leaf')}${escapeHtml(core.title)}</a>
+      ${items.map(({node,edge},i) => `<a class="preview-node preview-node-${i}" href="#/node/${node.id}" style="--chapter-color:${colors[i]}">
+        <small>${escapeHtml(RELATION_SEMANTICS[edge.type]?.outgoingLabel || node.type)}</small><strong>${escapeHtml(node.title)}</strong></a>`).join('')}
+    </div>
+    <a class="preview-link" href="#/graph">업무 관계 지도에서 찾기 ${uiIcon('arrow')}</a>
+  </section>`;
+}
+
+function initHomeInteractions(main) {
+  const input = document.getElementById('search-bar');
+  main.querySelectorAll('[data-search]').forEach(button => button.addEventListener('click', () => {
+    input.value = button.dataset.search;
+    input.dispatchEvent(new Event('input', {bubbles:true}));
+    input.focus({preventScroll:true});
+  }));
+  const preview = main.querySelector('.knowledge-preview');
+  let inView = true;
+  const updatePreview = () => preview?.classList.toggle('preview-paused', !inView || document.hidden);
+  const observer = preview && 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    updatePreview();
+  }) : null;
+  if (observer) observer.observe(preview);
+  document.addEventListener('visibilitychange', updatePreview);
+  window.__viewCleanup = () => {
+    observer?.disconnect();
+    document.removeEventListener('visibilitychange', updatePreview);
+  };
+}
+
+function enhanceContentTables(main) {
+  main.querySelectorAll('.node-card-body table').forEach((table,index) => {
+    const help = document.createElement('p');
+    help.id = `body-table-help-${index}`;
+    help.className = 'body-table-help';
+    help.textContent = '표가 화면보다 넓으면 좌우로 스크롤하세요. 키보드로 표에 이동한 뒤 방향키로도 볼 수 있습니다.';
+    const region = document.createElement('div');
+    region.className = 'body-table-region';
+    region.tabIndex = 0;
+    region.setAttribute('role','region');
+    region.setAttribute('aria-label',`본문 비교표 ${index + 1}`);
+    region.setAttribute('aria-describedby',help.id);
+    table.before(help,region);
+    region.append(table);
+  });
+}
 
 function relationVisual(relationType) {
   return RELATION_SEMANTICS[relationType]?.visual || {colorRole: 'rule', dash: [], arrow: false};
@@ -723,43 +1132,51 @@ function renderHome(main) {
   main.innerHTML = `
     <div class="home-hero">
       <div class="home-hero-grid">
-        <div>
-          <p class="home-kicker">2026 인천 교원인사 실무 참고자료</p>
+        <div class="hero-copy">
+          <p class="home-kicker"><span class="kicker-dot" aria-hidden="true"></span>2026 인천 교원인사 실무 참고자료</p>
           <h1 class="display"><span class="home-hero-title-line">규정은 빠르게 찾고,</span><span class="home-hero-title-line">판단에 집중하세요.</span></h1>
-          <p class="home-lede">중등·초등 실무도우미 905쪽 분량을 업무 항목, 수치, 법령, 절차로 연결했습니다. 실무도우미에서 찾을 위치와 판단할 기준을 함께 확인하세요.</p>
+          <p class="home-lede">중등·초등 실무도우미 905쪽을 한눈에.<br>필요한 업무부터 근거 법령까지, 연결해서 살펴보세요.</p>
+          <div class="search-panel">
+            <div class="search-input-row">${uiIcon('search')}
+              <input id="search-bar" class="search-bar" aria-label="교원인사 업무 검색" placeholder="어떤 업무가 궁금하세요?" autocomplete="off">
+              <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+            </div>
+            <div id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+            <div id="search-results" class="search-results"></div>
+          </div>
+          <div class="search-suggestions"><span>바로 검색</span>${['육아휴직','퇴직포상','기간제교원','ㅇㅇㅎㅈ'].map(word => `<button type="button" data-search="${word}">${word}</button>`).join('')}</div>
         </div>
-        <section class="home-stats" aria-label="데이터 현황">
-          <div class="home-stat"><strong>${visibleNodes.length}</strong><span>${scope} 기준 지식 항목</span></div>
-          <div class="home-stat"><strong>${numericNodes.length}</strong><span>수치·기한 항목</span></div>
-          <div class="home-stat"><strong>${explicitReviews.length}</strong><span>관련 법령 안내 항목</span></div>
-          <div class="home-stat"><strong>${conflictReviews.length}</strong><span>현행 법령과 다른 항목</span></div>
-        </section>
+        ${renderKnowledgePreview(visibleNodes)}
       </div>
-      <div class="search-panel">
-        <input id="search-bar" class="search-bar" aria-label="교원인사 업무 검색" placeholder="업무명, 법령, 수치, 초성으로 검색하세요. 예: 퇴직포상, ㅇㅇㅎㅈ" autocomplete="off">
-        <div id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-        <div id="search-results" class="search-results"></div>
-      </div>
+    </div>
+    <section class="home-stats" aria-label="데이터 현황">
+      <div class="home-stat"><div class="stat-symbol">${uiIcon('book')}</div><div><strong>${visibleNodes.length}</strong><span>${scope} 기준 지식 항목</span></div></div>
+      <div class="home-stat"><div class="stat-symbol">${uiIcon('clock')}</div><div><strong>${numericNodes.length}</strong><span>수치·기한 항목</span></div></div>
+      <div class="home-stat"><div class="stat-symbol">${uiIcon('document')}</div><div><strong>${explicitReviews.length}</strong><span>관련 법령 안내 항목</span></div></div>
+      <div class="home-stat"><div class="stat-symbol">${uiIcon('compare')}</div><div><strong>${conflictReviews.length}</strong><span>현행 법령과 다른 항목</span></div></div>
+    </section>
+    <details class="start-guide"><summary>처음 방문하셨나요? 이용 순서 살펴보기</summary>
       <section class="getting-started" aria-label="사이트 이용 순서">
         <div class="getting-started-item"><strong>1. 학교급 선택</strong><span>화면 상단에서 학교급을 선택하세요. ${escapeHtml(SCHOOL_SCOPE.selectionHelp)}</span></div>
         <div class="getting-started-item"><strong>2. 업무 찾기</strong><span>검색하거나 장별 메뉴를 선택해 필요한 제도·수치·절차로 이동합니다.</span></div>
         <div class="getting-started-item"><strong>3. 판단할 기준 확인</strong><span>① 실무도우미에서 찾을 위치 확인 → ② 관련 법령 확인 → ③ 소속 교육청 지침 확인 순서로 판단합니다.</span></div>
       </section>
-    </div>
+    </details>
     <section class="home-section">
       <div class="home-section-heading">
         <div><p class="section-kicker">장별 찾아보기</p><h2>업무 장별로 살펴보기</h2></div>
-        <p>실무도우미의 장 구성을 유지하면서 관련 조문과 수치 항목을 서로 연결했습니다.</p>
+        <a class="section-link" href="#/graph">전체 관계 지도 ${uiIcon('arrow')}</a>
       </div>
-      <nav class="chapter-gate">
+      <nav class="chapter-gate" aria-label="업무별 바로가기">
         ${chapters.map(c => {
           const count = visibleNodes.filter(n => n.chapter === c).length;
           return `
           <a href="#/chapter/${c}" class="chapter-gate-item" style="--chapter-color:var(--ch${c})">
-            <span class="chapter-num">${c === 0 ? '附' : String(c).padStart(2, '0')}</span>
-            <span class="chapter-count">${count}개 항목</span>
+            <span class="chapter-icon">${uiIcon(CHAPTER_ICONS[c])}</span>
+            <span class="chapter-num">${c === 0 ? '부록' : String(c).padStart(2, '0')}</span>
             <span class="chapter-name">${CHAPTER_NAMES[c]}</span>
             <span class="chapter-desc">${CHAPTER_DESCRIPTIONS[c]}</span>
+            <span class="chapter-count">${count}개 항목 ${uiIcon('arrow')}</span>
           </a>`;
         }).join('')}
       </nav>
@@ -773,8 +1190,10 @@ function renderHome(main) {
         <a href="#/table"><strong>수치·기한 통합표</strong><span>기간, 금액, 횟수 기준을 장과 법령 검토 상태별로 비교합니다.</span></a>
         <a href="#/print"><strong>인쇄용 실무 요약</strong><span>A4 형식으로 장별 핵심 수치와 출처를 출력합니다.</span></a>
       </div>
-    </section>`;
+    </section>
+    <div class="source-note"><span>실무도우미 기준 · 중등 2026.3.1. / 초등 2026.2.15.</span><a href="${escapeHtml(officialGuideForScope().url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(officialGuideForScope().label)} ↗</a></div>`;
   if (typeof initSearch === 'function') initSearch();
+  initHomeInteractions(main);
 }
 
 function parseHash() {
@@ -822,6 +1241,7 @@ function render({ focusContent = false } = {}) {
   else if (parts[0] === 'chapter' && parts[1] && typeof renderChapterHub === 'function') renderChapterHub(main, Number(parts[1]));
   else if (parts[0] === 'print' && typeof renderPrint === 'function') renderPrint(main);
   else main.innerHTML = '<p>준비 중인 화면입니다.</p>';
+  enhanceContentTables(main);
   updateRouteContext(main, focusContent);
 }
 
@@ -830,25 +1250,31 @@ function renderLeftNav() {
   if (!nav) return;
   const chapters = [1,2,3,4,5,6,7,0];
   nav.innerHTML = `
+    <a class="nav-home" href="#/">${uiIcon('home')}업무 안내 홈</a>
+    <p class="nav-caption">장별 찾아보기</p>
     <nav class="left-nav-chapters" aria-label="장별 업무 탐색">
       ${chapters.map(c => `
-        <a href="#/chapter/${c}"><span class="chapter-dot" style="background:var(--ch${c})"></span>${c === 0 ? '부록' : '제' + c + '장 ' + CHAPTER_NAMES[c]}</a>`).join('')}
+        <a href="#/chapter/${c}" style="--chapter-color:var(--ch${c})"><span class="nav-number">${c === 0 ? '부록' : String(c).padStart(2,'0')}</span>${c === 0 ? '법령 모아보기' : CHAPTER_NAMES[c]}</a>`).join('')}
     </nav>
     <hr class="left-nav-divider">
     <nav class="left-nav-quicklinks" aria-label="빠른 탐색">
-      <a href="#/graph">지식 지도</a>
-      <a href="#/table">수치·기한 통합표</a>
-      <a href="#/print">인쇄용 요약</a>
-    </nav>`;
+      <a href="#/graph">${uiIcon('graph')}지식 지도</a>
+      <a href="#/table">${uiIcon('table')}수치·기한 통합표</a>
+      <a href="#/print">${uiIcon('print')}인쇄용 요약</a>
+    </nav>
+    <div class="nav-guide"><strong>원문과 함께, 더 정확하게</strong><p>해당 연도 실무도우미와 소속 교육청 지침을 함께 확인하세요.</p><a href="#/chapter/0">관련 법령 살펴보기 ↗</a></div>`;
   highlightLeftNav();
 }
 
 function highlightLeftNav() {
   const nav = document.getElementById('left-nav');
   if (!nav) return;
-  const current = '#' + location.hash.slice(1);
-  nav.querySelectorAll('a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === current);
+  const current = location.hash || '#/';
+  document.querySelectorAll('#left-nav a, .header-nav a').forEach(a => {
+    const active = a.getAttribute('href') === current;
+    a.classList.toggle('active', active);
+    if (active) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
   });
 }
 
@@ -858,6 +1284,7 @@ window.addEventListener('hashchange', () => {
 });
 window.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
+  initMotionToggle();
   initScopeToggle();
   initSkipLink();
   renderLeftNav();
@@ -930,7 +1357,7 @@ function renderGraph(main) {
   const listJump = document.getElementById('graph-list-jump');
   const listPanel = document.getElementById('graph-list-panel');
   const resetButton = document.getElementById('graph-reset');
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'off';
   const css = getComputedStyle(document.documentElement);
   const inkColor = css.getPropertyValue('--ink').trim();
   const surfaceColor = css.getPropertyValue('--surface').trim();
@@ -1506,6 +1933,14 @@ function initSearch() {
   const results = document.getElementById('search-results');
   const status = document.getElementById('search-status');
   if (!bar || !results || !status) return;
+  const dismissResults = event => {
+    if (event.key !== 'Escape') return;
+    results.innerHTML = '';
+    status.textContent = '';
+    bar.focus({preventScroll:true});
+  };
+  bar.addEventListener('keydown', dismissResults);
+  results.addEventListener('keydown', dismissResults);
   bar.addEventListener('input', () => {
     const q = bar.value.trim();
     if (!q) {
@@ -1539,7 +1974,7 @@ function initSearch() {
     document.addEventListener('keydown', e => {
       const active = document.activeElement;
       const inField = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
-      if (e.key === '/' && !inField) {
+      if (e.key === '/' && !inField && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const currentBar = document.getElementById('search-bar');
         if (currentBar) { e.preventDefault(); currentBar.focus(); }
       }
